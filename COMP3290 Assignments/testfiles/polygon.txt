@@ -1,0 +1,57 @@
+CD23 polygon
+
+constants
+    SIZE is 20
+types
+    array_type is
+        value : integer,
+    end
+    
+    x_array is array [SIZE] of array_type end
+    y_array is array [SIZE] of array_type end
+
+main 
+
+    func compute_area(x_points : array_type, y_points : array_type, size : integer) : integer
+        value : integer
+        i : integer
+        begin
+            value = 0
+            for ( i = 0; i < size - 2)
+                value += ((x_points[i+1].value + x_points[i].value) * (y_points[i+1].value - y_points[i].value));
+                i += 1;
+            end
+            value /= 2;
+            return value;
+        end
+
+    curr_x : integer,
+    curr_y : integer,
+    length : integer,
+    counter : integer,
+    area : integer
+
+
+begin
+    
+    Out << "Please input the number of points in the polygon (as an integer): ";
+    In >> length;
+    Out << Line;
+    
+    counter = 0;
+    for ( counter = 0; counter < length)
+        Out << "Please input x" << counter << ": ";
+        In >> x_array[counter].value;
+        Out << Line;
+        Out << "Please input y" << counter << ": ";
+        In >> y_array[counter].value;
+        Out << Line;
+        counter += 1;
+    end
+
+    area = compute_area(x_array, y_array, length);
+
+    Out << "The area of the polygon describe is: " << area << Line;
+
+
+end CD23 polygon
