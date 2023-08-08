@@ -45,9 +45,7 @@ public class LookUpTable {
     "TTTOR ",	"TTXOR ",	"TGRGR ",       "TLSLS ",	"TIDEN ",	"TILIT ",
     "TFLIT ",	"TSTRG ",	"TUNDF "};
 		
-	private static HashMap<String, Integer> reservedKeyTokens = new HashMap<String, Integer>(); //hashmap containing all keyowrd, deliminators and operators - hasmap easier to store its appearence in a file (key), and the token value that goes with it (value)
-	private static HashMap<String, Integer> reservedOpsTokens = new HashMap<String, Integer>(); //hashmpa for just the operators
-	private static HashMap<String, Integer> reservedDelsTokens = new HashMap<String, Integer>(); //hashmap for just the deliminators
+	private static HashMap<String, Integer> reservedLexemes = new HashMap<String, Integer>(); //hashmap containing all lexemes.
 
     public LookUpTable(){
         reservedList();
@@ -60,161 +58,87 @@ public class LookUpTable {
 
     //fill in Hashmaps, one for reserved keywords/identifiers, one for operators and one for deliminators
 	public void reservedList(){
-		if(reservedKeyTokens.isEmpty()){
+		if(reservedLexemes.isEmpty()){
 			
-			//keywords
-			// TODO: Update to new spec
-			reservedKeyTokens.put("cd23",     TCD23);
-            reservedKeyTokens.put("constants",TCONS);
-            reservedKeyTokens.put("types",    TTYPS);
-            reservedKeyTokens.put("is",       TTTIS);
-            reservedKeyTokens.put("arrays",   TARRS);
-            reservedKeyTokens.put("main",     TMAIN);
-            reservedKeyTokens.put("begin",    TBEGN);
-            reservedKeyTokens.put("end",      TTEND);
-            reservedKeyTokens.put("array",    TARAY);
-            reservedKeyTokens.put("of",       TTTOF);
-            reservedKeyTokens.put("func",     TFUNC);
-            reservedKeyTokens.put("void",     TVOID);
-            reservedKeyTokens.put("const",    TCNST);
-            reservedKeyTokens.put("integer",  TINTG);
-            reservedKeyTokens.put("real",     TREAL);
-            reservedKeyTokens.put("boolean",  TBOOL);
-            reservedKeyTokens.put("for",      TTFOR);
-            reservedKeyTokens.put("repeat",   TREPT);
-            reservedKeyTokens.put("until",    TUNTL);
-            reservedKeyTokens.put("if",       TIFTH);
-            reservedKeyTokens.put("else",     TELSE);
-            reservedKeyTokens.put("in",       TINPT);
-            reservedKeyTokens.put("out",      TOUTP);
-            reservedKeyTokens.put("line",     TOUTL);
-            reservedKeyTokens.put("return",   TRETN);
-            reservedKeyTokens.put("not",      TNOTT);
-            reservedKeyTokens.put("and",      TTAND);
-            reservedKeyTokens.put("or",       TTTOR);
-            reservedKeyTokens.put("xor",      TTXOR);
-            reservedKeyTokens.put("true",     TTRUE);
-            reservedKeyTokens.put("false",    TFALS);
+			// Keywords
+			reservedLexemes.put("cd23",     TCD23);
+            reservedLexemes.put("constants",TCONS);
+            reservedLexemes.put("types",    TTYPS);
+            reservedLexemes.put("is",       TTTIS);
+            reservedLexemes.put("arrays",   TARRS);
+            reservedLexemes.put("main",     TMAIN);
+            reservedLexemes.put("begin",    TBEGN);
+            reservedLexemes.put("end",      TTEND);
+            reservedLexemes.put("array",    TARAY);
+            reservedLexemes.put("of",       TTTOF);
+            reservedLexemes.put("func",     TFUNC);
+            reservedLexemes.put("void",     TVOID);
+            reservedLexemes.put("const",    TCNST);
+            reservedLexemes.put("integer",  TINTG);
+            reservedLexemes.put("real",     TREAL);
+            reservedLexemes.put("boolean",  TBOOL);
+            reservedLexemes.put("for",      TTFOR);
+            reservedLexemes.put("repeat",   TREPT);
+            reservedLexemes.put("until",    TUNTL);
+            reservedLexemes.put("if",       TIFTH);
+            reservedLexemes.put("else",     TELSE);
+            reservedLexemes.put("in",       TINPT);
+            reservedLexemes.put("out",      TOUTP);
+            reservedLexemes.put("line",     TOUTL);
+            reservedLexemes.put("return",   TRETN);
+            reservedLexemes.put("true",     TTRUE);
+            reservedLexemes.put("false",    TFALS);
 			
 			//delimiters and operators
-			reservedKeyTokens.put(",", TCOMA);
-			reservedKeyTokens.put("[", TLBRK);
-			reservedKeyTokens.put("]", TRBRK);
-			reservedKeyTokens.put("(", TLPAR);
-			reservedKeyTokens.put(")", TRPAR);
-			reservedKeyTokens.put("=", TEQUL);
-			reservedKeyTokens.put("+", TPLUS);
-			reservedKeyTokens.put("-", TMINS);
-			reservedKeyTokens.put("*", TSTAR);
-			reservedKeyTokens.put("/", TDIVD);
-			reservedKeyTokens.put("%", TPERC);
-			reservedKeyTokens.put("^", TCART);
-			reservedKeyTokens.put("<", TLESS);
-			reservedKeyTokens.put(">", TGRTR);
-			reservedKeyTokens.put(":", TCOLN);
-			reservedKeyTokens.put("<=", TLEQL);
-			reservedKeyTokens.put(">=", TGEQL);
-			reservedKeyTokens.put("!=", TNEQL);
-			reservedKeyTokens.put("==", TEQEQ);
-			reservedKeyTokens.put("+=", TPLEQ);
-			reservedKeyTokens.put("-=", TMNEQ);
-			reservedKeyTokens.put("*=", TSTEQ);
-			reservedKeyTokens.put("/=", TDVEQ);
-			reservedKeyTokens.put(";", TSEMI);
-			reservedKeyTokens.put(".", TDOTT);
-			reservedKeyTokens.put(">>", TGRGR);
-			reservedKeyTokens.put("<<", TLSLS);
+			reservedLexemes.put(",", TCOMA);
+			reservedLexemes.put(";", TSEMI);
+			reservedLexemes.put("[", TLBRK);
+			reservedLexemes.put("]", TRBRK);
+			reservedLexemes.put("(", TLPAR);
+			reservedLexemes.put(")", TRPAR);
+			reservedLexemes.put("=", TEQUL);
+			reservedLexemes.put("+", TPLUS);
+			reservedLexemes.put("-", TMINS);
+			reservedLexemes.put("*", TSTAR);
+			reservedLexemes.put("/", TDIVD);
+			reservedLexemes.put("%", TPERC);
+			reservedLexemes.put("^", TCART);
+			reservedLexemes.put("<", TLESS);
+			reservedLexemes.put(">", TGRTR);
+			reservedLexemes.put("!", TNOTT);
+			reservedLexemes.put(":", TCOLN);
+			reservedLexemes.put(".", TDOTT);
 			
-		}
-		
-		//give the operators their own list - easier access to them
-		if(reservedOpsTokens.isEmpty()){
-			reservedOpsTokens.put("<=", TLEQL);
-			reservedOpsTokens.put(">=", TGEQL);
-			reservedOpsTokens.put("!=", TNEQL);
-			reservedOpsTokens.put("==", TEQEQ);
-			reservedOpsTokens.put("+=", TPLEQ);
-			reservedOpsTokens.put("-=", TMNEQ);
-			reservedOpsTokens.put("*=", TSTEQ);
-			reservedOpsTokens.put("/=", TDVEQ);
-			reservedOpsTokens.put(">>", TGRGR);
-			reservedOpsTokens.put("<<", TLSLS);
-		}
-		
-		//give delimiters their own list for easier access
-		if(reservedDelsTokens.isEmpty()){
-			reservedDelsTokens.put(",", TCOMA);
-			reservedDelsTokens.put("[", TLBRK);
-			reservedDelsTokens.put("]", TRBRK);
-			reservedDelsTokens.put("(", TLPAR);
-			reservedDelsTokens.put(")", TRPAR);
-			reservedDelsTokens.put("=", TEQUL);
-			reservedDelsTokens.put("+", TPLUS);
-			reservedDelsTokens.put("-", TMINS);
-			reservedDelsTokens.put("*", TSTAR);
-			reservedDelsTokens.put("/", TDIVD);
-			reservedDelsTokens.put("%", TPERC);
-			reservedDelsTokens.put("^", TCART);
-			reservedDelsTokens.put("<", TLESS);
-			reservedDelsTokens.put(">", TGRTR);
-			reservedDelsTokens.put(":", TCOLN);
-			reservedDelsTokens.put(";", TSEMI);
-			reservedDelsTokens.put(".", TDOTT);
+			reservedLexemes.put(">>", TGRGR);
+			reservedLexemes.put("<<", TLSLS);
+			reservedLexemes.put("<=", TLEQL);
+			reservedLexemes.put(">=", TGEQL);
+			reservedLexemes.put("!=", TNEQL);
+			reservedLexemes.put("==", TEQEQ);
+			reservedLexemes.put("+=", TPLEQ);
+			reservedLexemes.put("-=", TMNEQ);
+			reservedLexemes.put("*=", TSTEQ);
+			reservedLexemes.put("/=", TDVEQ);
+			reservedLexemes.put("&&", TTAND);
+			reservedLexemes.put("||", TTTOR);
+			reservedLexemes.put("&|", TTXOR);
+				
+			
 		}
 		
 	}
 
     //check word against reserved words
-	public int checkKeyWords(String lexeme){
+	public int checkLexeme(String lexeme){
 		lexeme = lexeme.toLowerCase(); //keywords are not case sentive, but as they are listed as lower case in the hash map, the lexem needs to be converted into lower case to compare
 		boolean tokFound = false;
 		int tokVal = -1; // Assume token not found
 
-        System.out.println("Checking lexeme: '" + lexeme + "'.");
-        tokFound = reservedKeyTokens.containsKey(lexeme);
+        tokFound = reservedLexemes.containsKey(lexeme);
 		
 		if(tokFound){
-			tokVal = reservedKeyTokens.get(lexeme);
+			tokVal = reservedLexemes.get(lexeme);
 		} 
         return tokVal;
 	}
-	
-	//check possible operation again operations defined (works the same as checkKeyWords())
-	public int checkOps(String lexeme){
-		boolean tokFound = false;
-		int tokVal = 0;
-		Iterator iterator = reservedOpsTokens.entrySet().iterator();
-		
-		while(iterator.hasNext()){
-			Map.Entry mapElement = (Map.Entry)iterator.next();
-			if(lexeme.equals(mapElement.getKey())){
-				tokVal = (int)mapElement.getValue();
-				tokFound = true;
-			}
-		}		
-		if(tokFound == false){
-			return -1;
-		} else {
-			return tokVal;
-		}
-	}
-	//check possible Deliminator again delimiters defined (works the same as checkKeyWords())
-	public int checkDels(String lexeme){
-		boolean tokFound = false;
-		int tokVal = 0;
-		Iterator iterator = reservedDelsTokens.entrySet().iterator();
-		while(iterator.hasNext()){
-			Map.Entry mapElement = (Map.Entry)iterator.next();
-			if(lexeme.equals(mapElement.getKey())){
-				tokVal = (int)mapElement.getValue();
-				tokFound = true;
-			}
-		}		
-		if(tokFound == false){
-			return -1;
-		} else {
-			return tokVal;
-		}
-	}
-    
 }
