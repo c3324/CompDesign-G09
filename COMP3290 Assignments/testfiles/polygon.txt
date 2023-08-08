@@ -12,6 +12,8 @@ types
 
 main 
 
+    /** This is a "multi-line" comment
+        explaining the pre and post conditions for the function **/
     func compute_area(x_points : array_type, y_points : array_type, size : integer) : integer
         value : integer
         i : integer
@@ -38,7 +40,7 @@ begin
     In >> length;
     Out << Line;
     
-    counter = 0;
+    counter = 0; /-- This is a single line comment
     for ( counter = 0; counter < length)
         Out << "Please input x" << counter << ": ";
         In >> x_array[counter].value;
@@ -51,7 +53,7 @@ begin
 
     area = compute_area(x_array, y_array, length);
 
-    Out << "The area of the polygon describe is: " << area << Line;
+    Out << "The area of the polygon described is: " << area << Line;
 
 
 end CD23 polygon

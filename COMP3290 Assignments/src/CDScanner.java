@@ -1,13 +1,7 @@
 
 import java.util.ArrayList; 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.lang.*;
 import java.util.Scanner;
 
 public class CDScanner {
@@ -19,27 +13,25 @@ public class CDScanner {
 
     private ArrayList<Token> token_buffer;
 
-    //list of possible states the scanner might find in the input file
+    // States for use with state machine
 	private enum STATE{ 
 		START, 
         ALPHABETIC_STRING, VARIABLE, 
         DELIM_OPER, 
         STRING, SLCOMMENT, MLCOMMENT,
 		INTEGER, FLOAT, 
-        ERROR, UNDEFINED_SYMBOL // Different error states may have different exit token cases.
+        LEXICAL_ERROR, UNDEFINED_SYMBOL // Different error states may have different exit token cases or error handling.
 	}
 	private STATE currentState; //the current state of the state machine
 	
 	private int line_number, col_number; //the line the scanner is on, and which column the scanner is up to.
-	private int curChar, numofChars; // a pointer to the character that the scanner is currently up to, and total number of characters in the file(used for eof checking)
-	private String text, buffer; //the input file stored as a string, and a buffer to evalute before returning a token.
-	private int outChar; //pointer to character tp be printed.
-	private String outbuffer; //the output buffer.
+	private String buffer; // Characters existing buffer to be tokenized
 
-    private LookUpTable look_up_table;
-    private SymbolTable symbol_table;
+    private LookUpTable look_up_table; // Contains on valid keywords, delimiters and operators
+    private SymbolTable symbol_table; // Currently not implemented.
     private boolean isEOF;
-    private boolean done;
+
+    private int print_char_counter;
 
     public CDScanner(String filename){
         this.file = new File(filename);
@@ -50,7 +42,7 @@ public class CDScanner {
         buffer = "";
         isEOF = false;
         token_buffer = new ArrayList<>();
-        done = false;
+        print_char_counter = 0;
         try{
             sc = new Scanner(file);
         }
@@ -93,8 +85,8 @@ public class CDScanner {
             evaluateState(next_char);
         }
         //System.out.println(buffer);
-        buffer += "\n";
-        evaluateState('\n');
+        buffer += "\r";
+        evaluateState('\r');
 
 
     }
@@ -140,7 +132,13 @@ public class CDScanner {
         }
 
         // Check if new line
-        if (character == '\n'){
+        if (character == '\r' && currentState != STATE.MLCOMMENT){
+            if (currentState == STATE.STRING){
+                currentState = STATE.LEXICAL_ERROR;
+                tokenizeBuffer();
+                currentState = STATE.START;
+                return;
+            } //else..
             buffer = buffer.substring(0, buffer.length()-1);
             tokenizeBuffer();
             currentState = STATE.START;
@@ -153,8 +151,8 @@ public class CDScanner {
             return;
         }
 
-        // Strings will always cause tokenizing
-        if (character == '"'){
+        // Strings Mostly will always cause tokenizing
+        if (character == '"' && currentState != STATE.MLCOMMENT && currentState != STATE.SLCOMMENT){
             if ( currentState == STATE.STRING){
                 tokenizeBuffer();
                 currentState = STATE.START;
@@ -222,13 +220,14 @@ public class CDScanner {
                 break;
 
             case SLCOMMENT:
-                if (character == '\n' ){
+                if (character == '\r' ){
                     tokenizeBuffer();
                     currentState = STATE.START;
                 }
                 break;
             case MLCOMMENT:
                 if ( buffer.length() >= 3){
+                    
                     if (buffer.substring(buffer.length()-3, buffer.length()).equals("**/")){
                         tokenizeBuffer();
                         currentState = STATE.START;  
@@ -259,7 +258,7 @@ public class CDScanner {
             case UNDEFINED_SYMBOL:
                 break;
 
-            case ERROR:   
+            case LEXICAL_ERROR:   
                 break;
             
 
@@ -294,7 +293,7 @@ public class CDScanner {
             tokenValue = look_up_table.checkLexeme(buffer);
         }
         // Edge case as some delimiters are held for pairing and some are not.
-        if ( tokenValue == -1 && currentState == STATE.DELIM_OPER){
+        if ( tokenValue == -1 && currentState == STATE.DELIM_OPER && !buffer.equals("/*")){
             if ( buffer.length() == 2 && tokenValue == -1){
                 String del1 = buffer.substring(0, 1);
                 String del2 = buffer.substring(1, 2);
@@ -330,16 +329,19 @@ public class CDScanner {
             lex = buffer;
             tokenValue = 62;
         }
-        else if (currentState == STATE.ERROR && tokenValue == -1){
-            //TODO: May not be undefined -> may be another error.
+        else if (currentState == STATE.LEXICAL_ERROR && tokenValue == -1){
             tokenValue = 63; // Undefined Token
+            lex = buffer;
         }
         else if (currentState == STATE.UNDEFINED_SYMBOL && tokenValue == -1)
         {
             tokenValue = 63; // Undefined Token
             lex = buffer;
         }
-        // System.out.println("Token found: " + tokenValue);
+        else if ( currentState == STATE.MLCOMMENT || currentState == STATE.SLCOMMENT){
+            buffer = "";
+            return; // Don't create token for a comment;
+        }
 
         Token new_token = new Token(tokenValue, lex, line_number, col_number, symbol_table);
         token_buffer.add(new_token);
@@ -361,6 +363,18 @@ public class CDScanner {
 
     public boolean eof(){
         return isEOF;
+    }
+
+    public void printToken(Token token){
+        if (print_char_counter > 60){
+             System.out.println();
+            print_char_counter = 0;
+        }
+        String token_string = token.getString();
+        print_char_counter += token_string.length();
+
+        System.out.print(token_string);
+
     }
 
     

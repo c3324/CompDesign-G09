@@ -1,7 +1,4 @@
-//Evangeline Hooper
-//COMP3290 Project 1B
-//Token.java
-//Due 15.08.2021
+
 
 public class Token {
 	
@@ -54,6 +51,16 @@ public class Token {
 		}
 
 		System.out.print(str);
+	}
+
+	public String getString(){
+		// Same as print but instead returns the string.
+		String str = LookUpTable.intToTokenString(tokNum);
+		if ( !lex.equals( "")){
+			str += lex + " ";
+		}
+
+		return str;
 	}
 	
 }
