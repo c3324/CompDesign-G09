@@ -134,6 +134,7 @@ public class CDScanner {
         // Check if new line
         if (character == '\r' && currentState != STATE.MLCOMMENT){
             if (currentState == STATE.STRING){
+                // New line is lexical error for strings.
                 currentState = STATE.LEXICAL_ERROR;
                 tokenizeBuffer();
                 currentState = STATE.START;
@@ -341,6 +342,9 @@ public class CDScanner {
         else if ( currentState == STATE.MLCOMMENT || currentState == STATE.SLCOMMENT){
             buffer = "";
             return; // Don't create token for a comment;
+        }
+        else if (tokenValue == -1){
+            System.out.println("Unhandled Exception!!!");
         }
 
         Token new_token = new Token(tokenValue, lex, line_number, col_number, symbol_table);
