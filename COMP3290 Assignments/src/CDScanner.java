@@ -131,6 +131,14 @@ public class CDScanner {
             currentState = STATE.START;
             return;
         }
+        // Tab acts similarly to white space
+        if (character == '\u0009' && currentState != STATE.STRING && currentState != STATE.MLCOMMENT && currentState != STATE.SLCOMMENT){
+            buffer = buffer.substring(0, buffer.length() - 1);
+            col_number += 3; // already increased by 1 for reading character.. add 3 more.
+            tokenizeBuffer();
+            currentState = STATE.START;
+            return;
+        }
 
         // Check if new line
         if (character == '\r' && currentState != STATE.MLCOMMENT){
@@ -280,8 +288,8 @@ public class CDScanner {
 
     private void tokenizeBuffer(){
 
-        // Ignore white space tokens.
-        if (buffer.equals(" ") || buffer.equals("")){
+        // Ignore blank buffers (includes empty, white space and tabs).
+        if (buffer.isBlank()){
             buffer = "";
             return;
         }
@@ -326,12 +334,24 @@ public class CDScanner {
             tokenValue = 59;
         }
         else if (currentState == STATE.INTEGER && tokenValue == -1){
-            lex = buffer;
-            tokenValue = 14;
+            try {
+                Long.parseLong(buffer);
+                lex = buffer;
+                tokenValue = 14;
+            } catch (Exception e){
+                // Cast failed.. 
+                // undefined token
+            } 
         }
         else if (currentState == STATE.FLOAT && tokenValue == -1){
-            lex = buffer;
-            tokenValue = 15;
+            try {
+                Double.parseDouble(buffer);
+                lex = buffer;
+                tokenValue = 15;
+            } catch (Exception e){
+                // Cast failed.. 
+                // undefined token
+            } 
         }
         else if (currentState == STATE.STRING && tokenValue == -1){
             lex = buffer;

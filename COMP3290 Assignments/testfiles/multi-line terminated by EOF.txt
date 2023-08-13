@@ -1,0 +1,12 @@
+CD23 lex5
+main 
+    
+begin
+    
+	
+
+end CD23 lex5
+
+/** Multi line comments
+  * are terminated by EOF
+  * .
