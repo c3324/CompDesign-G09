@@ -1,0 +1,7 @@
+CD23 lex2
+main 
+    v : boolean
+begin
+    Out << "Hello World << Line; /-- note the string is not closed.
+
+end CD23 lex2

@@ -1,0 +1,6 @@
+CD23 lex1 
+main 
+    v : # /-- hashtag '#' is not a valid symbol.
+begin
+
+end CD23 lex1

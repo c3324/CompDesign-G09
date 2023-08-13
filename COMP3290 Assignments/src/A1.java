@@ -15,7 +15,7 @@ public class A1{
 		// }
 
 		// String filepath = args[0];
-		String filepath = "COMP3290 Assignments/testfiles/polygon.txt"; // for non-console use
+		String filepath = "COMP3290 Assignments/testfiles/lexical1.txt"; // for non-console use
 		
 		// Construct Scanner.
 		CDScanner scanner = new CDScanner(filepath);

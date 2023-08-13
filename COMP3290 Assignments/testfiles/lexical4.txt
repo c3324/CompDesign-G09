@@ -1,0 +1,8 @@
+CD23 lex4
+main 
+    
+begin
+    
+	&&#&#&# /-- Should result in only one lexical error.
+
+end CD23 lex4

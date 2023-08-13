@@ -1,0 +1,8 @@
+CD23 lex3
+main 
+    
+begin
+    Out << "New line characters within strings are lexical errors 
+	" << Line;
+
+end CD23 lex3

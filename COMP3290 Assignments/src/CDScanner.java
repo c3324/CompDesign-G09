@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.Arrays;
 
 public class CDScanner {
 // Scanner iteratively acts on a file on a line by line basis
@@ -146,9 +147,11 @@ public class CDScanner {
             return;
         }
 
-        // Evaluate if character is valid symbol
-        if (!(Character.isAlphabetic(character) || Character.isDigit(character) || Character.isWhitespace(character) || charIsDelimiter(character) || character == '_' || look_up_table.checkLexeme(buffer) != -1 || character == '"')){
+        // Evaluate if character is valid symbol outside of comments and strings
+        if ((!(Character.isAlphabetic(character) || Character.isDigit(character) || Character.isWhitespace(character) || charIsDelimiter(character) || character == '_' || look_up_table.checkLexeme(buffer) != -1 || character == '"')) 
+            && !(Arrays.asList(STATE.MLCOMMENT, STATE.SLCOMMENT, STATE.STRING).contains(currentState))){
             currentState = STATE.UNDEFINED_SYMBOL;
+            // System.out.println("Undefined symbol found in:" + buffer + "  with currState = " + currentState); // Debug printout
             return;
         }
 
@@ -254,6 +257,10 @@ public class CDScanner {
                     tokenizeBuffer(true);
                     currentState = STATE.START;    
                 }
+                else if (Character.isAlphabetic(character)){
+                    tokenizeBuffer(true);
+                    currentState = STATE.ALPHABETIC_STRING;
+                }
                 break;
 
             case UNDEFINED_SYMBOL:
@@ -344,7 +351,11 @@ public class CDScanner {
             return; // Don't create token for a comment;
         }
         else if (tokenValue == -1){
-            System.out.println("Unhandled Exception!!!");
+            if ( buffer.equals("") || buffer.isBlank()){ // Nothing ot tokenize
+                buffer = "";
+                return;
+            }
+            System.out.println("Unhandled Exception!!! at currentState = " + currentState + "  with buffer = '" + buffer + "'");
         }
 
         Token new_token = new Token(tokenValue, lex, line_number, col_number, symbol_table);
@@ -373,6 +384,13 @@ public class CDScanner {
         if (print_char_counter > 60){
              System.out.println();
             print_char_counter = 0;
+        }
+        if (token.getTokNum() == 63){
+            System.out.println();
+            System.out.print("TUNDF ");
+            System.out.println();
+            System.out.println("lexical error " + token.getLex());
+            return;
         }
         String token_string = token.getString();
         print_char_counter += token_string.length();
