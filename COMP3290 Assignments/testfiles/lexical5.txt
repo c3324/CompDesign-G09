@@ -1,0 +1,23 @@
+CD23 lex4
+main 
+    
+begin
+    
+	&&#&#&# /-- Should result in only one lexical error.
+
+	"
+	/-- Challenges
+	123.abc /-- TILIT 123 TDOTT TSTRG "abc"
+	123.345.789 /-- TFLIT 123.456 TDOTT TILIT 789
+	123.4bc /-- test
+	"
+
+	'%=='
+
+	:'|==&&_"
+
+	Energi$ed
+
+
+
+end CD23 lex4

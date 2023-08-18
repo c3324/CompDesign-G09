@@ -1,0 +1,121 @@
+
+
+/-- Valid Delimiters
+; [ ] , ( ) = + - * / % ^ < > ! : . <= >= != == += -= *= /= && || &| >> <<
+
+/-- Keywords - all valid
+cd23 constants types is arrays main begin end array of func void const integer real boolean for repeat until if else In Out Line return true false 
+CD23 CONSTANTS TYPES IS ARRAYS MAIN BEGIN END ARRAY OF FUNC VOID CONST INTEGER REAL BOOLEAN FOR REPEAT UNTIL IF ELSE IN OUT LINE RETURN TRUE FALSE 
+Cd23 COnstAnts TypEs Is ArrAys MAIn BEgIn End ArrAy Of FUnc VOId COnst IntEgEr REAl BOOlEAn FOr REpEAt UntIl If ElsE In OUt LInE REtUrn TrUE FAlsE 
+
+
+
+Dan
+
+/-- Invalid characters
+@ # ~ ` ?@@#  ?@$@#
+?@/@#
+?@-$$@#   
+:'|==&&_ 
+
+/-- Valid strings
+"The quick brown fox jumps over the lazy dog."
+"This is our commenting glyph /-- which is in a string lit"
+"                                                       "		/-- Blank String
+
+/-- invalid strings
+"this string wraps around a line so 
+should not be right"
+
+"This SHOULD NOT"BE RIGHT either";
+123
+3234
+234565
+23.995
+654.72
+
+/-- Challenges
+123.abc				/-- TILIT 123   TDOTT TSTRG "abc"
+123.345.789			/-- TFLIT 123.456     TDOTT TILIT 789
+123.4bc				/-- test
+123,456.789
+123.O
+192.168.12.222 
+-22
+-0.123456
+Dan.COMP3290.newcastle,
+[COMP]
+(zero)
+(101+47)
+[3.14159 * 11 = x]
+<== %== *=== %/- "asdlkfj@"
+!!= =-= (/-=) >=.
+"String #@??\# Boo" 
+"#@??\# String ":/
+"#@??\#" 
+
+
+/-- Invalid challenges
+123.4@5.789			/-- two valid TFLIT and a TUNDF @
+Energi$ed
+Unenerg|sed
+00.00..00.0
+.5
+
+/-- bad comments
+
+/- comment
+-/-/--/////-------////******
+
+/**
+Trick
+Catch */
+"CAUGHT YOU"
+**/
+
+/-- talkies
+>>= >> =>=>>
+<<= << =<=<<
+
+/-- Bonus : check if numbers are within the limits
+"11111111111111111111111111111111111111111111111111111111111"
+2147483647 /-- Signed int
+4294967295 /-- Unsigned int
+
+1234567890
+1234567890123456789 0
+12345678901234567890
+12345678901234567890.abcdefg
+0000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000000000000
+1234567890123456789012345678901234567890
+9000000000000000000
+9200000000000000000
+9999999999999999999
+9000000000000000000.9000000000000000000
+1234456778890123445234.1
+2.3333333333333333333333333
+1234456778890123445234.158588888888888865
+98988987866574746536354234523352432134213123.788788777768750
+457654567885656745676578690.467870766788959987899689543677489
+657543.898675
+
+
+$$$$$$$$ %$^#
+!! !!!=
+
+
+<<= >>=< 
+
+
+/-- invalid strings
+"this string wraps around a line so 
+should not be right"
+
+
+/-- bad comments
+
+/- comment
+
+
+Hello

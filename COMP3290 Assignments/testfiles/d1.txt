@@ -1,0 +1,39 @@
+/**
+	Comp3290 Assignment 1
+	Main Class
+	Author: Dan Bell
+	Student No: c9876543
+	Last Modified 8/8/2021
+	Updated by Dan
+**/
+
+/-- Simple variables
+
+
+CD23 D1
+
+
+begin
+	a : integer 
+	b : real
+
+main
+	a = 2;
+	b = 3.0;
+	c = 987
+	d = 123.O
+	
+
+	out << a << " + " << b << " = " << a+b << line;
+	out << a << " * " << b << " = " << a*b << line;
+	out << b << " - " << a << " = " << b-a << line;
+	out << b << " / " << a << " = " << b/a << line;
+
+	out << a << "^" << a << " = " << a^a << line;
+	out << b << "^" << a << " = " << b^a;
+	out << line
+
+	out << "Finished";
+	out << line
+
+end CD23 D1

@@ -20,7 +20,7 @@ public class CDScanner {
         ALPHABETIC_STRING, VARIABLE, 
         DELIM_OPER, 
         STRING, SLCOMMENT, MLCOMMENT,
-		INTEGER, FLOAT, 
+		INTEGER, FLOAT_POINT, FLOAT,  // Float point is precisely at the dot
         LEXICAL_ERROR, UNDEFINED_SYMBOL // Different error states may have different exit token cases or error handling.
 	}
 	private STATE currentState; //the current state of the state machine
@@ -111,7 +111,8 @@ public class CDScanner {
             c == ';' ||
             c == '.' ||
             c == '!' ||
-            c == ':'
+            c == ':' ||
+            c == '&'
         ){
             return true;
         }
@@ -156,9 +157,14 @@ public class CDScanner {
         }
 
         // Evaluate if character is valid symbol outside of comments and strings
-        if ((!(Character.isAlphabetic(character) || Character.isDigit(character) || Character.isWhitespace(character) || charIsDelimiter(character) || character == '_' || look_up_table.checkLexeme(buffer) != -1 || character == '"')) 
+        if ((!(Character.isAlphabetic(character) || Character.isDigit(character) || Character.isWhitespace(character) || charIsDelimiter(character) || look_up_table.checkLexeme(buffer) != -1 || character == '"')) 
             && !(Arrays.asList(STATE.MLCOMMENT, STATE.SLCOMMENT, STATE.STRING).contains(currentState))){
-            currentState = STATE.UNDEFINED_SYMBOL;
+            
+            if (currentState != STATE.UNDEFINED_SYMBOL){
+                // Tokenize buffer
+                tokenizeBuffer(1);
+                currentState = STATE.UNDEFINED_SYMBOL;
+            }
             // System.out.println("Undefined symbol found in:" + buffer + "  with currState = " + currentState); // Debug printout
             return;
         }
@@ -170,7 +176,7 @@ public class CDScanner {
                 currentState = STATE.START;
             }
             else{
-                tokenizeBuffer(true);
+                tokenizeBuffer(1);
                 currentState = STATE.STRING;
             }
             return;
@@ -196,27 +202,27 @@ public class CDScanner {
                     currentState = STATE.VARIABLE;
                 }
                 else if ( charIsDelimiter(character) ){
-                    tokenizeBuffer(true);
+                    tokenizeBuffer(1);
                     currentState = STATE.DELIM_OPER;
                 }
                 break;
             case VARIABLE:
                 if (charIsDelimiter(character)){
-                    tokenizeBuffer(true);
+                    tokenizeBuffer(1);
                     currentState = STATE.DELIM_OPER;
                 }
                 break;
             case DELIM_OPER:
                 if ( Character.isDigit(character)){
-                    tokenizeBuffer(true);
+                    tokenizeBuffer(1);
                     currentState = STATE.INTEGER;
                 }
                 else if ( Character.isAlphabetic(character)){
-                    tokenizeBuffer(true);
+                    tokenizeBuffer(1);
                     currentState = STATE.ALPHABETIC_STRING;
                 }
                 else if (character == ';'){
-                    tokenizeBuffer(true);
+                    tokenizeBuffer(1);
                     currentState = STATE.START;
                 }
                 else if (buffer.equals("/--")){
@@ -224,6 +230,13 @@ public class CDScanner {
                 }
                 else if (buffer.equals("/**")){
                     currentState = STATE.MLCOMMENT;
+                } else if (buffer.length() == 3){
+                    if (look_up_table.checkLexeme(buffer.substring(0, 2)) != -1){
+                        tokenizeBuffer(1);
+                    }
+                    else{
+                        tokenizeBuffer(2);
+                    }
                 }
                 
                 break;
@@ -248,30 +261,63 @@ public class CDScanner {
                 break;
             case INTEGER:
                 if (character == '.'){
-                    currentState = STATE.FLOAT;
+                    currentState = STATE.FLOAT_POINT;
                 }
                 else if (charIsDelimiter(character)){
-                    tokenizeBuffer(true);
+                    tokenizeBuffer(1);
                     currentState = STATE.DELIM_OPER;
                 }
                 else if (Character.isAlphabetic(character)){
-                    tokenizeBuffer(true);
+                    tokenizeBuffer(1);
                     currentState = STATE.ALPHABETIC_STRING;
+                }
+                break;
+
+            case FLOAT_POINT:
+                if (charIsDelimiter(character)){
+                    tokenizeBuffer(2);
+                    tokenizeBuffer(1);
+                    currentState = STATE.START;    
+                }
+                else if (Character.isAlphabetic(character)){
+                    tokenizeBuffer(2);
+                    tokenizeBuffer(1);
+                    currentState = STATE.ALPHABETIC_STRING;
+                }
+                else if (Character.isWhitespace(character)){
+                    tokenizeBuffer(1);
+                    buffer = "";
+                    currentState = STATE.START;
+                } if (Character.isDigit(character)){
+                    currentState = STATE.FLOAT;
                 }
                 break;
 
             case FLOAT:
                 if (charIsDelimiter(character)){
-                    tokenizeBuffer(true);
-                    currentState = STATE.START;    
+                    tokenizeBuffer(1);
+                    currentState = STATE.DELIM_OPER;
+                    evaluateState(character);    
                 }
                 else if (Character.isAlphabetic(character)){
-                    tokenizeBuffer(true);
+                    tokenizeBuffer(1);
                     currentState = STATE.ALPHABETIC_STRING;
                 }
                 break;
 
             case UNDEFINED_SYMBOL:
+                if (Character.isAlphabetic(character)){
+                    tokenizeBuffer(1);
+                    currentState = STATE.ALPHABETIC_STRING;
+                }
+                else if (Character.isDigit(character)){
+                    tokenizeBuffer(1);
+                    currentState = STATE.INTEGER;
+                }
+                else if (charIsDelimiter(character)){
+                    tokenizeBuffer(1);
+                    currentState = STATE.DELIM_OPER;
+                }
                 break;
 
             case LEXICAL_ERROR:   
@@ -341,6 +387,7 @@ public class CDScanner {
             } catch (Exception e){
                 // Cast failed.. 
                 // undefined token
+                currentState = STATE.UNDEFINED_SYMBOL;  // Overflow Error
             } 
         }
         else if (currentState == STATE.FLOAT && tokenValue == -1){
@@ -351,7 +398,28 @@ public class CDScanner {
             } catch (Exception e){
                 // Cast failed.. 
                 // undefined token
+                lex = buffer;
+                tokenValue = 63;
             } 
+        }
+        else if (currentState == STATE.FLOAT_POINT && tokenValue == -1){
+            // Tokenize left of dot and dot
+            if (buffer.equals(".")){
+                lex = "";
+                tokenValue = 44; // TDOTT
+            }
+            else {
+                try {
+                    Long.parseLong(buffer);
+                    lex = buffer;
+                    tokenValue = 14;
+                } catch (Exception e){
+                    // Cast failed.. 
+                    // undefined token
+                    lex = buffer;
+                    tokenValue = 63;
+                } 
+            }
         }
         else if (currentState == STATE.STRING && tokenValue == -1){
             lex = buffer;
@@ -361,16 +429,16 @@ public class CDScanner {
             tokenValue = 63; // Undefined Token
             lex = buffer;
         }
-        else if (currentState == STATE.UNDEFINED_SYMBOL && tokenValue == -1)
-        {
-            tokenValue = 63; // Undefined Token
-            lex = buffer;
-        }
         else if ( currentState == STATE.MLCOMMENT || currentState == STATE.SLCOMMENT){
             buffer = "";
             return; // Don't create token for a comment;
         }
-        else if (tokenValue == -1){
+        if (currentState == STATE.UNDEFINED_SYMBOL && tokenValue == -1)
+        {
+            tokenValue = 63; // Undefined Token
+            lex = buffer;
+        }
+        if (tokenValue == -1){
             if ( buffer.equals("") || buffer.isBlank()){ // Nothing ot tokenize
                 buffer = "";
                 return;
@@ -385,15 +453,14 @@ public class CDScanner {
 
     }
 
-    private void tokenizeBuffer(boolean droplast){
+    private void tokenizeBuffer(int n_buffer_skips){
         // method keeps the last element of the buffer intact and does not tokenize it
         // helper method to reduce repeated code
-        if (droplast){
-            String temp_buffer =  buffer.substring(buffer.length() - 1, buffer.length());
-            buffer = buffer.substring(0, buffer.length() - 1);
+            String temp_buffer =  buffer.substring(buffer.length() - n_buffer_skips, buffer.length());
+            buffer = buffer.substring(0, buffer.length() - n_buffer_skips);
             tokenizeBuffer();
             buffer = temp_buffer;
-        }
+        
     }
 
     public boolean eof(){
@@ -410,6 +477,7 @@ public class CDScanner {
             System.out.print("TUNDF ");
             System.out.println();
             System.out.println("lexical error " + token.getLex());
+            print_char_counter = 0;
             return;
         }
         String token_string = token.getString();
