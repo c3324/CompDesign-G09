@@ -37,12 +37,12 @@ public class LookUpTable {
     "TBEGN ",	"TTEND ",	"TARAY ",	"TTTOF ",	"TFUNC ",	"TVOID ",
     "TCNST ",	"TINTG ",	"TREAL ",	"TBOOL ",	"TTFOR ",	"TREPT ",
     "TUNTL ",	"TIFTH ",	"TELSE ",	"TINPT ",	"TOUTP ",	"TOUTL ",
-    "TRETN ",	"TTRUE ",       "TFALS ",	"TCOMA ",	"TSEMI ",       "TLBRK ",	
+    "TRETN ",	"TTRUE ",   "TFALS ",	"TCOMA ",	"TSEMI ",   "TLBRK ",	
     "TRBRK ",	"TLPAR ",	"TRPAR ",	"TEQUL ",	"TPLUS ",	"TMINS ",
     "TSTAR ",	"TDIVD ",	"TPERC ",	"TCART ",	"TLESS ",	"TGRTR ",
     "TCOLN ",	"TDOTT ",	"TLEQL ",	"TGEQL ",	"TNEQL ",	"TEQEQ ",	
     "TPLEQ ",	"TMNEQ ",	"TSTEQ ",	"TDVEQ ",	"TNOTT ",	"TTAND ",
-    "TTTOR ",	"TTXOR ",	"TGRGR ",       "TLSLS ",	"TIDEN ",	"TILIT ",
+    "TTTOR ",	"TTXOR ",	"TGRGR ",   "TLSLS ",	"TIDEN ",	"TILIT ",
     "TFLIT ",	"TSTRG ",	"TUNDF "};
 		
 	private static HashMap<String, Integer> reservedLexemes = new HashMap<String, Integer>(); //hashmap containing all lexemes.

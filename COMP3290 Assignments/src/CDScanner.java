@@ -363,6 +363,7 @@ public class CDScanner {
                 int tokenValue2 = look_up_table.checkLexeme(del2);
                 if ( tokenValue1 == -1 || tokenValue2 == -1){
                     tokenValue = 63; // Undefined
+                    lex = "undefined operator" + buffer;
                 }
                 else {
                     Token tok1, tok2;
@@ -383,7 +384,7 @@ public class CDScanner {
             try {
                 Long.parseLong(buffer);
                 lex = buffer;
-                tokenValue = 14;
+                tokenValue = 60;
             } catch (Exception e){
                 // Cast failed.. 
                 // undefined token
@@ -394,11 +395,11 @@ public class CDScanner {
             try {
                 Double.parseDouble(buffer);
                 lex = buffer;
-                tokenValue = 15;
+                tokenValue = 61;
             } catch (Exception e){
                 // Cast failed.. 
                 // undefined token
-                lex = buffer;
+                lex = "- numerical overflow error: " + buffer;
                 tokenValue = 63;
             } 
         }
@@ -416,7 +417,7 @@ public class CDScanner {
                 } catch (Exception e){
                     // Cast failed.. 
                     // undefined token
-                    lex = buffer;
+                    lex = "- numerical overflow error: " + buffer;
                     tokenValue = 63;
                 } 
             }
@@ -436,7 +437,7 @@ public class CDScanner {
         if (currentState == STATE.UNDEFINED_SYMBOL && tokenValue == -1)
         {
             tokenValue = 63; // Undefined Token
-            lex = buffer;
+            lex = "- undefined token: " + buffer;
         }
         if (tokenValue == -1){
             if ( buffer.equals("") || buffer.isBlank()){ // Nothing ot tokenize
@@ -481,6 +482,9 @@ public class CDScanner {
             return;
         }
         String token_string = token.getString();
+        for ( int i = 0; i < token_string.length() % 6; i++){
+            token_string += " ";
+        }
         print_char_counter += token_string.length();
 
         System.out.print(token_string);
