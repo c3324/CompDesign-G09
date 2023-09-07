@@ -23,8 +23,12 @@ public class A1{
 		// Spec structure used.
 		while (!scanner.eof()){
 			Token recieved_token = scanner.nextToken();
+
 			scanner.printToken(recieved_token);
+			//need to add a away to store the tokens in a list to pass to the Parser
 		}
+
+		//This is where : CDParser parser = new CDParser(tokenList); can then go. 
 	}
 
 }
