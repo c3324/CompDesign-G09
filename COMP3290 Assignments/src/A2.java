@@ -16,7 +16,7 @@ public class A2 {
 		// }
 
 		// String filepath = args[0];
-		String filepath = "COMP3290 Assignments/testfiles/g09.txt"; // for non-console use
+		String filepath = "COMP3290 Assignments/testfiles/d1.txt"; // for non-console use
 		
 		// Construct Scanner.
 		CDScanner scanner = new CDScanner(filepath);
@@ -35,6 +35,8 @@ public class A2 {
         
 
 		//This is where : CDParser parser = new CDParser(tokenList); can then go. 
+		CDParser parser = new CDParser(scanner);
+		parser.parse();
         //if there is no token errors
         //  create parser 'object' containing the generated token list
         // then start parsing. 

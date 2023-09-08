@@ -51,8 +51,24 @@ public class Node {
         rightNode = node;
     }
 
+    public Node getLeftNode(){
+        return leftNode;
+    }
+
+    public Node getMidNode(){
+        return midNode;
+    }
+
+    public Node getRightNode(){
+        return rightNode;
+    }
+
     public void setSymbolValue(String value){
         symbolValue = value;
+    }
+
+    public String getSymbolVaue(){
+        return symbolValue;
     }
 
     

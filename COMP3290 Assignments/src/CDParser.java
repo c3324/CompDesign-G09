@@ -7,5 +7,21 @@ import java.nio.file.Paths;
 //This will be the top level code for the scanner, that the A2 class will call to start parsing.
 
 public class CDParser {
+
+    private CDScanner cdScanner;
+    private SyntaxTree syntaxTree;
+
+    public CDParser(CDScanner scanner){
+
+        cdScanner = scanner;
+        syntaxTree = new SyntaxTree(cdScanner);
+
+    }
+
+    public void parse(){
+
+        syntaxTree.buildTree();
+
+    }
     
 }

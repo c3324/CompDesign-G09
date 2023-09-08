@@ -4,7 +4,7 @@ public class Token {
 	
 		
 	private int tokNum, ln, col;
-	private String lex;
+	private String lex, tokID;
 	private SymbolTable symbol_table;
 
 	
@@ -21,6 +21,7 @@ public class Token {
 	//initialising the current token
 	public Token(int tokNum, String lex, int ln, int col, SymbolTable symbol_table){
 		this.tokNum = tokNum;
+		this.tokID = LookUpTable.intToTokenString(tokNum);
 		this.lex = lex;
 		this.ln = ln;
 		this.col = col;
@@ -30,6 +31,10 @@ public class Token {
 	//getters
 	public int getTokNum(){
 		return tokNum;
+	}
+
+	public String getTokID(){
+		return tokID;
 	}
 	
 	public int getLn(){

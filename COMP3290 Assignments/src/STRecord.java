@@ -25,5 +25,18 @@ public class STRecord {
         this.glyph = glyph;
 
     }
+
+
+    public STRecord( Token token, String type){
+
+        this.id = token.getLex();
+        this.line_number = token.getLn();
+        this.col_number = token.getCol();
+        this.type = type;
+        this.base = "";
+        this.offset = "";
+        this.glyph = "";
+
+    }
     
 }
