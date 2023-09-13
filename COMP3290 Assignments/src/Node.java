@@ -15,6 +15,7 @@ public class Node {
         this.leftNode = null;
         this.midNode = null;
         this.rightNode = null;
+        this.symbolValue = "";
 
     }
 
@@ -70,6 +71,54 @@ public class Node {
     public String getSymbolVaue(){
         return symbolValue;
     }
+
+    public void setId(String id){
+        this.id = id;
+    }
+
+    public Integer printTreeHelper(int current_col){
+
+        String string = this.id;
+        int col = current_col + 1;
+        if ( col > 9 ){
+            string += "\n";
+            col = 0;
+        }
+
+        if (!this.symbolValue.equals("")){
+            string +=  this.getSymbolVaue() + " ";
+            col++;
+        
+            for ( int i = 0; i < string.length() % 7; i++){
+                string += " ";
+            }
+            if ( col > 9 ){
+                string += "\n";
+                col = 0;
+            }
+        }
+
+        System.out.print(string);
+
+        if (this.getLeftNode() != null){
+            col = this.getLeftNode().printTreeHelper(col);
+        }
+        if (this.getMidNode() != null){
+            col = this.getMidNode().printTreeHelper(col);
+        }
+        if (this.getRightNode() != null){
+            col = this.getRightNode().printTreeHelper(col);
+        }
+
+        return col;
+        
+    }
+
+    public void printTree(){
+
+       printTreeHelper(0);
+    }
+
 
     
     

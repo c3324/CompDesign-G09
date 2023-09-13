@@ -1,0 +1,9 @@
+CD23 ExampleAST
+    main
+        i:integer, j:integer, k:integer
+    begin
+        In >> i;
+        In >> j;
+        k = i + j;
+        Out << k << Line;
+    end CD23 ExampleAST

@@ -16,7 +16,7 @@ public class A2 {
 		// }
 
 		// String filepath = args[0];
-		String filepath = "COMP3290 Assignments/testfiles/d1.txt"; // for non-console use
+		String filepath = "COMP3290 Assignments/testfiles/a2_example_file.txt"; // for non-console use
 		
 		// Construct Scanner.
 		CDScanner scanner = new CDScanner(filepath);
@@ -32,9 +32,11 @@ public class A2 {
             //put a check in place to see if an error is thrown while scanning, as we don't want to continue to parsing if a token returned is an error token (TUNDF i think it is)
 		}
 
+		System.out.println("\n\nPreorder Traversal:");
         
 
 		//This is where : CDParser parser = new CDParser(tokenList); can then go. 
+		scanner = new CDScanner(filepath);
 		CDParser parser = new CDParser(scanner);
 		parser.parse();
         //if there is no token errors

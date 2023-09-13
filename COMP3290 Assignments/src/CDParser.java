@@ -21,6 +21,7 @@ public class CDParser {
     public void parse(){
 
         syntaxTree.buildTree();
+        syntaxTree.printPreOrderTraversal();
 
     }
     

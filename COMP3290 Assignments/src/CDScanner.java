@@ -38,7 +38,7 @@ public class CDScanner {
         this.file = new File(filename);
         line_number = 0;
         col_number = 0;
-        symbol_table = new SymbolTable();
+        symbol_table = new SymbolTable(true);
         currentState = STATE.START;
         buffer = "";
         isEOF = false;
