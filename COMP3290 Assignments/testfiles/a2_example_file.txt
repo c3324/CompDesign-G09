@@ -1,5 +1,5 @@
 CD23 ExampleAST
-    
+    main
         i:integer, j:integer, k:integer
     begin
         In >> i;
