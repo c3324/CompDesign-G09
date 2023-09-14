@@ -4,6 +4,7 @@
 // Due 13.08.2023
 
 import java.io.IOException;
+import java.util.LinkedList;
 
 public class A1{
 	public static void main(String[] args) throws IOException {
@@ -15,7 +16,7 @@ public class A1{
 		// }
 
 		// String filepath = args[0];
-		String filepath = "COMP3290 Assignments/testfiles/g09.txt"; // for non-console use
+		String filepath = "COMP3290 Assignments/testfiles/a.txt"; // for non-console use
 		
 		// Construct Scanner.
 		CDScanner scanner = new CDScanner(filepath);
@@ -25,8 +26,16 @@ public class A1{
 			Token recieved_token = scanner.nextToken();
 
 			scanner.printToken(recieved_token);
+			
+			
 			//need to add a away to store the tokens in a list to pass to the Parser
 		}
+		System.out.println("\n\nLEXICAL ERRORS\n");
+		System.out.println("-------------------------------------------------------------\n");
+        LinkedList<String> errorList = scanner.returnErrorList();
+        for(int i = 0; i < errorList.size() ; i++){
+            System.out.println(errorList.get(i));
+        }
 
 		//This is where : CDParser parser = new CDParser(tokenList); can then go. 
 	}

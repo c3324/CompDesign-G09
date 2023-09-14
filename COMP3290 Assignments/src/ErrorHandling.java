@@ -25,5 +25,9 @@ public class ErrorHandling {
         return errorList.isEmpty();
     }
 
+    public int size_is(){
+        return errorList.size();
+    }
+
     
 }

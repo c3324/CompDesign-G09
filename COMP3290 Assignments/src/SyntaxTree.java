@@ -36,15 +36,12 @@ public class SyntaxTree {
     }
 
     private void error(){
-        // Needs to be updated to form an error listing.. could simply push them all to arraylist
-        //System.out.println("Error found at line " + currentToken.getLn() + " in column " + currentToken.getCol()); // TODO: Error handling
         String errorString = "Error found at line " + currentToken.getLn() + " in column " + currentToken.getCol();
         errorList.addErrorToList(errorString);
         
     }
 
     private void error(String msg){
-        //System.out.println("Error!" + msg + "found at line " + currentToken.getLn() + " in column " + currentToken.getCol()); // TODO: Error handling
         String errorString = "Error!" + msg + "found at line " + currentToken.getLn() + " in column " + currentToken.getCol();
         errorList.addErrorToList(errorString);
         

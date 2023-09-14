@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.Arrays;
+import java.util.LinkedList;
 
 public class CDScanner {
 // Scanner iteratively acts on a file on a line by line basis
@@ -13,6 +14,7 @@ public class CDScanner {
     private java.util.Scanner sc;
 
     private ArrayList<Token> token_buffer;
+    ErrorHandling errorList_Scanner;
 
     // States for use with state machine
 	private enum STATE{ 
@@ -44,6 +46,7 @@ public class CDScanner {
         isEOF = false;
         token_buffer = new ArrayList<>();
         print_char_counter = 0;
+        errorList_Scanner = ErrorHandling.getInstance();
         try{
             sc = new Scanner(file);
         }
@@ -363,7 +366,7 @@ public class CDScanner {
                 int tokenValue2 = look_up_table.checkLexeme(del2);
                 if ( tokenValue1 == -1 || tokenValue2 == -1){
                     tokenValue = 63; // Undefined
-                    lex = "undefined operator" + buffer;
+                    lex = "Undefined Operator" + buffer;
                 }
                 else {
                     Token tok1, tok2;
@@ -399,7 +402,7 @@ public class CDScanner {
             } catch (Exception e){
                 // Cast failed.. 
                 // undefined token
-                lex = "- numerical overflow error: " + buffer;
+                lex = "Numerical overflow error: " + buffer;
                 tokenValue = 63;
             } 
         }
@@ -417,7 +420,7 @@ public class CDScanner {
                 } catch (Exception e){
                     // Cast failed.. 
                     // undefined token
-                    lex = "- numerical overflow error: " + buffer;
+                    lex = "Numerical overflow error: " + buffer;
                     tokenValue = 63;
                 } 
             }
@@ -437,7 +440,7 @@ public class CDScanner {
         if (currentState == STATE.UNDEFINED_SYMBOL && tokenValue == -1)
         {
             tokenValue = 63; // Undefined Token
-            lex = "- undefined token: " + buffer;
+            lex = "Undefined Token: " + buffer;
         }
         if (tokenValue == -1){
             if ( buffer.equals("") || buffer.isBlank()){ // Nothing ot tokenize
@@ -448,6 +451,9 @@ public class CDScanner {
         }
 
         Token new_token = new Token(tokenValue, lex, line_number, col_number, symbol_table);
+        if(new_token.getTokNum() == 63){
+            error(new_token);
+        }
         token_buffer.add(new_token);
 
         buffer = "";
@@ -491,6 +497,16 @@ public class CDScanner {
 
     }
 
-    
-    
+    //Better Error Handling for Lexical Errors
+
+    private void error(Token current_Token){
+        String errorString = "Lexical Error: (" + current_Token.getLn() + "," + current_Token.getCol() + "): " + current_Token.getLex();
+        errorList_Scanner.addErrorToList(errorString);
+        System.out.println("Added to Error List");
+        
+    }
+
+    public LinkedList<String> returnErrorList(){
+        return errorList_Scanner.getErrorList();
+    } 
 }
