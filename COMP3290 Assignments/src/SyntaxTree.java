@@ -29,7 +29,7 @@ public class SyntaxTree {
     // Match current token
     private void match(){
         //TODO: currentSymbolTable.processToken(currentToken);
-        // System.out.println(currentToken.getTokID());
+        System.out.println(currentToken.getTokID());
 
         tokenBuffer.remove(0);
         getNextToken();
@@ -206,15 +206,13 @@ public class SyntaxTree {
             return null;
         }
         if (!currentToken.getTokID().equals("TFUNC ")){
-            error("Fucntion declaration must begin with 'func' keyword.");
+            error("Function declaration must begin with 'func' keyword.");
             return null;
         }
 
         Node NFUNCS = new Node("NFUNCS ");
         NFUNCS.setLeftNode(func());
-        match();
         NFUNCS.setRightNode(funcs());
-        match();
 
         return NFUNCS;
         
@@ -293,15 +291,12 @@ public class SyntaxTree {
 
         Node NTYPEL = new Node("NTYPEL ");
         Node type = type();
-
-        if (type == null){
-            return null;
-        }
-
         Node typelist_r = typelist_r();
-        if ( typelist_r == null){ // special case
+
+        if ( typelist_r == null || type == null){ // special case
             return type;
         }
+
         NTYPEL.setLeftNode(type);
         type.setRightNode(typelist_r);
 
@@ -323,7 +318,6 @@ public class SyntaxTree {
 
 
         // TODO:// StructID and typeID??
-        System.out.println(currentToken.getTokID());
         if ( !currentToken.getTokID().equals("TIDEN ")){ // ? <structid> / <typeid>??
             error("Expected identifier token for type declaration");
             return null;
@@ -344,7 +338,7 @@ public class SyntaxTree {
             type_node.setId("NATYPE ");
             match(); // array
 
-            if ( !currentToken.getTokID().equals("TLBRK" )){
+            if ( !currentToken.getTokID().equals("TLBRK " )){
                 error("Excpected '['.");
                 return null;
             }
@@ -469,7 +463,8 @@ public class SyntaxTree {
             return null;
         }
         if ( !currentToken.getTokID().equals("TCOMA ")){
-            error("Missing comma");
+
+            error("Missing coma");
             return null;
         }
         match(); // ,
@@ -558,7 +553,7 @@ public class SyntaxTree {
             match(); // void   
         }
         
-        else if (currentToken.getTokID().equals("TIDEN ")){
+        else if (currentToken.getTokID().equals("TIDEN ") || currentToken.getTokID().equals("TINTG ") || currentToken.getTokID().equals("TREAL ") || currentToken.getTokID().equals("TBOOL ")){
             return stype(); 
         }
 
@@ -583,7 +578,7 @@ public class SyntaxTree {
         Node param = param();
         Node params_r = params_r();
 
-        if ( params_r == null){
+        if ( params_r == null || param == null){
             return param;
         }
 
@@ -599,7 +594,7 @@ public class SyntaxTree {
             return null;
         }
         if ( !currentToken.getTokID().equals("TCOMA ")){
-            error("Missing comma");
+            error("Missing coma");
             return new Node("NERROR");
         }
         match(); // ,
@@ -616,7 +611,13 @@ public class SyntaxTree {
             NARRC.setLeftNode(arrdecl());
             return NARRC;
         }
-        Node type = type();
+        if ( !currentToken.getTokID().equals("TIDEN ")){
+            error("expected identifier as a parameter");
+            return new Node("NERROR");
+        }
+        String id_lex = currentToken.getLex();
+        // TODO: // Symbol Table
+        match(); // <id>
         if ( !currentToken.getTokID().equals("TCOLN ")){
             error("Missing ':'");
             return new Node("NERROR");
@@ -624,7 +625,7 @@ public class SyntaxTree {
         match(); // :
 
         Node param_delayed = param_delayed(); // Returns NSIMP with right child <stype>, or NARRP with right child <typeid>
-        param_delayed.getLeftNode().setLeftNode(type);
+        param_delayed.setSymbolValue(id_lex);
 
         return param_delayed;
 
@@ -633,25 +634,32 @@ public class SyntaxTree {
 
     public Node param_delayed(){
 
-        if ( currentToken.getTokID().equals("<stype> ")){ // TODO: <stype>
+        if ( currentToken.getTokID().equals("TIDEN ")){ // TODO: <stype>
 
             Node NSIMP = new Node("NSIMP ");
-            //NSIMP.setRightNode(); //TODO: <stype>
+            Node NSDECL = new Node("NSDECL");
+            NSDECL.setSymbolValue(currentToken.getLex());
+
+            NSIMP.setRightNode(NSDECL); 
+            match(); // id
 
             return NSIMP;
         }
-        else if (currentToken.getTokID().equals("<typeid> ")){ // TODO: <typeid>
+        else if (currentToken.getTokID().equals("TINTG ") || currentToken.getTokID().equals("TREAL ") || currentToken.getTokID().equals("TBOOL ")){ // TODO: <typeid>
         
             Node NARRP = new Node("NARRP ");
+            Node NARRD = new Node("NSDECL");
+            NARRD.setSymbolValue(currentToken.getLex());
 
-            //NARRP.setRightNode(); //TODO: <typeid>
+            NARRP.setRightNode(NARRD); //TODO: <typeid>
+            match(); // id
 
             return NARRP;
 
         }
         else {
-            error("Expected paramater type of <stype> or <typeid>.");
-            return null;
+            error("Expected parameter type of <stype> or <typeid>.");
+            return new Node("NERROR ");
         }
 
     }
@@ -662,13 +670,13 @@ public class SyntaxTree {
         // TODO: Handle <funcbody>
         Node funcbody = new Node("<funcbody>");
         funcbody.setLeftNode(locals());
-        if ( currentToken.getTokID().equals("TBEGN ")){ 
+        if ( !currentToken.getTokID().equals("TBEGN ")){ 
             error("Expecterd 'begin' keyword for function body declaration");
             return new Node("NERROR");
         }
         match(); // begin
         funcbody.setRightNode(stats());
-        if ( currentToken.getTokID().equals("TTEND ")){ 
+        if ( !currentToken.getTokID().equals("TTEND ")){ 
             error("Expecterd 'TTEND' keyword for function body declaration");
             return new Node("NERROR");
         }
@@ -692,7 +700,7 @@ public class SyntaxTree {
         Node decl = decl();
         Node dlist_r = dlist_r();
 
-        if ( dlist_r == null){
+        if ( dlist_r == null || decl == null){
             return decl;
         }
 
@@ -708,17 +716,17 @@ public class SyntaxTree {
             return null;
         }
         if ( !currentToken.getTokID().equals("TCOMA ")){
-            error("Missing comma");
+            error("Missing coma");
             return new Node("NERROR");
         }
         match(); // ,
-        return params();
+        return dlist();
         
     }
 
     public Node decl(){
 
-        if(  !currentToken.getTokID().equals("TIDEN ")  ){ 
+        if(  !currentToken.getTokID().equals("TIDEN ") || currentToken.getTokID().equals("TINTG ") || currentToken.getTokID().equals("TREAL ") || currentToken.getTokID().equals("TBOOL ") ){ 
             error("Expected <id> for declaration");
             return new Node("NERROR");
         }
@@ -732,6 +740,9 @@ public class SyntaxTree {
         match(); // :
 
         Node decl_delayed = decl_delayed();
+        if (decl_delayed == null){
+            return new Node("NERROR");
+        }
         decl_delayed.setSymbolValue(id_lex);
 
         // TODO: Symbol Table
@@ -741,18 +752,21 @@ public class SyntaxTree {
 
     public Node decl_delayed(){
 
-        if ( currentToken.getTokID().equals("<stype> ")){ // TODO: <stype>
+        if ( currentToken.getTokID().equals("TIDEN ")){ // TODO: <stype>
 
             Node NSDECL = new Node("NSDECL ");
+            NSDECL.setSymbolValue(currentToken.getLex());
             //NSIMP.setRightNode(); //TODO: <stype>
+            match(); // <id>
 
             return NSDECL;
         }
-        else if (currentToken.getTokID().equals("<typeid> ")){ // TODO: <typeid>
+        else if (currentToken.getTokID().equals("TINTG ") || currentToken.getTokID().equals("TREAL ") || currentToken.getTokID().equals("TBOOL ")){ 
+            // TODO: <typeid>
         
             Node NSDECL = new Node("NSDECL ");
-
-            //NARRP.setRightNode(); //TODO: <typeid>
+            NSDECL.setSymbolValue(currentToken.getLex());
+            match(); //
 
             return NSDECL;
 
@@ -816,7 +830,6 @@ public class SyntaxTree {
 
         Node stat = stat();
         
-        //System.out.println(currentToken.getTokID());
         if(  !currentToken.getTokID().equals("TSEMI ") ){ 
             error("Missing semi-colon");
             return new Node("NERROR");
@@ -880,7 +893,6 @@ public class SyntaxTree {
         }
 
         error("Invalid statement");
-        System.out.println(currentToken.getTokID());
         return null;
         
     }
@@ -931,7 +943,7 @@ public class SyntaxTree {
 
         NFORL.setLeftNode(asgn_for_list());
 
-        if (!(currentToken.getTokID().equals("TESMI ") )){
+        if (!(currentToken.getTokID().equals("TSEMI ") )){
             error("Missing ';' in for statement");
             return new Node("NERROR");
         }
@@ -940,7 +952,7 @@ public class SyntaxTree {
         NFORL.setMidNode(bool());
 
         if (!(currentToken.getTokID().equals("TRPAR ") )){
-            error("Missing '('' in for statement");
+            error("Missing ')' in for statement");
             return new Node("NERROR");
         }
         match(); // )
@@ -1021,7 +1033,7 @@ public class SyntaxTree {
         Node asgnstat = asgnstat();
         Node alist_for_r = alist_for_r();
 
-        if ( alist_for_r == null){ // epsilon path
+        if ( alist_for_r == null || asgnstat == null){ // epsilon path
             return asgnstat;
         }
 
@@ -1048,7 +1060,7 @@ public class SyntaxTree {
         Node asgnstat = asgnstat();
         Node alist_rep_r = alist_rep_r();
 
-        if ( alist_rep_r == null){ // epsilon path
+        if ( alist_rep_r == null || asgnstat == null){ // epsilon path
             return asgnstat;
         }
 
@@ -1202,6 +1214,7 @@ public class SyntaxTree {
             if ( currentToken.getTokID().equals("TOUTL ") ){ // Line path
                 
                 node = new Node("NOUTL ");
+                match(); // Line
                 return node;
 
             }
@@ -1224,7 +1237,7 @@ public class SyntaxTree {
 
             }
 
-            else if ( currentToken.getTokID().equals("TESMI ")){ //epsilon path
+            else if ( currentToken.getTokID().equals("TSEMI ")){ //epsilon path
 
                 node = new Node("NOUTP ");
                 return node;
@@ -1465,12 +1478,12 @@ public class SyntaxTree {
 
     public Node elist_r(){
 
-        if (currentToken.getTokID().equals("RPAR ") ){ // epsilon path
+        if (currentToken.getTokID().equals("TRPAR ") ){ // epsilon path
             return null;
         }
 
-        if( !currentToken.getTokID().equals("TCOMA ") ){ 
-            error("Missing coma!");
+        if( !currentToken.getTokID().equals("TCOMA ") ){     
+            error("Missing coma");
             return null;
         }
         match(); // Match comma
@@ -1488,7 +1501,7 @@ public class SyntaxTree {
 
         
 
-        if (bool_r == null){
+        if (bool_r == null || rel == null){
             return rel;
         }
 
@@ -1501,7 +1514,9 @@ public class SyntaxTree {
 
     public Node bool_r(){
 
-        if (currentToken.getTokID().equals("TCOMA ") || currentToken.getTokID().equals("TRPAR ") || currentToken.getTokID().equals("TSEMI ")){ // epsilon path
+        if (currentToken.getTokID().equals("TCOMA ") || currentToken.getTokID().equals("TRPAR ") || currentToken.getTokID().equals("TSEMI ")
+        || currentToken.getTokID().equals("TEQEQ ") || currentToken.getTokID().equals("TNEQL ") || currentToken.getTokID().equals("TGRTR ") 
+        || currentToken.getTokID().equals("TLESS ") || currentToken.getTokID().equals("TLEQL ") || currentToken.getTokID().equals("TGEQL ") ){ // epsilon path
             return null;
         }
 
@@ -1557,9 +1572,7 @@ public class SyntaxTree {
 
     public Node rel_r(){
 
-        if (currentToken.getTokID().equals("TTAND ") || currentToken.getTokID().equals("TTTOR ") || currentToken.getTokID().equals("TTXOR ") 
-        || currentToken.getTokID().equals("TEQEQ ") || currentToken.getTokID().equals("TNEQL ") || currentToken.getTokID().equals("TGRTR ") 
-        || currentToken.getTokID().equals("TLESS ") || currentToken.getTokID().equals("TLEQL ") || currentToken.getTokID().equals("TGEQL ") 
+        if (currentToken.getTokID().equals("TTAND ") || currentToken.getTokID().equals("TTTOR ") || currentToken.getTokID().equals("TTXOR ")  
         || currentToken.getTokID().equals("TCOMA ") || currentToken.getTokID().equals("TRPAR ") || currentToken.getTokID().equals("TSEMI ")){ 
             // epsilon path
             return null;
@@ -1664,7 +1677,8 @@ public class SyntaxTree {
         || currentToken.getTokID().equals("TEQEQ ") || currentToken.getTokID().equals("TNEQL ") || currentToken.getTokID().equals("TGRTR ") 
         || currentToken.getTokID().equals("TLESS ") || currentToken.getTokID().equals("TLEQL ") || currentToken.getTokID().equals("TGEQL ") 
         || currentToken.getTokID().equals("TCOMA ") || currentToken.getTokID().equals("TRPAR ") || currentToken.getTokID().equals("TSEMI ")
-        || currentToken.getTokID().equals("TLSLS ") || currentToken.getTokID().equals("TGRGR ")){
+        || currentToken.getTokID().equals("TLSLS ") || currentToken.getTokID().equals("TGRGR ") || currentToken.getTokID().equals("TTYPS ")
+        || currentToken.getTokID().equals("TRBRK ")){
             // epsilon path
             return null;
         }
@@ -1720,7 +1734,8 @@ public class SyntaxTree {
         || currentToken.getTokID().equals("TEQEQ ") || currentToken.getTokID().equals("TNEQL ") || currentToken.getTokID().equals("TGRTR ") 
         || currentToken.getTokID().equals("TLESS ") || currentToken.getTokID().equals("TLEQL ") || currentToken.getTokID().equals("TGEQL ")
         || currentToken.getTokID().equals("TCOMA ") || currentToken.getTokID().equals("TRPAR ") || currentToken.getTokID().equals("TSEMI ") 
-        || currentToken.getTokID().equals("TLSLS ") || currentToken.getTokID().equals("TGRGR ")) {
+        || currentToken.getTokID().equals("TLSLS ") || currentToken.getTokID().equals("TGRGR ") || currentToken.getTokID().equals("TTYPS ")
+        || currentToken.getTokID().equals("TRBRK ")) {
             // epsilon path
             return null;
         }
@@ -1760,7 +1775,8 @@ public class SyntaxTree {
         || currentToken.getTokID().equals("TLESS ") || currentToken.getTokID().equals("TLEQL ") || currentToken.getTokID().equals("TGEQL ")
         || currentToken.getTokID().equals("TCOMA ") || currentToken.getTokID().equals("TRPAR ") || currentToken.getTokID().equals("TSEMI ")
         || currentToken.getTokID().equals("TSTAR ") || currentToken.getTokID().equals("TDIVD ") || currentToken.getTokID().equals("TPERC ")
-        || currentToken.getTokID().equals("TLSLS ") || currentToken.getTokID().equals("TGRGR ")) {
+        || currentToken.getTokID().equals("TLSLS ") || currentToken.getTokID().equals("TGRGR ") || currentToken.getTokID().equals("TTYPS ")
+        || currentToken.getTokID().equals("TRBRK ")) {
             // epsilon path - note inherits term_r epsilon path + START(term_R)
             return null;
         }
@@ -1814,6 +1830,7 @@ public class SyntaxTree {
                 error("Unclosed parenthesis");
                 return new Node("NERROR");
             }
+            match(); // )
             return bool;
         }
         else{
@@ -1828,9 +1845,9 @@ public class SyntaxTree {
         String id_lex = currentToken.getLex();
         match(); // <id>
 
-        if (currentToken.getTokID().equals("TLPAR")){
+        if (currentToken.getTokID().equals("TLPAR ")){
             //fncall path
-            Node NFCALL = new Node("NFCALL");
+            Node NFCALL = new Node("NFCALL ");
             NFCALL.setSymbolValue(id_lex);
             match(); // (
 
@@ -1863,7 +1880,7 @@ public class SyntaxTree {
 
             if (!currentToken.getTokID().equals("TRBRK ")){ 
                 error("Expected ']'.");
-                return new Node("NERROR");
+                return new Node("NERROR ");
             }
             match(); // ]
 
@@ -1881,7 +1898,8 @@ public class SyntaxTree {
         || currentToken.getTokID().equals("TLESS ") || currentToken.getTokID().equals("TLEQL ") || currentToken.getTokID().equals("TGEQL ")
         || currentToken.getTokID().equals("TCOMA ") || currentToken.getTokID().equals("TRPAR ") || currentToken.getTokID().equals("TSEMI ")
         || currentToken.getTokID().equals("TSTAR ") || currentToken.getTokID().equals("TDIVD ") || currentToken.getTokID().equals("TPERC ")
-        || currentToken.getTokID().equals("TLSLS ") || currentToken.getTokID().equals("TGRGR ")){
+        || currentToken.getTokID().equals("TLSLS ") || currentToken.getTokID().equals("TGRGR ") || currentToken.getTokID().equals("TTYPS ")
+        || currentToken.getTokID().equals("TRBRK ")){
             // epsilon path
             Node NSIMV = new Node("NSIMV ");
             NSIMV.setSymbolValue(id_lex);
@@ -1938,9 +1956,11 @@ public class SyntaxTree {
         if ( currentToken.getTokID().equals("TSTRG ") ){
             Node NSTRG = new Node("NSTRG ");
             NSTRG.setSymbolValue(currentToken.getLex());
+            match(); // <String>
+            return NSTRG;
         }
 
-        if ( currentToken.getTokID().equals("TILIT ") || currentToken.getTokID().equals("TFLIT ") || currentToken.getTokID().equals("TIDEN ") 
+        else if ( currentToken.getTokID().equals("TILIT ") || currentToken.getTokID().equals("TFLIT ") || currentToken.getTokID().equals("TIDEN ") 
         || currentToken.getTokID().equals("TTRUE ") || currentToken.getTokID().equals("TFALS ") || currentToken.getTokID().equals("TLPAR ") ){
             // <expr> path
             return expr();

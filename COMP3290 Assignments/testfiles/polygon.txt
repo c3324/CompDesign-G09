@@ -11,10 +11,10 @@ types
     yarray is array [SIZE] of arraytype end
 
 func computearea(xpoints : arraytype, ypoints : arraytype, size : integer) : integer
-        value : integer
+        value : integer,
         i : integer
         begin
-            value = 0
+            value = 0;
             for ( i = 0; i < size - 2)
                 value += ((xpoints[i+1].value + xpoints[i].value) * (ypoints[i+1].value - ypoints[i].value));
                 i += 1;
@@ -42,18 +42,18 @@ begin
     
     counter = 0;
     for ( counter = 0; counter < length)
-        Out << "Please input x" << counter << ": ";
+        Out << "Please input x", counter, ": ";
         In >> xarray[counter].value;
         Out << Line;
-        Out << "Please input y" << counter << ": ";
+        Out << "Please input y", counter, ": ";
         In >> yarray[counter].value;
-        Out << ine;
+        Out << Line;
         counter += 1;
     end
 
     area = computearea(xarray, yarray, length);
 
-    Out << "The area of the polygon describe is: " << area << Line;
+    Out << "The area of the polygon describe is: ", area << Line;
 
 
 end CD23 polygon
