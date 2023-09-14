@@ -48,16 +48,18 @@ public class A2 {
 			
 			parser.parse();
 			System.out.println("\n\nPARSER\n");
+			parser.parser_Printing();
+			parser.printErrorList();
 
 			//this is just here at the moment to make sure the error list is working, will remove/alter when error recovery is happenign
-			if(parser.checkErrorList()){
+			/*if(parser.checkErrorList()){
 				System.out.println("No Errors\n");
 				parser.parser_Printing();
 			} else {
 				parser.parser_Printing();
 				System.out.println("Errors");
 				parser.printErrorList();
-			}			
+			}	*/		
 		}
 	}
 }
