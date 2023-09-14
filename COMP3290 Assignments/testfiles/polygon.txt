@@ -10,9 +10,7 @@ types
     xarray is array [SIZE] of arraytype end
     yarray is array [SIZE] of arraytype end
 
-main 
-
-    func computearea(xpoints : arraytype, ypoints : arraytype, size : integer) : integer
+func computearea(xpoints : arraytype, ypoints : arraytype, size : integer) : integer
         value : integer
         i : integer
         begin
@@ -24,6 +22,10 @@ main
             value /= 2;
             return value;
         end
+
+main 
+
+    
 
     currx : integer,
     curry : integer,
