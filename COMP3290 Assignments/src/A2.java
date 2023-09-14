@@ -4,6 +4,7 @@
 // Due 13.08.2023
 
 import java.io.IOException;
+import java.util.LinkedList;
 
 public class A2 {
     
@@ -32,18 +33,27 @@ public class A2 {
             //put a check in place to see if an error is thrown while scanning, as we don't want to continue to parsing if a token returned is an error token (TUNDF i think it is)
 		}
 
-		System.out.println("\n\nPreorder Traversal:");
-        
+		LinkedList<String> errorList = scanner.returnErrorList();
+		if(!errorList.isEmpty()){ 	
+			//if there are lexical errors present, it will print them out and not preceed to the Parser.
+			System.out.println("\n LEXICAL ERRORS\n");
+			System.out.println("-------------------------------------------------------------\n");
+        	for(int i = 0; i < errorList.size() ; i++){
+            	System.out.println(errorList.get(i));
+        	}
+			
+		} else {
+			//yay, there are no lexical Errors, so the Parsing Process can begin
+			System.out.println("\n\nPreorder Traversal:");
+			//This is where : CDParser parser = new CDParser(tokenList); can then go. 
+			scanner = new CDScanner(filepath);
+			CDParser parser = new CDParser(scanner);
+			parser.parse();
+			parser.printErrorList();
+			
+		}
 
-		//This is where : CDParser parser = new CDParser(tokenList); can then go. 
-		scanner = new CDScanner(filepath);
-		CDParser parser = new CDParser(scanner);
-		parser.parse();
-		parser.printErrorList();
-        //if there is no token errors
-        //  create parser 'object' containing the generated token list
-        // then start parsing. 
-        //else, 
-        //  print -> present lexical errors ad terminate program
+
+
 	}
 }
