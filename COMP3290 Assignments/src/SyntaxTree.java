@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class SyntaxTree {
 
@@ -9,6 +10,7 @@ public class SyntaxTree {
     private Token currentToken;
     private CDScanner cdScanner;
     private SymbolTable currentSymbolTable;
+    ErrorHandling errorList;
 
     public SyntaxTree(CDScanner scanner){
 
@@ -19,6 +21,8 @@ public class SyntaxTree {
         cdScanner = scanner;
 
         currentSymbolTable = new SymbolTable(true);
+
+        errorList = ErrorHandling.getInstance();
 
     }
 
@@ -33,12 +37,25 @@ public class SyntaxTree {
 
     private void error(){
         // Needs to be updated to form an error listing.. could simply push them all to arraylist
-        System.out.println("Error found at line " + currentToken.getLn() + " in column " + currentToken.getCol()); // TODO: Error handling
+        //System.out.println("Error found at line " + currentToken.getLn() + " in column " + currentToken.getCol()); // TODO: Error handling
+        String errorString = "Error found at line " + currentToken.getLn() + " in column " + currentToken.getCol();
+        errorList.addErrorToList(errorString);
+        
     }
 
     private void error(String msg){
-        System.out.println("Error!" + msg + "found at line " + currentToken.getLn() + " in column " + currentToken.getCol()); // TODO: Error handling
+        //System.out.println("Error!" + msg + "found at line " + currentToken.getLn() + " in column " + currentToken.getCol()); // TODO: Error handling
+        String errorString = "Error!" + msg + "found at line " + currentToken.getLn() + " in column " + currentToken.getCol();
+        errorList.addErrorToList(errorString);
+        
     }
+
+    /*This is just chilling here for the moment to test it works. not sure if it should stay here or not*/
+    public LinkedList<String> returnErrorList(){
+        return errorList.getErrorList();
+    }
+
+    
 
     public void getNextToken(){
         tokenBuffer.add(cdScanner.nextToken());
@@ -53,21 +70,22 @@ public class SyntaxTree {
 
         if (!currentToken.getTokID().equals("TCD23 ")){
             error();
+
+        }
+        if(errorList.is_Empty()){ //if CD23 is not at the beginning, it will not continue with the Parsing Process
+            match(); // TCD23 token
+
+            root.setSymbolValue(currentToken.getLex());
+            currentSymbolTable.processToken(currentToken, "<program>");
+            match(); // identifier token
+
+            root.setLeftNode(globals());
+            root.setMidNode(funcs());
+            root.setRightNode(mainbody());
+
         }
         
-        match(); // TCD23 token
-
-        root.setSymbolValue(currentToken.getLex());
-        currentSymbolTable.processToken(currentToken, "<program>");
-        match(); // identifier token
-
-        root.setLeftNode(globals());
-        root.setMidNode(funcs());
-        root.setRightNode(mainbody());
-
         
-
-
     }
 
     public void printPreOrderTraversal(){

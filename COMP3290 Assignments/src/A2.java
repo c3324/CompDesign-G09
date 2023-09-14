@@ -39,6 +39,7 @@ public class A2 {
 		scanner = new CDScanner(filepath);
 		CDParser parser = new CDParser(scanner);
 		parser.parse();
+		parser.printErrorList();
         //if there is no token errors
         //  create parser 'object' containing the generated token list
         // then start parsing. 

@@ -1,4 +1,4 @@
-CD23 ExampleAST
+ ExampleAST
     main
         i:integer, j:integer, k:integer
     begin
@@ -6,4 +6,4 @@ CD23 ExampleAST
         In >> j;
         k = i + j;
         Out << k << Line;
-    end CD23 ExampleAST
+end CD23 ExampleAST

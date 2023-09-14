@@ -24,5 +24,13 @@ public class CDParser {
         syntaxTree.printPreOrderTraversal();
 
     }
+
+    public void printErrorList(){
+        System.out.println("");
+        LinkedList<String> errorList = syntaxTree.returnErrorList();
+        for(int i = 0; i < errorList.size() ; i++){
+            System.out.println(errorList.get(i));
+        }
+    }
     
 }
