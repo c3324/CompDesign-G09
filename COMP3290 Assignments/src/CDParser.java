@@ -12,17 +12,30 @@ public class CDParser {
     private SyntaxTree syntaxTree;
 
     public CDParser(CDScanner scanner){
-
         cdScanner = scanner;
         syntaxTree = new SyntaxTree(cdScanner);
 
     }
 
     public void parse(){
-
         syntaxTree.buildTree();
-        syntaxTree.printPreOrderTraversal();
+    }
 
+    public void parser_Printing(){
+         syntaxTree.printPreOrderTraversal();
+    }
+
+    public boolean checkErrorList(){
+        LinkedList<String> errorList_Parser = syntaxTree.returnErrorList();
+        boolean empty;
+        empty = true;
+        if(!errorList_Parser.isEmpty()){
+
+            empty = false;
+        }
+
+        System.out.println("Empty: "+ empty);
+        return empty;
     }
 
     public void printErrorList(){

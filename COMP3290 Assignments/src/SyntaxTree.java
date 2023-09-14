@@ -37,12 +37,11 @@ public class SyntaxTree {
 
     private void error(){
         String errorString = "Error found at line " + currentToken.getLn() + " in column " + currentToken.getCol();
-        errorList.addErrorToList(errorString);
-        
+        errorList.addErrorToList(errorString);    
     }
 
     private void error(String msg){
-        String errorString = "Error!" + msg + "found at line " + currentToken.getLn() + " in column " + currentToken.getCol();
+        String errorString = "Error! " + msg + " found at line " + currentToken.getLn() + " in column " + currentToken.getCol();
         errorList.addErrorToList(errorString);
         
     }
@@ -61,6 +60,7 @@ public class SyntaxTree {
 
 
     public void buildTree(){ // also <program>
+
 
         getNextToken();
         currentToken = tokenBuffer.get(0);
@@ -86,7 +86,6 @@ public class SyntaxTree {
     }
 
     public void printPreOrderTraversal(){
-
         root.printTree();
     }
 

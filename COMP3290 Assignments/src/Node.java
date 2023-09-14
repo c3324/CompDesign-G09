@@ -120,11 +120,7 @@ public class Node {
     }
 
     public void printTree(){
-
        printTreeHelper(0);
     }
-
-
-    
     
 }
