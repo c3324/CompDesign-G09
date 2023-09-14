@@ -84,19 +84,24 @@ public class Node {
             string += "\n";
             col = 0;
         }
+        for ( int i = 0; i < string.length() % 7; i++){
+            string += " ";
+        }
 
         if (!this.symbolValue.equals("")){
             string +=  this.getSymbolVaue() + " ";
             col++;
-        
+
             for ( int i = 0; i < string.length() % 7; i++){
                 string += " ";
             }
+        
             if ( col > 9 ){
                 string += "\n";
                 col = 0;
             }
         }
+        
 
         System.out.print(string);
 
