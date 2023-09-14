@@ -37,12 +37,11 @@ public class SyntaxTree {
 
     private void error(){
         String errorString = "Error found at line " + currentToken.getLn() + " in column " + currentToken.getCol();
-        errorList.addErrorToList(errorString);
-        
+        errorList.addErrorToList(errorString);    
     }
 
     private void error(String msg){
-        String errorString = "Error!" + msg + "found at line " + currentToken.getLn() + " in column " + currentToken.getCol();
+        String errorString = "Error! " + msg + " found at line " + currentToken.getLn() + " in column " + currentToken.getCol();
         errorList.addErrorToList(errorString);
         
     }
@@ -62,12 +61,12 @@ public class SyntaxTree {
 
     public void buildTree(){ // also <program>
 
+
         getNextToken();
         currentToken = tokenBuffer.get(0);
 
         if (!currentToken.getTokID().equals("TCD23 ")){
             error();
-
         }
         if(errorList.is_Empty()){ //if CD23 is not at the beginning, it will not continue with the Parsing Process
             match(); // TCD23 token
@@ -86,7 +85,6 @@ public class SyntaxTree {
     }
 
     public void printPreOrderTraversal(){
-
         root.printTree();
     }
 

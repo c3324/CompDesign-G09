@@ -23,7 +23,9 @@ public class A2 {
 		CDScanner scanner = new CDScanner(filepath);
 
 		// Spec structure used.
+		System.out.print("SCANNER\n");
 		while (!scanner.eof()){
+			
 			Token recieved_token = scanner.nextToken();
 			scanner.printToken(recieved_token);
 		}
@@ -39,13 +41,22 @@ public class A2 {
 			
 		} else {
 			//yay, there are no lexical Errors, so the Parsing Process can begin
-			System.out.println("\n\nPreorder Traversal:");
+			
 			//This is where : CDParser parser = new CDParser(tokenList); can then go. 
 			scanner = new CDScanner(filepath);
 			CDParser parser = new CDParser(scanner);
-			parser.parse();
-			parser.printErrorList();
 			
+			parser.parse();
+			System.out.println("PARSER\n");
+
+			//this is just here at the moment to make sure the error list is working, will remove/alter when error recovery is happenign
+			if(parser.checkErrorList()){
+				System.out.println("No Errors\n");
+				parser.parser_Printing();
+			} else {
+				System.out.println("Errors");
+				parser.printErrorList();
+			}			
 		}
 	}
 }
