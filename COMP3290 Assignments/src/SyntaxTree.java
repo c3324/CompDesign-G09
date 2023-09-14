@@ -291,11 +291,11 @@ public class SyntaxTree {
 
     public Node typelist(){
 
-        Node NTYPEL = new Node("NTYPEL");
+        Node NTYPEL = new Node("NTYPEL ");
         Node type = type();
 
         if (type == null){
-            return new Node("NERROR");
+            return null;
         }
 
         Node typelist_r = typelist_r();
@@ -380,7 +380,7 @@ public class SyntaxTree {
             type_node.setId("NRTYPE ");
 
             type_node.setLeftNode(fields());
-            if ( !currentToken.getTokID().equals("TTEND" )){
+            if ( !currentToken.getTokID().equals("TTEND " )){
                 error("Excpected 'end' keyword");
                 return null;
             }
@@ -1951,9 +1951,5 @@ public class SyntaxTree {
         }
         
     }
-
-
- 
-    
     
 }

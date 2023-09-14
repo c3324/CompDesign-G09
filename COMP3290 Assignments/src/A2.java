@@ -1,7 +1,7 @@
 // Joshua Burwood & Evangeline Hooper
 // COMP3290 Project 2
 // A2.java
-// Due 13.08.2023
+// Due 15.09.2023
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -47,13 +47,14 @@ public class A2 {
 			CDParser parser = new CDParser(scanner);
 			
 			parser.parse();
-			System.out.println("PARSER\n");
+			System.out.println("\n\nPARSER\n");
 
 			//this is just here at the moment to make sure the error list is working, will remove/alter when error recovery is happenign
 			if(parser.checkErrorList()){
 				System.out.println("No Errors\n");
 				parser.parser_Printing();
 			} else {
+				parser.parser_Printing();
 				System.out.println("Errors");
 				parser.printErrorList();
 			}			
