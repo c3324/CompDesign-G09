@@ -74,7 +74,7 @@ public class SymbolTable {
 
     public String returnSTRecords(int recordNum){
         STRecord record = records.get(recordNum);
-        String recordOutput = "Symbol Table Record "+ recordNum + ": " + record.getID() + record.getType() + "\n";
+        String recordOutput = "Symbol Table Record "+ recordNum + ": " + record.getID() + " " + record.getType();
         return recordOutput;       
     }
    

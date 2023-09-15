@@ -50,7 +50,7 @@ public class A2 {
 			System.out.println("\n\nPARSER\n");
 			parser.parser_Printing();
 			parser.printErrorList();
-			parser.printSymbolTable();
+			//parser.printSymbolTable(); //--> Uncomment this to see what has been stored in the Symbol Table
 
 		}
 	}
