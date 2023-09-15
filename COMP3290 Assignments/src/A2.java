@@ -17,7 +17,7 @@ public class A2 {
 		// }
 
 		// String filepath = args[0];
-		String filepath = "COMP3290 Assignments/testfiles/polygon.txt"; // for non-console use
+		String filepath = "COMP3290 Assignments/testfiles/a2_example_file.txt"; // for non-console use
 		
 		// Construct Scanner.
 		CDScanner scanner = new CDScanner(filepath);
@@ -50,16 +50,8 @@ public class A2 {
 			System.out.println("\n\nPARSER\n");
 			parser.parser_Printing();
 			parser.printErrorList();
+			parser.printSymbolTable();
 
-			//this is just here at the moment to make sure the error list is working, will remove/alter when error recovery is happenign
-			/*if(parser.checkErrorList()){
-				System.out.println("No Errors\n");
-				parser.parser_Printing();
-			} else {
-				parser.parser_Printing();
-				System.out.println("Errors");
-				parser.printErrorList();
-			}	*/		
 		}
 	}
 }
