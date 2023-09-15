@@ -37,13 +37,21 @@ public class SyntaxTree {
 
     private void error(){
         String errorString = "Error found at line " + currentToken.getLn() + " in column " + currentToken.getCol();
-        errorList.addErrorToList(errorString);    
+        errorList.addErrorToList(errorString);   
+
+        burnTokens();
     }
 
     private void error(String msg){
         String errorString = "Error! " + msg + " found at line " + currentToken.getLn() + " in column " + currentToken.getCol();
         errorList.addErrorToList(errorString);
+
+        burnTokens();
         
+    }
+
+    private void burnTokens(){
+        // burn tokens until a valid symbol is found then return to appropriate section of tree.
     }
 
     /*This is just chilling here for the moment to test it works. not sure if it should stay here or not*/
