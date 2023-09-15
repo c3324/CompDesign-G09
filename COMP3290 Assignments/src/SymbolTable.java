@@ -1,11 +1,10 @@
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 
 public class SymbolTable {
 
-    private ArrayList<SymbolTable> scoped_symbol_table;
+    private SymbolTable parentSymbolTable;
     private ArrayList<STRecord> records;
 
     // id hashmap?
@@ -15,7 +14,7 @@ public class SymbolTable {
 
     public SymbolTable(boolean push_keywords){
 
-        scoped_symbol_table = new ArrayList<>();
+        parentSymbolTable = null;
         records = new ArrayList<>();
         keywordsIndex = new HashMap<>();
         number_of_records = 0;
@@ -37,13 +36,21 @@ public class SymbolTable {
 
     public SymbolTable(SymbolTable higher_scoped_symbol_table){
 
+        parentSymbolTable = higher_scoped_symbol_table;
+        records = new ArrayList<>();
+        keywordsIndex = new HashMap<>();
+        number_of_records = higher_scoped_symbol_table.getNumRecords();
+
     }
 
     public int getRecordIndex(String id){
         if (keywordsIndex.containsKey(id)){
             return keywordsIndex.get(id);
         }
-        return -1;
+        if (parentSymbolTable == null){
+            return -1;
+        }
+        return parentSymbolTable.getRecordIndex(id);
     }
 
     public void processToken(Token token, String type){
@@ -58,6 +65,10 @@ public class SymbolTable {
         else {
             
         }
+    }
+
+    public int getNumRecords(){
+        return number_of_records;
     }
 
 
