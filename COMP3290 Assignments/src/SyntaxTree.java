@@ -537,7 +537,6 @@ public class SyntaxTree {
         }
         match(); // is
 
-        System.out.println(currentToken.getTokID());
         if ( currentToken.getTokID().equals("TARAY ")){
             // NATYPE path
             type_node.setId("NATYPE ");
