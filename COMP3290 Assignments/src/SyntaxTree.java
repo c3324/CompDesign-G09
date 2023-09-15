@@ -10,6 +10,7 @@ public class SyntaxTree {
     private Token currentToken;
     private CDScanner cdScanner;
     private SymbolTable currentSymbolTable;
+    private String currentIdentifier; // identifier is held until its type is declared and then pushed to symbol table inside of match()
     ErrorHandling errorList;
 
     public SyntaxTree(CDScanner scanner){
@@ -168,6 +169,7 @@ public class SyntaxTree {
             return new Node("NERROR");
         }
         NINIT.setSymbolValue(currentToken.getLex());
+        currentIdentifier = currentToken.getLex();
         match(); // <id>
         if( !currentToken.getTokID().equals("TTTIS ")){
             error("missing 'is' keyword in id initialisation");
@@ -332,7 +334,7 @@ public class SyntaxTree {
         }
         Node type_node = new Node("<placeholder> ");
         type_node.setSymbolValue(currentToken.getLex());
-        //Process token to symbol table
+        currentIdentifier = currentToken.getLex();
         match(); // <id>
 
         if ( !currentToken.getTokID().equals("TTTIS ")){
@@ -368,6 +370,7 @@ public class SyntaxTree {
                 error("Expected identifier token for type declaration");
                 return null;
             }
+            currentIdentifier = currentToken.getLex();
             match(); // <id>
 
             if ( !currentToken.getTokID().equals("TTEND ")){
@@ -434,6 +437,7 @@ public class SyntaxTree {
             return null;
         }
         nsdecl.setSymbolValue(currentToken.getLex());
+        currentIdentifier = currentToken.getLex();
         match(); // TIDEN
 
         if(currentToken.getTokID() != "TCOLN "){
@@ -489,6 +493,7 @@ public class SyntaxTree {
             return new Node("NERROR");
         }
         NARRD.setSymbolValue(currentToken.getLex());
+        currentIdentifier = currentToken.getLex();
         match(); // TIDEN
 
         if(currentToken.getTokID() != "TCOLN "){
@@ -523,6 +528,7 @@ public class SyntaxTree {
             return new Node("NERROR");
         }
         NFUND.setSymbolValue(currentToken.getLex());
+        currentIdentifier = currentToken.getLex();
         match(); // <id>
 
         if(currentToken.getTokID() != "TLPAR "){
@@ -624,7 +630,7 @@ public class SyntaxTree {
             return new Node("NERROR");
         }
         String id_lex = currentToken.getLex();
-        // TODO: // Symbol Table
+        currentIdentifier = currentToken.getLex();
         match(); // <id>
         if ( !currentToken.getTokID().equals("TCOLN ")){
             error("Missing ':'");
@@ -649,6 +655,7 @@ public class SyntaxTree {
             NSDECL.setSymbolValue(currentToken.getLex());
 
             NSIMP.setRightNode(NSDECL); 
+            currentIdentifier = currentToken.getLex();
             match(); // id
 
             return NSIMP;
@@ -739,6 +746,7 @@ public class SyntaxTree {
             return new Node("NERROR");
         }
         String id_lex = currentToken.getLex();
+        currentIdentifier = currentToken.getLex();
         match(); // <id>
 
         if(  !currentToken.getTokID().equals("TCOLN ")  ){ 
@@ -765,6 +773,7 @@ public class SyntaxTree {
             Node NSDECL = new Node("NSDECL ");
             NSDECL.setSymbolValue(currentToken.getLex());
             //NSIMP.setRightNode(); //TODO: <stype>
+            currentIdentifier = currentToken.getLex();
             match(); // <id>
 
             return NSDECL;
@@ -912,6 +921,7 @@ public class SyntaxTree {
             return new Node("NERROR");
         }
         String token_lex = currentToken.getLex();
+        currentIdentifier = currentToken.getLex();
         match(); // <id>
         
 
@@ -1269,6 +1279,7 @@ public class SyntaxTree {
             return new Node("NERROR");
         }
         NCALL.setSymbolValue(currentToken.getLex());
+        currentIdentifier = currentToken.getLex();
         match(); // <id>
 
         if ( !currentToken.getTokID().equals("TLPAR ")){
@@ -1393,6 +1404,7 @@ public class SyntaxTree {
             return new Node("NERROR");
         }
         String id_lex = currentToken.getLex();
+        currentIdentifier = currentToken.getLex();
         match(); // <id>
 
         Node var_r = var_r();
