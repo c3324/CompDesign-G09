@@ -17,7 +17,7 @@ public class A2 {
 		// }
 
 		// String filepath = args[0];
-		String filepath = "COMP3290 Assignments/testfiles/a2_example_file.txt"; // for non-console use
+		String filepath = "COMP3290 Assignments/testfiles/polygon.txt"; // for non-console use
 		
 		// Construct Scanner.
 		CDScanner scanner = new CDScanner(filepath);
@@ -50,7 +50,7 @@ public class A2 {
 			System.out.println("\n\nPARSER\n");
 			parser.parser_Printing();
 			parser.printErrorList();
-			parser.printSymbolTable();
+			//parser.printSymbolTable(); //--> Uncomment this to see what has been stored in the Symbol Table
 
 		}
 	}

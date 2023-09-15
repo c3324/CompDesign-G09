@@ -38,5 +38,13 @@ public class STRecord {
         this.glyph = "";
 
     }
+
+    public String getID(){
+        return id;
+    }
+
+    public String getType(){
+        return type;
+    }
     
 }

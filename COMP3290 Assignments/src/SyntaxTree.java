@@ -37,24 +37,21 @@ public class SyntaxTree {
 
     // Match current token
     private void match(){
-        //TODO: currentSymbolTable.processToken(currentToken);
-
-        
 
         if(currentToken.getTokID() == "TIDEN "){
             currentIdentifier = currentToken;
-            System.out.println("TIDEN");
+            //System.out.println("TIDEN");
         }
         //assign type to the identifier
         if(currentToken.getTokID() == "TINTG " ){
             currentSymbolTable.processToken(currentIdentifier, "integer");
-            System.out.println("TINTG ");            
+           // System.out.println("TINTG ");            
         } else if (currentToken.getTokID() == "TBOOL"){
             currentSymbolTable.processToken(currentIdentifier, "boolean");
-            System.out.println("TBOOL ");
+            //System.out.println("TBOOL ");
         } else if (currentToken.getTokID() == "TREAL"){
             currentSymbolTable.processToken(currentIdentifier, "real");
-            System.out.println("TREAL ");
+            //System.out.println("TREAL ");
         }else{
             //pass, skip, something that does nothing
             ;
@@ -63,25 +60,27 @@ public class SyntaxTree {
         //for Literals going into Symbol Table
         if(currentToken.getTokID() == "TILIT "){// interger literal
             currentSymbolTable.processToken(currentToken, "integer");
-            System.out.println("TILIT");
+           // System.out.println("TILIT");
         }
         if(currentToken.getTokID() == "TSTRG "){//String
             currentSymbolTable.processToken(currentToken, "string");
-            System.out.println("TSTRG ");
+            //System.out.println("TSTRG ");
         }
         if(currentToken.getTokID() == "TFLIT "){ //Float/real number
             currentSymbolTable.processToken(currentToken, "real");
-            System.out.println("TFLIT");
+            //System.out.println("TFLIT");
         }
 
-        
         //System.out.println("Symbol Table Records: " + currentSymbolTable.getNumRecords());
         tokenBuffer.remove(0);
         getNextToken();
     }
 
-    public int returnSymbolTableRecords(){
-        return currentSymbolTable.getNumRecords();
+    public void returnSymbolTableRecords(){
+       for(int i = 0; i < currentSymbolTable.getNumRecords(); i++){
+            System.out.println(currentSymbolTable.returnSTRecords(i));
+       }
+
     }
 
     private void error(){
