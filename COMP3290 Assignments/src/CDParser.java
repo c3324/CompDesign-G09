@@ -26,7 +26,7 @@ public class CDParser {
     }
 
     public boolean checkErrorList(){
-        LinkedList<String> errorList_Parser = syntaxTree.returnErrorList();
+        LinkedList<String> errorList_Parser = syntaxTree.returnError_List();
         boolean empty;
         empty = true;
         if(!errorList_Parser.isEmpty()){
@@ -40,10 +40,14 @@ public class CDParser {
 
     public void printErrorList(){
         System.out.println("");
-        LinkedList<String> errorList = syntaxTree.returnErrorList();
+        LinkedList<String> errorList = syntaxTree.returnError_List();
         for(int i = 0; i < errorList.size() ; i++){
             System.out.println(errorList.get(i));
         }
+    }
+
+    public void printSymbolTable(){
+        System.out.println("Symbol Table Records: "+ syntaxTree.returnSymbolTableRecords());
     }
     
 }

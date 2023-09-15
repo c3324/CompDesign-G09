@@ -36,10 +36,50 @@ public class SyntaxTree {
     // Match current token
     private void match(){
         //TODO: currentSymbolTable.processToken(currentToken);
-        //System.out.println(currentToken.getTokID());
 
+        
+
+        if(currentToken.getTokID() == "TIDEN "){
+            currentIdentifier = currentToken;
+            System.out.println("TIDEN");
+        }
+        //assign type to the identifier
+        if(currentToken.getTokID() == "TINTG " ){
+            currentSymbolTable.processToken(currentIdentifier, "integer");
+            System.out.println("TINTG ");            
+        } else if (currentToken.getTokID() == "TBOOL"){
+            currentSymbolTable.processToken(currentIdentifier, "boolean");
+            System.out.println("TBOOL ");
+        } else if (currentToken.getTokID() == "TREAL"){
+            currentSymbolTable.processToken(currentIdentifier, "real");
+            System.out.println("TREAL ");
+        }else{
+            //pass, skip, something that does nothing
+            ;
+        }
+
+        //for Literals going into Symbol Table
+        if(currentToken.getTokID() == "TILIT "){// interger literal
+            currentSymbolTable.processToken(currentToken, "integer");
+            System.out.println("TILIT");
+        }
+        if(currentToken.getTokID() == "TSTRG "){//String
+            currentSymbolTable.processToken(currentToken, "string");
+            System.out.println("TSTRG ");
+        }
+        if(currentToken.getTokID() == "TFLIT "){ //Float/real number
+            currentSymbolTable.processToken(currentToken, "real");
+            System.out.println("TFLIT");
+        }
+
+        
+        //System.out.println("Symbol Table Records: " + currentSymbolTable.getNumRecords());
         tokenBuffer.remove(0);
         getNextToken();
+    }
+
+    public int returnSymbolTableRecords(){
+        return currentSymbolTable.getNumRecords();
     }
 
     private void error(){
@@ -55,7 +95,7 @@ public class SyntaxTree {
 
         burnTokens();
 
-        while ( !(currentToken.getTokID().equals("TSEMI ") || currentToken.getTokID().equals("TSEMI "))
+        while ( !(currentToken.getTokID().equals("TSEMI ") || currentToken.getTokID().equals("TSEMI ")));
         
     }
 
@@ -64,7 +104,7 @@ public class SyntaxTree {
     }
 
     /*This is just chilling here for the moment to test it works. not sure if it should stay here or not*/
-    public LinkedList<String> returnError List(){
+    public LinkedList<String> returnError_List(){
         return errorList.getErrorList();
     }
 

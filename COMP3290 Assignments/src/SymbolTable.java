@@ -56,10 +56,13 @@ public class SymbolTable {
     public void processToken(Token token, String type){
 
         int tokenIndex = getRecordIndex(token.getTokID());
+        System.out.println("In Process Token");
         if ( tokenIndex != -1){
+            
             records.add(new STRecord(token, type));
             keywordsIndex.put(token.getLex(), number_of_records);
             number_of_records++;
+            System.out.println(number_of_records);
             return;
         }
         else {
@@ -70,8 +73,5 @@ public class SymbolTable {
     public int getNumRecords(){
         return number_of_records;
     }
-
-
-
-    
+   
 }

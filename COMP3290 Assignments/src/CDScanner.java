@@ -502,11 +502,13 @@ public class CDScanner {
     private void error(Token current_Token){
         String errorString = "Lexical Error: (" + current_Token.getLn() + "," + current_Token.getCol() + "): " + current_Token.getLex();
         errorList_Scanner.addErrorToList(errorString);
-        System.out.println("Added to Error List");
+        //System.out.println("Added to Error List");
         
     }
 
     public LinkedList<String> returnErrorList(){
         return errorList_Scanner.getErrorList();
     } 
+
+
 }
