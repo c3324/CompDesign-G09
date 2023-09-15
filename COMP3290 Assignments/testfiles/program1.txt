@@ -1,0 +1,14 @@
+CD23 program1
+main 
+    var1 : integer,
+    var2 : integer,
+    var3 : integer
+
+begin
+    var1 = 1;
+    var2 = 2;
+    var3 = var1 + var2;
+
+    Out << var1, " + ", var2, " = ", var3 << Line;
+
+end CD23 program1

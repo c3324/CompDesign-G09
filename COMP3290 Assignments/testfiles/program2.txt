@@ -1,0 +1,20 @@
+CD23 program2
+constants
+    SIZE is 10
+types
+    arraytype is
+        value : integer
+    end
+    
+    arrayvar is array [SIZE] of arraytype end
+
+main 
+    var1 : integer,
+    var2 : integer,
+    var3 : integer
+
+begin
+    
+    arrayvar[0].value = 0;
+
+end CD23 program2

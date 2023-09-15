@@ -38,7 +38,7 @@ begin
     In >> length;
     Out << Line;
     
-    counter = 0
+    counter = 0;
     for ( counter = 0; counter < length)
         Out << "Please input x", counter, ": ";
         In >> xarray[counter].value;

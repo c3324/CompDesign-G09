@@ -1,0 +1,30 @@
+CD23 program2
+
+func exp(a : integer, b : real, c : boolean) : integer
+        value : float
+        begin
+            value = a^b;
+            if (c)
+                value /= 2;
+            end
+            return value;
+        end
+
+main 
+    var1 : integer,
+    var2 : real,
+    var3 : boolean,
+    output : real
+
+    
+
+
+begin
+    
+    var1 = 3;
+    var2 = 0.9;
+    var3 = true;
+
+    output = exp(var1, var2, var3);
+
+end CD23 program2

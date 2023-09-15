@@ -101,12 +101,23 @@ public class SyntaxTree {
         errorList.addErrorToList(errorString);
     }
 
+    private void burnTill(String string){
+        // helper function that burns all tokens until keyword is found.
+        while ( !currentToken.getTokID().equals(string)){
+            tokenBuffer.remove(0);
+            getNextToken();
+            if( currentToken.getTokID().equals("TTEOF ")){
+                return;
+            }
+        }
+    }
+
     private void burnTokens(){
         // burn tokens until a valid symbol is found then return to appropriate section of tree.
 
         Boolean done = false;
         while ( !done ){
-
+            //System.out.println(currentToken.getTokID());
             if (currentToken.getTokID().equals("TTEOF ")){
                 // TODO: unrecoverable state!
                 done = true;
@@ -161,7 +172,9 @@ public class SyntaxTree {
                     break;
                 
                 case FUNC:
-                    if (currentToken.getTokID().equals("TMAIN ")){
+                    if (currentToken.getTokID().equals("TMAIN ") || currentToken.getTokID().equals("TTEND ") || currentToken.getTokID().equals("TTFOR ") 
+                    || currentToken.getTokID().equals("TREPT ") || currentToken.getTokID().equals("TIFTH ") || currentToken.getTokID().equals("TELSE ")
+                    || currentToken.getTokID().equals("TRETN ")){
                         done = true;
                         break;
                     }
@@ -177,7 +190,7 @@ public class SyntaxTree {
                     } if (  currentToken.getTokID().equals("TTEND ") 
                     || currentToken.getTokID().equals("TTFOR ") || currentToken.getTokID().equals("TREPT ") || currentToken.getTokID().equals("TIFTH ")
                     || currentToken.getTokID().equals("TELSE ") || currentToken.getTokID().equals("TINPT ") || currentToken.getTokID().equals("TOUTP ")
-                    || currentToken.getTokID().equals("TRETN ")){
+                    || currentToken.getTokID().equals("TRETN ") || currentToken.getTokID().equals("TBEGN ")){
                         // These are likely called by a missing semi colon as a keyword has been found
                         errorMessage += " - Perhaps a semi-colon is missing!";
                         done = true;
@@ -189,9 +202,9 @@ public class SyntaxTree {
                     break;
                 
                 case PARAMS:
-                    if (currentToken.getTokID().equals("TSEMI ") || currentToken.getTokID().equals("TBEGN ")){
+                    if (currentToken.getTokID().equals("TRPAR ")){
                         done = true;
-                        
+                        break;
                     }
                     // else - burn
                     tokenBuffer.remove(0);
@@ -328,7 +341,13 @@ public class SyntaxTree {
             return new Node("NERROR ");
         }
         match(); // is
-        NINIT.setRightNode(expr());
+        Node const_lit = const_lit();
+        if ( const_lit != null){
+            if ( const_lit.getId().equals("NERROR")){
+                return const_lit;
+            }
+        }
+        NINIT.setRightNode(const_lit);
         
         return NINIT;
 
@@ -390,7 +409,13 @@ public class SyntaxTree {
         }
         match(); // main 
         Node NMAIN = new Node("NMAIN ");
-        NMAIN.setLeftNode(slist());
+        Node slist = slist();
+        if (slist != null){
+            if (slist.getId().equals("NERROR ")){
+                burnTill("TBEGN ");
+            }
+        }
+        NMAIN.setLeftNode(slist);
         if (!currentToken.getTokID().equals("TBEGN ")){
             error("Begin symbol not found!");
             return new Node("NERROR ");
@@ -425,9 +450,12 @@ public class SyntaxTree {
 
         Node slist_node = new Node("NSDLST ");
         Node sdecl = sdecl();
-        if ( sdecl.getId().equals("NERROR ") ){
-            return sdecl;
+        if ( sdecl != null){
+            if ( sdecl.getId().equals("NERROR ") ){
+                return sdecl;
+            }
         }
+        
         Node slist_r = slist_r();
         
         if ( slist_r == null){
@@ -510,6 +538,7 @@ public class SyntaxTree {
         }
         match(); // is
 
+        System.out.println(currentToken.getTokID());
         if ( currentToken.getTokID().equals("TARAY ")){
             // NATYPE path
             type_node.setId("NATYPE ");
@@ -541,7 +570,7 @@ public class SyntaxTree {
             match(); // <id>
 
             if ( !currentToken.getTokID().equals("TTEND ")){
-                error("Excpected 'end' keyword.");
+                error("Expected 'end' keyword.");
                 return new Node("NERROR ");
             }
             match(); // end
@@ -551,9 +580,15 @@ public class SyntaxTree {
             // NRTYPE path
             type_node.setId("NRTYPE ");
 
-            type_node.setLeftNode(fields());
+            Node fields = fields();
+            if ( fields != null){
+                if (fields.getId().equals("NERROR ")){
+                    return fields;
+                }
+            }
+            type_node.setLeftNode(fields);
             if ( !currentToken.getTokID().equals("TTEND " )){
-                error("Excpected 'end' keyword");
+                error("Expected 'end' keyword");
                 return new Node("NERROR ");
             }
             match(); // end
@@ -568,9 +603,12 @@ public class SyntaxTree {
 
         Node fields = new Node("NFLIST ");
         Node sdecl = sdecl();
-        if ( sdecl.getId().equals("NERROR ") ){
-            return sdecl;
+        if ( sdecl != null){
+            if ( sdecl.getId().equals("NERROR ") ){
+                return sdecl;
+            }
         }
+        
         Node fields_r = fields_r();
 
         if ( fields_r == null){
@@ -607,7 +645,7 @@ public class SyntaxTree {
 
         if(currentToken.getTokID() != "TIDEN "){
             error("Statement declaration must begin with identifier");
-            return null;
+            return new Node("NERROR ");
         }
         nsdecl.setSymbolValue(currentToken.getLex());
         currentIdentifier = currentToken;
@@ -619,7 +657,12 @@ public class SyntaxTree {
         }
         match(); // TCOLN
         
-        stype();
+        Node stype = stype();
+        if ( stype != null){
+            if (stype.getId().equals("NERROR ")){
+                return stype;
+            }
+        }
         // TODO: Insert to symbol table.
         
         return nsdecl;
@@ -718,6 +761,7 @@ public class SyntaxTree {
         }
         match(); // (
 
+        error_recovery_state = ERROR_STATES.PARAMS; // return to func - no longer parameters
         NFUND.setLeftNode(plist());
         error_recovery_state = ERROR_STATES.FUNC; // return to func - no longer parameters
 
@@ -760,7 +804,6 @@ public class SyntaxTree {
 
     public Node plist(){
 
-        error_recovery_state = ERROR_STATES.PARAMS;
         if (currentToken.getTokID().equals("TLPAR ")){ // epsilon path
             return null;
         }
@@ -879,8 +922,15 @@ public class SyntaxTree {
             return new Node("NERROR ");
         }
         match(); // begin
-        funcbody.setRightNode(stats());
+        Node stats = stats();
+        if ( stats != null){
+            if ( stats.getId().equals("NERROR ")){
+                return stats;
+            }
+        }
+        funcbody.setRightNode(stats);
         if ( !currentToken.getTokID().equals("TTEND ")){ 
+            System.out.println(currentToken.getTokID());
             error("Expecterd 'TTEND' keyword for function body declaration");
             return new Node("NERROR ");
         }
@@ -1004,7 +1054,9 @@ public class SyntaxTree {
             match(); // integer | real | boolean
         }
         else {
-            error("Expected type keyword");
+            System.out.println(currentToken.getTokID());
+            error("Expected <stype> keyword");
+            return new Node("NERROR ");
         }
 
         // if( !(currentToken.getTokID().equals("TINTG ") ||  currentToken.getTokID().equals("TREAL ") ||  currentToken.getTokID().equals("TBOOL "))){ 
@@ -1021,14 +1073,19 @@ public class SyntaxTree {
 
         // <stat>;<stats_r> | <strstat><stats_r>
         if (currentToken.getTokID().equals("TIFTH ") || currentToken.getTokID().equals("TTFOR ")){ // <strstat> path
-            Node strsrtat = strstat();
+            Node strstat = strstat();
+            if ( strstat != null){
+                if ( strstat.getId().equals("NERROR ")){
+                    return strstat;
+                }
+            }
 
             if(  currentToken.getTokID().equals("TUNTL ") ||  currentToken.getTokID().equals("TELSE ") ||  currentToken.getTokID().equals("TTEND ")){ // epsilon path
                 //strsrtat.setLeftNode();
-                return strsrtat;
+                return strstat;
             }
 
-            NSTATS.setLeftNode(strsrtat);
+            NSTATS.setLeftNode(strstat);
             NSTATS.setRightNode(stats_r());
             return NSTATS;
 
@@ -1108,8 +1165,14 @@ public class SyntaxTree {
             // new statements
             return stats();
         }
+        // stats is still called within funcs and as such can be called outside of main 
+        if (currentToken.getTokID().equals("TMAIN ") || currentToken.getTokID().equals("TFUNC ") ){
+            // new statements
+            return new Node("NUNDF ");
+        }
 
         System.out.println("This code should be unreachable due to error handling");
+        System.out.println(currentToken.getTokID());
         return new Node("NUNDF ");
         
         
@@ -1371,10 +1434,11 @@ public class SyntaxTree {
 
         Node NIFTH = new Node("NIFTH ");
 
-        if( !currentToken.getTokID().equals("TIFTH ")){ // epsilon path
+        if( !currentToken.getTokID().equals("TIFTH ")){ 
             error("Missing 'if' statement");
             return new Node("NERROR ");
         }
+        match(); // if
 
         if (!(currentToken.getTokID().equals("TLPAR ") )){
             error("Missing '(' in for statement");
@@ -1385,7 +1449,7 @@ public class SyntaxTree {
         NIFTH.setLeftNode(bool());
 
         if (!(currentToken.getTokID().equals("TRPAR ") )){
-            error("Missing '(' in for statement");
+            error("Missing ')' in for statement");
             return new Node("NERROR ");
         }
         match(); // )
@@ -1395,7 +1459,7 @@ public class SyntaxTree {
         NIFTH.setRightNode(ifstat_opt_end());
 
         if (!(currentToken.getTokID().equals("TTEND ") )){
-            error("Missing '(' in for statement");
+            error("Missing 'end' in for statement");
             return new Node("NERROR ");
         }
         match(); // end
@@ -2280,6 +2344,44 @@ public class SyntaxTree {
         else {
             error("Invalid exponent sequence");
             return null;
+        }
+        
+    }
+
+    public Node const_lit(){
+
+      
+        if ( currentToken.getTokID().equals("TILIT ")){
+            Node NILIT = new Node("NILIT ");
+            NILIT.setSymbolValue(currentToken.getLex());
+            // TODO: symbol table
+            match(); // <intlit>
+            return NILIT;
+        }
+        else if ( currentToken.getTokID().equals("TFLIT ")){
+            Node NFLIT = new Node("NFLIT ");
+            NFLIT.setSymbolValue(currentToken.getLex());
+            // TODO: symbol table
+            match(); // <reallit>
+            return NFLIT;
+        }
+        else if ( currentToken.getTokID().equals("TTRUE ")){
+            Node NTRUE = new Node("NTRUE ");
+            NTRUE.setSymbolValue(currentToken.getLex());
+            // TODO: symbol table
+            match(); // true
+            return NTRUE;
+        }
+        else if ( currentToken.getTokID().equals("TFALS ")){
+            Node NFALS = new Node("NFALS ");
+            NFALS.setSymbolValue(currentToken.getLex());
+            // TODO: symbol table
+            match(); // false
+            return NFALS;
+        }
+        else{
+            error("Invalid const literal");
+            return new Node("NERROR ");
         }
         
     }
