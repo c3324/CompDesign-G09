@@ -26,7 +26,7 @@ public class CDParser {
     }
 
     public boolean checkErrorList(){
-        LinkedList<String> errorList_Parser = syntaxTree.returnError_List();
+        LinkedList<String> errorList_Parser = syntaxTree.returnErrorList();
         boolean empty;
         empty = true;
         if(!errorList_Parser.isEmpty()){
@@ -40,7 +40,7 @@ public class CDParser {
 
     public void printErrorList(){
         System.out.println("");
-        LinkedList<String> errorList = syntaxTree.returnError_List();
+        LinkedList<String> errorList = syntaxTree.returnErrorList();
         for(int i = 0; i < errorList.size() ; i++){
             System.out.println(errorList.get(i));
         }

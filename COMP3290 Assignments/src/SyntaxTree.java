@@ -165,7 +165,7 @@ public class SyntaxTree {
     }
 
     /*This is just chilling here for the moment to test it works. not sure if it should stay here or not*/
-    public LinkedList<String> returnError List(){
+    public LinkedList<String> returnErrorList(){
         return errorList.getErrorList();
     }
 
