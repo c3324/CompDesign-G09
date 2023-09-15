@@ -55,13 +55,12 @@ public class SymbolTable {
     public void processToken(Token token, String type){
 
         int tokenIndex = getRecordIndex(token.getTokID());
-        System.out.println("In Process Token");
-        if ( tokenIndex != -1){
-            
+        //System.out.println("In Process Token");
+        if ( tokenIndex == -1){     //if record doesn't already exist
             records.add(new STRecord(token, type));
             keywordsIndex.put(token.getLex(), number_of_records);
             number_of_records++;
-            System.out.println(number_of_records);
+           // System.out.println(number_of_records);
             return;
         }
         else {
@@ -71,6 +70,12 @@ public class SymbolTable {
 
     public int getNumRecords(){
         return number_of_records;
+    }
+
+    public String returnSTRecords(int recordNum){
+        STRecord record = records.get(recordNum);
+        String recordOutput = "Symbol Table Record "+ recordNum + ": " + record.getID() + record.getType() + "\n";
+        return recordOutput;       
     }
    
 }

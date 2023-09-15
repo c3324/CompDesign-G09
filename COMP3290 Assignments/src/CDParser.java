@@ -47,7 +47,7 @@ public class CDParser {
     }
 
     public void printSymbolTable(){
-        System.out.println("Symbol Table Records: "+ syntaxTree.returnSymbolTableRecords());
+        syntaxTree.returnSymbolTableRecords();
     }
     
 }
