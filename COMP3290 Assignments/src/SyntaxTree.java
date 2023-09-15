@@ -14,7 +14,7 @@ public class SyntaxTree {
     ErrorHandling errorList;
 
     private enum ERROR_STATES {
-        NPROG, GLOBALS, FUNC, MAIN
+        NPROG, CONST, TYPES, ARRAYS, FUNC, MAIN, PARAMS // note params waits on')'
     }
 
     private ERROR_STATES error_recovery_state;
@@ -95,16 +95,77 @@ public class SyntaxTree {
 
         burnTokens();
 
-        while ( !(currentToken.getTokID().equals("TSEMI ") || currentToken.getTokID().equals("TSEMI ")));
+        //while ( !(currentToken.getTokID().equals("TSEMI ") || currentToken.getTokID().equals("TSEMI "))){}
         
     }
 
     private void burnTokens(){
         // burn tokens until a valid symbol is found then return to appropriate section of tree.
+        
+        if (error_recovery_state == ERROR_STATES.NPROG){
+            if (currentToken.getTokID().equals("TMAIN ") || currentToken.getTokID().equals("TFUNC ") || currentToken.getTokID().equals("TCNST ")
+             || currentToken.getTokID().equals("TTYPS ") || currentToken.getTokID().equals("TARRS ")){
+                //tokenBuffer.remove(0);
+                //getNextToken();
+                return;
+            }
+            // else - burn
+            tokenBuffer.remove(0);
+            getNextToken();
+
+        }
+        else if (error_recovery_state == ERROR_STATES.CONST){
+            if (currentToken.getTokID().equals("TMAIN ") || currentToken.getTokID().equals("TFUNC ")
+             || currentToken.getTokID().equals("TTYPS ") || currentToken.getTokID().equals("TARRS ")){
+                //tokenBuffer.remove(0);
+                //getNextToken();
+                return;
+            }
+            // else - burn
+            tokenBuffer.remove(0);
+            getNextToken();
+
+        }
+        else if (error_recovery_state == ERROR_STATES.TYPES){
+            if (currentToken.getTokID().equals("TMAIN ") || currentToken.getTokID().equals("TFUNC ") 
+             || currentToken.getTokID().equals("TARRS ")){
+                //tokenBuffer.remove(0);
+                //getNextToken();
+                return;
+            }
+            // else - burn
+            tokenBuffer.remove(0);
+            getNextToken();
+
+        }
+        else if (error_recovery_state == ERROR_STATES.ARRAYS){
+            if (currentToken.getTokID().equals("TMAIN ") || currentToken.getTokID().equals("TFUNC ")){
+                //tokenBuffer.remove(0);
+                //getNextToken();
+                return;
+            }
+            // else - burn
+            tokenBuffer.remove(0);
+            getNextToken();
+
+        }
+        else if (error_recovery_state == ERROR_STATES.FUNC){
+
+        }
+        else if (error_recovery_state == ERROR_STATES.MAIN){
+            if (currentToken.getTokID().equals("TSEMI ") || currentToken.getTokID().equals("TBEGN ")){
+                tokenBuffer.remove(0);
+                getNextToken();
+                return;
+            }
+            // else - burn
+            tokenBuffer.remove(0);
+            getNextToken();
+        }
     }
 
     /*This is just chilling here for the moment to test it works. not sure if it should stay here or not*/
-    public LinkedList<String> returnError_List(){
+    public LinkedList<String> returnError List(){
         return errorList.getErrorList();
     }
 
@@ -138,8 +199,7 @@ public class SyntaxTree {
             root.setMidNode(funcs());
             root.setRightNode(mainbody());
 
-        }
-        
+        }  
         
     }
 
@@ -151,16 +211,18 @@ public class SyntaxTree {
     // Grammar
     /////////////////////////////////////////////////////////////////////////////////////////////////
     public Node globals(){
-        error_recovery_state = ERROR_STATES.GLOBALS;
+        error_recovery_state = ERROR_STATES.CONST;
         Node node = new Node("NGLOB ");
         node.setLeftNode(consts());
         if ( node.getLeftNode() != null){
             // match();
         }
+        error_recovery_state = ERROR_STATES.TYPES;
         node.setMidNode(types());
         if ( node.getMidNode() != null){
             // match(); // matched later to ensure TTYPS keyword
         }
+        error_recovery_state = ERROR_STATES.ARRAYS;
         node.setRightNode(arrays());
         if ( node.getRightNode() != null){
             // match();
@@ -592,6 +654,7 @@ public class SyntaxTree {
         match(); // (
 
         NFUND.setLeftNode(plist());
+        error_recovery_state = ERROR_STATES.FUNC; // return to func - no longer parameters
 
         if(currentToken.getTokID() != "TRPAR "){
             error("Missing ')' in function declaration");
@@ -632,6 +695,7 @@ public class SyntaxTree {
 
     public Node plist(){
 
+        error_recovery_state = ERROR_STATES.PARAMS;
         if (currentToken.getTokID().equals("TLPAR ")){ // epsilon path
             return null;
         }
@@ -1487,7 +1551,7 @@ public class SyntaxTree {
         }
 
         if (!currentToken.getTokID().equals("TLBRK ")){ 
-            error("Expected '['.");
+            error("Expected '['. Perhaps a semi-colon is missing.");
             return new Node("NERROR ");
         }
         match(); // [
@@ -1758,7 +1822,7 @@ public class SyntaxTree {
         }
         else {
             error("Invalid expression");
-            return null;
+            return new Node("NERROR ");
         }
 
     }
@@ -1815,7 +1879,7 @@ public class SyntaxTree {
         }
         else {
             error("Invalid term");
-            return null;
+            return new Node("NERROR ");
         }
         
     }
@@ -1856,7 +1920,7 @@ public class SyntaxTree {
         }
         else{
             error("Invalid term");
-            return null;
+            return new Node("NERROR ");
         }
         
     }
@@ -1909,7 +1973,7 @@ public class SyntaxTree {
         }
         else{
             error("Invalid exponent");
-            return null;
+            return new Node("NERROR ");;
         }
         
     }

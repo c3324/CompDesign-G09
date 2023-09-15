@@ -30,7 +30,6 @@ public class SymbolTable {
 
             number_of_records = 3;
         }
-        
 
     }
 

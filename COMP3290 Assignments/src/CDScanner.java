@@ -450,7 +450,7 @@ public class CDScanner {
             System.out.println("Unhandled Exception!!! at currentState = " + currentState + "  with buffer = '" + buffer + "'");
         }
 
-        Token new_token = new Token(tokenValue, lex, line_number, col_number, symbol_table);
+        Token new_token = new Token(tokenValue, lex, line_number, (col_number - buffer.length()), symbol_table);
         if(new_token.getTokNum() == 63){
             error(new_token);
         }

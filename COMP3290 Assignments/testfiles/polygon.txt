@@ -35,7 +35,7 @@ main
 begin
     
     Out << "Please input the number of points in the polygon (as an integer): ";
-    In >> length;
+    In >> length
     Out << Line;
     
     counter = 0;
@@ -43,7 +43,7 @@ begin
         Out << "Please input x", counter, ": ";
         In >> xarray[counter].value;
         Out << Line;
-        Out << "Please input y", counter, ": ";
+        Out << "Please input y", counter, ": "
         In >> yarray[counter].value;
         Out << Line;
         counter += 1;
