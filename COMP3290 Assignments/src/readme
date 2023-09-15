@@ -5,3 +5,17 @@ Due 15.09.2023
 
 ----------------------------------------------------------
 
+The grammar was constructed as per the LL1 grammar pdf. 
+Any deviations from the grammar results in an error.
+There is slight error recovery depending on where the error occured.
+Errors in the main scope will search for a next valid keyword or semi-colon, 
+and then begin parsing again from the next statement or keyword.
+
+Error recovery outside of the main scope is more limitted. 
+Mostly tokens until the next keyword will be burnt, but function parameters
+will burn until a right parentheses.
+
+Error's report the grammar error that resulted in the error but this
+does not always result in a meaningful error report. Syntax errors that
+result in an epsilon path being taken or ignored can have particularly
+meaningless or useless error messages.
