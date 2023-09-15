@@ -76,6 +76,10 @@ public class Node {
         this.id = id;
     }
 
+    public String getId(){
+        return id;
+    }
+
     public Integer printTreeHelper(int current_col){
 
         String string = this.id;
