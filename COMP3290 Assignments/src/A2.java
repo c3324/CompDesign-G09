@@ -11,13 +11,13 @@ public class A2 {
     public static void main(String[] args) throws IOException {
 
 		//making sure the file is being read in properly, if not, exception will be thrown and the program will exit
-		if(args.length < 1) {
-			System.out.print("Error, usage: java A2 inputfile");
-			System.exit(1);
-		}
+		// if(args.length < 1) {
+		// 	System.out.print("Error, usage: java A2 inputfile");
+		// 	System.exit(1);
+		// }
 
-		String filepath = args[0];
-		// String filepath = "COMP3290 Assignments/testfiles/polygon.txt"; // for non-console use
+		// String filepath = args[0];
+		String filepath = "COMP3290 Assignments/testfiles/polygon.txt"; // for non-console use
 		
 		// Construct Scanner.
 		CDScanner scanner = new CDScanner(filepath);

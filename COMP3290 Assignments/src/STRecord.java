@@ -46,5 +46,13 @@ public class STRecord {
     public String getType(){
         return type;
     }
+
+    public void setGlyph(String glpyh){
+        this.glyph = glpyh;
+    }
+
+    public String getGlyph(){
+        return glyph;
+    }
     
 }

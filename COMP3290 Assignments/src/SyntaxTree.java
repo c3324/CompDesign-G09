@@ -59,6 +59,12 @@ public class SyntaxTree {
         
     }
 
+    private void semanticError(String msg){
+        String errorString = "Semantic Error: line " + currentToken.getLn() + " - " + msg;
+        errorList.addErrorToList(errorString);
+
+    }
+
     private void burnTokens(){
         // burn tokens until a valid symbol is found then return to appropriate section of tree.
         
@@ -152,7 +158,7 @@ public class SyntaxTree {
             match(); // TCD23 token
 
             root.setSymbolValue(currentToken.getLex());
-            currentSymbolTable.processToken(currentToken, "<program>");
+            currentSymbolTable.processTokenDeclaration(currentToken, "<program>");
             match(); // identifier token
 
             root.setLeftNode(globals());
@@ -332,7 +338,7 @@ public class SyntaxTree {
         // TODO: symbol table lookup for CD23 <id>;
         //NMAIN.setSymbolValue(currentToken.getLex());
         if (!currentToken.getLex().equals(root.getSymbolVaue())){
-            error("CD23 names differ at start and end of file");
+            semanticError("CD23 names differ at start and end of file");
             return new Node("NERROR ");
         }
         match(); // <id>
@@ -400,8 +406,6 @@ public class SyntaxTree {
 
     public Node type(){
 
-
-        // TODO:// StructID and typeID??
         if ( !currentToken.getTokID().equals("TIDEN ")){ // ? <structid> / <typeid>??
             error("Expected identifier token for type declaration");
             return null;
@@ -439,7 +443,6 @@ public class SyntaxTree {
             }
             match(); // of
             
-            //TODO://
             if ( !currentToken.getTokID().equals("TIDEN ")){ // ? <structid> / <typeid>??
                 error("Expected identifier token for type declaration");
                 return null;
@@ -521,7 +524,6 @@ public class SyntaxTree {
         match(); // TCOLN
         
         stype();
-        // TODO: Insert to symbol table.
         
         return nsdecl;
         
@@ -576,11 +578,16 @@ public class SyntaxTree {
         }
         match(); // TCOLN
         
-        if(currentToken.getTokID() != "<typeid> "){ // TODO: <typeid>
+        if(!(currentToken.getTokID().equals("TINTG ") || currentToken.getTokID().equals("TREAL ") || currentToken.getTokID().equals("TBOOL "))){ 
+            // TODO: <typeid>
             error("Expected identifier");
             return new Node("NERROR ");
         }
         // TODO: Insert to symbol table.
+        int st_push_success = currentSymbolTable.processTokenDeclaration(currentIdentifier, currentToken);
+        if (st_push_success == -1){
+            semanticError("Invalid type");
+        }
         match(); // <stype>
         
         return NARRD;
@@ -626,9 +633,8 @@ public class SyntaxTree {
             error("Missing ':' in function declaration");
             return new Node("NERROR ");
         }
-        match(); // :
-
-        // TODO: Symbol table for func rtype
+        match(); 
+        
         rtype();
 
         NFUND.setRightNode(funcbody());
@@ -639,12 +645,17 @@ public class SyntaxTree {
 
     public Node rtype(){
 
-        // TODO: Symbol table
         if (currentToken.getTokID().equals("TVOID ")){
+            // TODO: Handle void return type symbol table
             match(); // void   
         }
         
-        else if (currentToken.getTokID().equals("TIDEN ") || currentToken.getTokID().equals("TINTG ") || currentToken.getTokID().equals("TREAL ") || currentToken.getTokID().equals("TBOOL ")){
+        else if (currentToken.getTokID().equals("TINTG ") || currentToken.getTokID().equals("TREAL ") || currentToken.getTokID().equals("TBOOL ")){
+            int st_push_success = currentSymbolTable.processTokenDeclaration(currentIdentifier, currentToken);
+            if (st_push_success == -1){
+                // note this should probably be unreachable - but a sanity check is nice.
+                semanticError("Invalid type");
+            }
             return stype(); 
         }
 
@@ -744,8 +755,13 @@ public class SyntaxTree {
             Node NARRD = new Node("NSDECL");
             NARRD.setSymbolValue(currentToken.getLex());
 
-            NARRP.setRightNode(NARRD); //TODO: <typeid>
-            match(); // id
+            NARRP.setRightNode(NARRD); 
+            // Symbol table push
+            int st_push_success = currentSymbolTable.processTokenDeclaration(currentIdentifier, currentToken);
+            if (st_push_success == -1){
+                semanticError("Invalid type");
+            }
+            match(); // type
 
             return NARRP;
 
@@ -839,7 +855,6 @@ public class SyntaxTree {
         }
         decl_delayed.setSymbolValue(id_lex);
 
-        // TODO: Symbol Table
         return decl_delayed;
         
     }
@@ -861,7 +876,11 @@ public class SyntaxTree {
         
             Node NSDECL = new Node("NSDECL ");
             NSDECL.setSymbolValue(currentToken.getLex());
-            match(); //
+            int st_push_success = currentSymbolTable.processTokenDeclaration(currentIdentifier, currentToken);
+            if (st_push_success == -1){
+                semanticError("Invalid type");
+            }
+            match(); 
 
             return NSDECL;
 
@@ -876,13 +895,11 @@ public class SyntaxTree {
     public Node stype(){
 
         // TODO: Insert into symbol table
-        if (currentToken.getTokID().equals("TINTG ")){
-            match(); // integer | real | boolean
-        }
-        else if (currentToken.getTokID().equals("TREAL ")){
-            match(); // integer | real | boolean
-        }
-        else if (currentToken.getTokID().equals("TBOOL ")){
+        if (currentToken.getTokID().equals("TINTG ") || currentToken.getTokID().equals("TREAL ") || currentToken.getTokID().equals("TBOOL ")){
+            int st_push_success = currentSymbolTable.processTokenDeclaration(currentIdentifier, currentToken);
+            if (st_push_success == -1){
+                semanticError("Invalid type");
+            }
             match(); // integer | real | boolean
         }
         else {
@@ -1893,7 +1910,10 @@ public class SyntaxTree {
         else if ( currentToken.getTokID().equals("TILIT ")){
             Node NILIT = new Node("NILIT ");
             NILIT.setSymbolValue(currentToken.getLex());
-            // TODO: symbol table
+            int st_push_success = currentSymbolTable.processVariable(currentIdentifier, currentToken);
+            if (st_push_success == -1){
+                semanticError("Invalid type");
+            }
             match(); // <intlit>
             return NILIT;
         }
@@ -2068,6 +2088,22 @@ public class SyntaxTree {
             return null;
         }
         
-    }    
+    }
+
+    private void pushTypeDeclSymbolTable(Token identifier, Token variable){
+        
+    }
+
+
+    private void pushVariableToSymbolTable(Token identifier, Token variable){
+
+        int st_push_success = currentSymbolTable.processVariable(currentIdentifier, currentToken);
+        if (st_push_success == -1){
+            semanticError("Invalid type");
+        }
+
+    }
+
+    
     
 }

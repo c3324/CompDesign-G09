@@ -54,4 +54,4 @@ begin
     Out << "The area of the polygon describe is: ", area << Line;
 
 
-end CD23 polygon
+end CD23 polygont
