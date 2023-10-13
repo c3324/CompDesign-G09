@@ -12,7 +12,7 @@ public class CD {
 
 		//making sure the file is being read in properly, if not, exception will be thrown and the program will exit
 		if(args.length < 1) {
-			System.out.print("Error, usage: java A2 inputfile");
+			System.out.print("Error, usage: java CD inputfile");
 			System.exit(1);
 		}
 
