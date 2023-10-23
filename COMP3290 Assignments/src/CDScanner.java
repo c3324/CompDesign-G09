@@ -2,15 +2,25 @@
 import java.util.ArrayList; 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.FileWriter; 
 
 public class CDScanner {
 // Scanner iteratively acts on a file on a line by line basis
 // Next line is called every nextToken()
 
     private File file;
+    private BufferedReader reader;
+    private FileWriter writer;
+    private BufferedWriter bufferW;
+    private PrintWriter printer;
     private java.util.Scanner sc;
 
     private ArrayList<Token> token_buffer;
@@ -506,9 +516,58 @@ public class CDScanner {
         
     }
 
-    public LinkedList<String> returnErrorList(){
+    public LinkedList<String> returnErrorList(){        
         return errorList_Scanner.getErrorList();
     } 
 
+    public void createProgramListing(){
+        int i =1;
+        try {
+			reader = new BufferedReader(new FileReader(file));
+            writer = new FileWriter("proglisting.txt");
+			String line = reader.readLine();
 
-}
+			while (line != null) {
+
+				//System.out.println(i + ". " + line);
+                writer.write(i + ". " + line + "\n");
+				// read next line
+				line = reader.readLine();
+                i++;
+			}
+
+			reader.close();
+            writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+
+    public void addErrorstoFile(){
+        try {
+            writer= new FileWriter("proglisting.txt", true);
+            bufferW= new BufferedWriter(writer);
+            printer = new PrintWriter(bufferW);
+
+            printer.println("\n LEXICAL ERRORS \n");
+            printer.println("-------------------------------------------------------------\n");
+
+            LinkedList<String> errorList = errorList_Scanner.getErrorList();
+            for(int i = 0; i < errorList.size() ; i++){
+                printer.println(errorList.get(i));
+            }
+
+            printer.flush();
+            writer.close();
+            bufferW.close();
+            printer.close();
+        
+        } catch (IOException io){}
+        }  
+    }
+
+
+
+    
+
+

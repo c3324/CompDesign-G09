@@ -3,6 +3,11 @@ import java.util.LinkedList;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 
 //This will be the top level code for the scanner, that the A2 class will call to start parsing.
 
@@ -10,6 +15,9 @@ public class CDParser {
 
     private CDScanner cdScanner;
     private SyntaxTree syntaxTree;
+    private FileWriter writer;
+    private BufferedWriter bufferW;
+    private PrintWriter printer;
 
     public CDParser(CDScanner scanner){
         cdScanner = scanner;
@@ -39,6 +47,7 @@ public class CDParser {
     }
 
     public void printErrorList(){
+        
         System.out.println("");
         LinkedList<String> errorList = syntaxTree.returnErrorList();
         for(int i = 0; i < errorList.size() ; i++){
@@ -46,10 +55,35 @@ public class CDParser {
         }
     }
 
-    public void printSymbolTable(){
+    public void addErrorstoFile(){
+        try {
+            writer= new FileWriter("proglisting.txt", true);
+            bufferW= new BufferedWriter(writer);
+            printer = new PrintWriter(bufferW);
+
+            printer.println("\n ERRORS \n");
+            printer.println("-------------------------------------------------------------\n");
+
+            LinkedList<String> errorList =  syntaxTree.returnErrorList();
+            for(int i = 0; i < errorList.size() ; i++){
+                printer.println(errorList.get(i));
+            }
+
+            printer.flush();
+            writer.close();
+            bufferW.close();
+            printer.close();
+        
+        } catch (IOException io){}
+        }  
+    }
+
+
+
+    /*public void printSymbolTable(){
         System.out.println("\nSYMBOL TABLE RECORDS");
         System.out.println("-------------------------------------------");
         syntaxTree.returnSymbolTableRecords();
-    }
+    }*/
     
-}
+

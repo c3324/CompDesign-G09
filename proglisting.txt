@@ -1,0 +1,153 @@
+1. 
+2. 
+3. /-- Valid Delimiters
+4. ; [ ] , ( ) = + - * / % ^ < > ! : . <= >= != == += -= *= /= && || &| >> <<
+5. 
+6. /-- Keywords - all valid
+7. cd23 constants types is arrays main begin end array of func void const integer real boolean for repeat until if else In Out Line return true false 
+8. CD23 CONSTANTS TYPES IS ARRAYS MAIN BEGIN END ARRAY OF FUNC VOID CONST INTEGER REAL BOOLEAN FOR REPEAT UNTIL IF ELSE IN OUT LINE RETURN TRUE FALSE 
+9. Cd23 COnstAnts TypEs Is ArrAys MAIn BEgIn End ArrAy Of FUnc VOId COnst IntEgEr REAl BOOlEAn FOr REpEAt UntIl If ElsE In OUt LInE REtUrn TrUE FAlsE 
+10. 
+11. 
+12. 
+13. Dan
+14. 
+15. /-- Invalid characters
+16. @ # ~ ` ?@@#  ?@$@#
+17. ?@/@#
+18. ?@-$$@#   
+19. :'|==&&_ 
+20. 
+21. /-- Valid strings
+22. "The quick brown fox jumps over the lazy dog."
+23. "This is our commenting glyph /-- which is in a string lit"
+24. "                                                       "		/-- Blank String
+25. 
+26. /-- invalid strings
+27. "this string wraps around a line so 
+28. should not be right"
+29. 
+30. "This SHOULD NOT"BE RIGHT either";
+31. 123
+32. 3234
+33. 234565
+34. 23.995
+35. 654.72
+36. 
+37. /-- Challenges
+38. 123.abc				/-- TILIT 123   TDOTT TSTRG "abc"
+39. 123.345.789			/-- TFLIT 123.456     TDOTT TILIT 789
+40. 123.4bc				/-- test
+41. 123,456.789
+42. 123.O
+43. 192.168.12.222 
+44. -22
+45. -0.123456
+46. Dan.COMP3290.newcastle,
+47. [COMP]
+48. (zero)
+49. (101+47)
+50. [3.14159 * 11 = x]
+51. <== %== *=== %/- "asdlkfj@"
+52. !!= =-= (/-=) >=.
+53. "String #@??\# Boo" 
+54. "#@??\# String ":/
+55. "#@??\#" 
+56. 
+57. 
+58. /-- Invalid challenges
+59. 123.4@5.789			/-- two valid TFLIT and a TUNDF @
+60. Energi$ed
+61. Unenerg|sed
+62. 00.00..00.0
+63. .5
+64. 
+65. /-- bad comments
+66. 
+67. /- comment
+68. -/-/--/////-------////******
+69. 
+70. /**
+71. Trick
+72. Catch */
+73. "CAUGHT YOU"
+74. **/
+75. 
+76. /-- talkies
+77. >>= >> =>=>>
+78. <<= << =<=<<
+79. 
+80. /-- Bonus : check if numbers are within the limits
+81. "11111111111111111111111111111111111111111111111111111111111"
+82. 2147483647 /-- Signed int
+83. 4294967295 /-- Unsigned int
+84. 
+85. 1234567890
+86. 1234567890123456789 0
+87. 12345678901234567890
+88. 12345678901234567890.abcdefg
+89. 0000000000000000000000000000000000000000000
+90. 0000000000000000000000000000000000000000000000000000000000000000000000000
+91. 1234567890123456789012345678901234567890
+92. 9000000000000000000
+93. 9200000000000000000
+94. 9999999999999999999
+95. 9000000000000000000.9000000000000000000
+96. 1234456778890123445234.1
+97. 2.3333333333333333333333333
+98. 1234456778890123445234.158588888888888865
+99. 98988987866574746536354234523352432134213123.788788777768750
+100. 457654567885656745676578690.467870766788959987899689543677489
+101. 657543.898675
+102. 
+103. 
+104. $$$$$$$$ %$^#
+105. !! !!!=
+106. 
+107. 
+108. <<= >>=< 
+109. 
+110. 
+111. /-- invalid strings
+112. "this string wraps around a line so 
+113. should not be right"
+114. 
+115. 
+116. /-- bad comments
+117. 
+118. /- comment
+119. 
+120. 
+121. Hello
+
+ LEXICAL ERRORS 
+
+-------------------------------------------------------------
+
+Lexical Error: (16,0): Undefined Token: @
+Lexical Error: (16,2): Undefined Token: #
+Lexical Error: (16,4): Undefined Token: ~
+Lexical Error: (16,6): Undefined Token: `
+Lexical Error: (16,8): Undefined Token: ?@@#
+Lexical Error: (16,13): Undefined Token: ?@$@#
+Lexical Error: (17,0): Undefined Token: ?@
+Lexical Error: (17,2): Undefined Token: @#
+Lexical Error: (18,0): Undefined Token: ?@
+Lexical Error: (18,3): Undefined Token: $$@#
+Lexical Error: (19,1): Undefined Token: '|
+Lexical Error: (19,7): Undefined Token: _
+Lexical Error: (27,-2): "this string wraps around a line so 
+Lexical Error: (28,17): "
+Lexical Error: (30,30): ";
+Lexical Error: (59,5): Undefined Token: @
+Lexical Error: (60,6): Undefined Token: $
+Lexical Error: (61,7): Undefined Token: |
+Lexical Error: (87,-1): Undefined Token: 12345678901234567890
+Lexical Error: (88,1): Numerical overflow error: 12345678901234567890
+Lexical Error: (91,-1): Undefined Token: 1234567890123456789012345678901234567890
+Lexical Error: (94,-1): Undefined Token: 9999999999999999999
+Lexical Error: (104,0): Undefined Token: $$$$$$$$
+Lexical Error: (104,10): Undefined Token: $
+Lexical Error: (104,11): Undefined Token: #
+Lexical Error: (112,-2): "this string wraps around a line so 
+Lexical Error: (113,17): "
