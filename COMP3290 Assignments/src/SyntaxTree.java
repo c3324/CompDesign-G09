@@ -255,7 +255,7 @@ public class SyntaxTree {
             return new Node("NERROR ");
         }
         match(); // is
-        NINIT.setRightNode(expr());
+        NINIT.setRightNode(const_lit());
         
         return NINIT;
 
@@ -407,6 +407,8 @@ public class SyntaxTree {
     }
 
     public Node type(){
+
+        // TODO:// <structid> scoping / array scoping
 
         if ( !currentToken.getTokID().equals("TIDEN ")){ // ? <structid> / <typeid>??
             error("Expected identifier token for type declaration");
@@ -1942,7 +1944,10 @@ public class SyntaxTree {
         else if ( currentToken.getTokID().equals("TFLIT ")){
             Node NFLIT = new Node("NFLIT ");
             NFLIT.setSymbolValue(currentToken.getLex());
-            // TODO: symbol table
+            int st_push_success = currentSymbolTable.processVariable(currentIdentifier, currentToken);
+            if (st_push_success == -1){
+                semanticError("Invalid type");
+            }
             match(); // <reallit>
             return NFLIT;
         }
@@ -2051,6 +2056,57 @@ public class SyntaxTree {
             return null;
         }
         
+    }
+
+    public Node const_lit(){
+
+        if (currentToken.getTokID().equals("TILIT ")){
+            Node NILIT = new Node("NILIT ");
+
+            // Symbol table..
+            int st_push_success = currentSymbolTable.processVariableForce(currentIdentifier, currentToken);
+            if (st_push_success == -1){
+                semanticError("Invalid type");
+            }
+            match(); // <intlit>
+            return NILIT;
+        }
+        else if (currentToken.getTokID().equals("TFLIT ")){
+            Node NFLIT = new Node("NFLIT ");
+
+            // Symbol table..
+            int st_push_success = currentSymbolTable.processVariableForce(currentIdentifier, currentToken);
+            if (st_push_success == -1){
+                semanticError("Invalid type");
+            }
+            match(); // <intlit>
+            return NFLIT;
+        }
+        else if (currentToken.getTokID().equals("TTRUE ")){
+            Node NTRUE = new Node("NTRUE ");
+
+            // Symbol table..
+            int st_push_success = currentSymbolTable.processVariableForce(currentIdentifier, currentToken);
+            if (st_push_success == -1){
+                semanticError("Invalid type");
+            }
+            match(); // <intlit>
+            return NTRUE;
+        }
+        else if (currentToken.getTokID().equals("TFALS ")){
+            Node NFALS = new Node("NFALS ");
+
+            // Symbol table..
+            int st_push_success = currentSymbolTable.processVariableForce(currentIdentifier, currentToken);
+            if (st_push_success == -1){
+                semanticError("Invalid type");
+            }
+            match(); // <intlit>
+            return NFALS;
+        }
+
+        //else error
+        return new Node("NERROR ");
     }
 
     // currently redundent

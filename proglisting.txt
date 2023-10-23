@@ -1,32 +1,45 @@
-1. /-- Using Arrays
-2. /-- this should pick up comp3290 should be an array of students, not person.
-3. /-- for most, I am happy with PASS
-4. 
-5. CD23 c
-6. 
-7. constants
-8.     SIZE is 10
+1. /**
+2. 	Comp3290 Assignment 1
+3. 	Main Class
+4. 	Author: Dan Bell
+5. 	Student No: c9876543
+6. 	Last Modified 8/8/2021
+7. 	Updated by Dan
+8. **/
 9. 
-10. types
-11.     person is
-12.         age : integer,
-13.         height : real
-14.     end
+10. /-- Simple variables
+11. 
+12. 
+13. CD23 D1
+14. 
 15. 
-16.     students is array [SIZE] of person end
+16. 
 17. 
-18. arrays
-19.     comp3290 : person
-20. 
-21. main
-22.     val : integer
-23. begin
-24.     /-- Declaring the first person in the array.
-25.     comp3290[0].age = 22;
-26.     comp3290[0].height = 194.6;
-27. 
-28.     /-- Printegering the age of the first person in array. Should be above value 22.
-29.     out << "Student with age", comp3290[0].age, " added to array" << line;
-30. end 
-31. 
-32. CD23 c   
+18. main
+19. 	a : real,
+20. 	b : real,
+21. 	c : integer,
+22. 	d : real
+23. 
+24. 
+25. 
+26. begin
+27. 	a = 2;
+28. 	b = 3.0;
+29. 	c = 987.0;
+30. 	d = 123.0;
+31. 	
+32. 
+33. 	out << a , " + " , b , " = " , a+b << line;
+34. 	out << a , " * " , b , " = " , a*b << line;
+35. 	out << b , " - " , a , " = " , b-a << line;
+36. 	out << b , " / " , a , " = " , b/a << line;
+37. 
+38. 	out << a , "^" , a , " = " , a^a << line;
+39. 	out << b , "^" , a , " = " , b^a << line;
+40. 	out << line;
+41. 
+42. 	out << "Finished";
+43. 	out << line;
+44. 
+45. end CD23 D1
