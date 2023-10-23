@@ -92,3 +92,41 @@
 92. end
 93. 
 94. CD23 AreaOfPolygon
+
+ ERRORS 
+
+-------------------------------------------------------------
+
+Semantic Error: line 13 - Invalid type
+Semantic Error: line 17 - Invalid type
+Error! expected identifier as a parameter found at line 19 in column 18
+Semantic Error: line 24 - Invalid type
+Semantic Error: line 29 - Invalid type
+Semantic Error: line 33 - Invalid type
+Semantic Error: line 38 - Invalid type
+Semantic Error: line 53 - Invalid type
+Semantic Error: line 54 - Invalid type
+Semantic Error: line 55 - Invalid type
+Error! Invalid term found at line 59 in column 4
+Error! Invalid term found at line 59 in column 4
+Error! Invalid expression found at line 59 in column 4
+Error! Invalid relational operator found at line 59 in column 4
+Error! Invalid exponent found at line 59 in column 4
+Error! Invalid term found at line 59 in column 4
+Error! Invalid term found at line 59 in column 4
+Error! Invalid expression found at line 59 in column 4
+Error! Invalid logical operator found at line 59 in column 4
+Error! Invalid exponent found at line 59 in column 4
+Error! Invalid term found at line 59 in column 4
+Error! Invalid term found at line 59 in column 4
+Error! Invalid expression found at line 59 in column 4
+Error! Invalid relational operator found at line 59 in column 4
+Error! Invalid exponent found at line 59 in column 4
+Error! Invalid term found at line 59 in column 4
+Error! Invalid term found at line 59 in column 4
+Error! Invalid expression found at line 59 in column 4
+Error found at line 59 in column 4
+Error! Missing semi-colon found at line 59 in column 4
+Error! Expecterd 'TTEND' keyword for function body declaration found at line 59 in column 4
+Error! Function declaration must begin with 'func' keyword. found at line 59 in column 4
+Error! Main symbol not found! found at line 59 in column 4
