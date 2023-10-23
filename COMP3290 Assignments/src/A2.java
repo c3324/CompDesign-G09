@@ -17,7 +17,7 @@ public class A2 {
 		// }
 
 		// String filepath = args[0];
-		String filepath = "COMP3290 Assignments/testfiles/polygon.txt"; // for non-console use
+		String filepath = "COMP3290 Assignments/testfiles/testsuite/e.txt"; // for non-console use
 		
 		// Construct Scanner.
 		CDScanner scanner = new CDScanner(filepath);
@@ -27,7 +27,7 @@ public class A2 {
 		while (!scanner.eof()){
 			
 			Token recieved_token = scanner.nextToken();
-			scanner.printToken(recieved_token);
+			//scanner.printToken(recieved_token); removed for now for testing
 		}
 
 		LinkedList<String> errorList = scanner.returnErrorList();

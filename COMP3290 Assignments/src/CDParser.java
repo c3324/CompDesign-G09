@@ -49,7 +49,7 @@ public class CDParser {
     public void printSymbolTable(){
         System.out.println("\nSYMBOL TABLE RECORDS");
         System.out.println("-------------------------------------------");
-        syntaxTree.returnSymbolTableRecords();
+        //syntaxTree.returnSymbolTableRecords(); // commented out for compiler error for now.
     }
     
 }

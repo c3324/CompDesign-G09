@@ -1,0 +1,6 @@
+CD23 HelloWorld
+main
+	i : integer
+begin
+	Out << "Hello World" << Line;
+end CD23 HelloWorld

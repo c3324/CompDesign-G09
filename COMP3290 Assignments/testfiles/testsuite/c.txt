@@ -1,0 +1,32 @@
+/-- Using Arrays
+/-- this should pick up comp3290 should be an array of students, not person.
+/-- for most, I am happy with PASS
+
+CD23 c
+
+constants
+    SIZE is 10
+
+types
+    person is
+        age : integer,
+        height : real
+    end
+
+    students is array [SIZE] of person end
+
+arrays
+    comp3290 : person
+
+main
+    val : integer
+begin
+    /-- Declaring the first person in the array.
+    comp3290[0].age = 22;
+    comp3290[0].height = 194.6;
+
+    /-- Printegering the age of the first person in array. Should be above value 22.
+    out << "Student with age", comp3290[0].age, " added to array" << line;
+end 
+
+CD23 c   

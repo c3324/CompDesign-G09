@@ -1,0 +1,48 @@
+/-- Fibonacci sequence program. COMP3290
+
+
+CD23 FibonacciSequence
+
+func calculateFibonacci(index: integer): integer
+  fibonacciValue: integer
+
+  begin
+    if (index == 0 || index == 1)
+      return index;
+    else
+      fibonacciValue = calculateFibonacci(index - 1) + calculateFibonacci(index - 2);
+      return fibonacciValue;
+    end
+  end
+
+main
+  index: integer,
+  fibonacciOfIndex : integer
+
+begin
+  index = 0;
+  fibonacciOfIndex = 0;
+
+  in >> index;
+  fibonacciOfIndex = calculateFibonacci(index);
+  out << fibonacciOfIndex << line;
+
+end
+
+CD23 FibonacciSequence
+
+
+/**
+
+<func> ::= func <id> ( <plist> ) : <rtype> <funcbody>
+<funcbody> ::= <locals> begin <stats> end
+<ifstat> ::= if ( <bool> ) <stats> else <stats> end 
+
+<func> ::= func calculateFibonacci(index: integer): integer
+  <funcbody> 
+  <locals> ::= fibonacciValue: integer
+  begin 
+    <stats> ::= <ifstat> ::= if ( <bool> ) <stats> else <stats> end 
+  end
+
+**/

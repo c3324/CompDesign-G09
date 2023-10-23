@@ -1,0 +1,26 @@
+/-- Using Simple Vars
+/-- should fail on line 7-8 missing comma
+
+CD23 b
+
+main
+    i : integer
+    looping : boolean
+begin
+    looping = true;
+    
+    /-- Increments i until it gets to value 8.
+    for(i = 0 ; looping)
+        i += 1;
+
+        if(i >= 8)
+            looping = false;
+        end
+    end
+
+    /-- Printegering value of i, should be 8.
+    out << "value of i is ", i << line
+
+end 
+
+CD23 b

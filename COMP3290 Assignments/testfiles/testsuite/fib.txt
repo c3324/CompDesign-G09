@@ -1,0 +1,19 @@
+CD23 fibonacci
+
+func fib(num : integer) : integer
+    begin
+        if (num == 1 || num == 2)
+            return 1;
+        end
+        return fib(num - 2) + fib(num - 1);
+    end
+
+main
+    num : integer
+
+begin
+    in >> num;
+    out << (fib(num)) << line;
+
+
+end CD23 fibonacci

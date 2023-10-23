@@ -155,10 +155,11 @@ public class SyntaxTree {
             return;
         }
         if(errorList.is_Empty()){ //if CD23 is not at the beginning, it will not continue with the Parsing Process
+            currentIdentifier = currentToken;
             match(); // TCD23 token
 
             root.setSymbolValue(currentToken.getLex());
-            currentSymbolTable.processTokenDeclaration(currentToken, "<program>");
+            currentSymbolTable.processTokenDeclaration(currentToken, currentToken);
             match(); // identifier token
 
             root.setLeftNode(globals());
@@ -283,6 +284,7 @@ public class SyntaxTree {
             error("Arrays declaration must begin with 'arrays' keyword");
             return null;
         }
+        
         match(); // arrays keyword
         return arrdecls();
 
@@ -365,7 +367,7 @@ public class SyntaxTree {
 
     public Node slist_r(){
 
-        if ( currentToken.getTokID().equals("TBEGN ")){ // epsilon path
+        if ( currentToken.getTokID().equals("TBEGN ") ){ // epsilon path
             return null;
         }
         if ( !currentToken.getTokID().equals("TCOMA ")){
@@ -476,6 +478,8 @@ public class SyntaxTree {
 
     public Node fields(){
 
+
+        //System.out.println("test1");
         Node fields = new Node("NFLIST ");
         Node sdecl = sdecl();
         Node fields_r = fields_r();
@@ -555,7 +559,9 @@ public class SyntaxTree {
             error("Missing coma");
             return null;
         }
+        
         match(); // ,
+        
         return arrdecls();
         
     }
@@ -578,8 +584,10 @@ public class SyntaxTree {
         }
         match(); // TCOLN
         
-        if(!(currentToken.getTokID().equals("TINTG ") || currentToken.getTokID().equals("TREAL ") || currentToken.getTokID().equals("TBOOL "))){ 
+        if(!(currentToken.getTokID().equals("TIDEN ") )){ 
             // TODO: <typeid>
+            System.out.println("test");
+            System.out.println("comma matched at " + currentToken.getTokID() + " " + currentToken.getLex());
             error("Expected identifier");
             return new Node("NERROR ");
         }
@@ -706,6 +714,8 @@ public class SyntaxTree {
     }
 
     public Node param(){
+
+        
 
         // TODO: Fix Grammar <sdecl> and <arrdecl> both start with <id> :
         if ( currentToken.getTokID().equals("TCNST ")){
@@ -919,7 +929,8 @@ public class SyntaxTree {
         Node NSTATS = new Node("NSTATS ");
 
         // <stat>;<stats_r> | <strstat><stats_r>
-        if (currentToken.getTokID().equals("TIFTH ") || currentToken.getTokID().equals("TTFOR ")){ // <strstat> path
+        if (currentToken.getTokID().equals("TIFTH ") || currentToken.getTokID().equals("TTFOR ")){ 
+            // <strstat> path
             Node strsrtat = strstat();
 
             if(  currentToken.getTokID().equals("TUNTL ") ||  currentToken.getTokID().equals("TELSE ") ||  currentToken.getTokID().equals("TTEND ")){ // epsilon path
@@ -935,7 +946,7 @@ public class SyntaxTree {
 
         else if ( !(currentToken.getTokID().equals("TREPT ") || currentToken.getTokID().equals("TIDEN ") || currentToken.getTokID().equals("TOUTP ") 
         || currentToken.getTokID().equals("TINPT ") || currentToken.getTokID().equals("TRETN ") || currentToken.getTokID().equals("TOUTL ") 
-        || currentToken.getTokID().equals("TSEMI "))){
+        )){
             error("Invalid statement");
             return new Node("NERROR ");
         }
@@ -962,7 +973,11 @@ public class SyntaxTree {
 
     public Node stats_r(){
 
-        if(  currentToken.getTokID().equals("TUNTL ") ||  currentToken.getTokID().equals("TELSE ") ||  currentToken.getTokID().equals("TTEND ")){ // epsilon path
+        if(  currentToken.getTokID().equals("TUNTL ") ||  currentToken.getTokID().equals("TELSE ") 
+        ||  currentToken.getTokID().equals("TTEND ") || currentToken.getTokID().equals(("TCOMA "))
+        || currentToken.getTokID().equals("TREPT ") || currentToken.getTokID().equals("TIDEN ") || currentToken.getTokID().equals("TOUTP ") 
+        || currentToken.getTokID().equals("TINPT ") || currentToken.getTokID().equals("TRETN ") || currentToken.getTokID().equals("TOUTL ") 
+        || currentToken.getTokID().equals("TSEMI ")){ // epsilon path
             return null;
         }
 

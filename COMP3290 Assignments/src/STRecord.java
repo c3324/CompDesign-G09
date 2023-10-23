@@ -54,5 +54,13 @@ public class STRecord {
     public String getGlyph(){
         return glyph;
     }
+
+
+    public void print(){
+        // helper method for printing records
+        System.out.println(
+            this.id + " " + this.type + " " + this.glyph
+        );
+    }
     
 }

@@ -1,0 +1,23 @@
+CD23 CompoundOperators
+main
+	value : integer
+begin
+	value = 10;
+	Out << "Initial value: ", value << Line;
+
+	/-- Testing += operator
+	value += 5;
+	Out << "After += 5: ", value << Line;
+
+	/-- Testing -= operator
+	value -= 3;
+	Out << "After -= 3: ", value << Line;
+
+	/-- Testing *= operator
+	value *= 2;
+	Out << "After *= 2: ", value << Line;
+
+	/-- Testing /= operator
+	value /= 4;
+	Out << "After /= 4: ", value << Line;
+end CD23 CompoundOperators

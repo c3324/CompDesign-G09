@@ -1,0 +1,37 @@
+/**
+	Multi-lines
+**/
+
+/-- Simple variables
+
+
+CD23 D
+
+
+main
+	a : integer,
+	b : real,
+	c : integer
+
+/-- fixed!
+
+begin
+	a = 2;
+	b = 3.0;
+	c = 9;
+
+	out << "Basic Maths & String Const" << line;
+
+	out << a, " + ", b, " = ", a+b << line;
+	out << a, " * ", b, " = ", a*b << line;
+	out << b, " - ", a, " = ", b-a << line;
+	out << b, " / ", a, " = ", b/a << line;
+
+	out << a, "^", a, " = ", a^a << line;
+	out << b, "^", a, " = ", b^a << line;
+
+	out << "Finished ", "the ", "List!" << line;
+
+end 
+
+CD23 D

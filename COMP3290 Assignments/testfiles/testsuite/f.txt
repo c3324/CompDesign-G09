@@ -1,0 +1,9 @@
+CD23 lexicalFail					
+	main
+		temp : integer
+
+		begin
+			out << "hemlo 
+			" << line;
+		end! 
+CD23 lexicalFail					

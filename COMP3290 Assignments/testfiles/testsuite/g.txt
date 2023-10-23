@@ -1,0 +1,94 @@
+/-- Calculate area of polygon. COMP3290
+
+
+CD23 AreaOfPolygon
+
+types
+  point is
+    x: real,
+    y: real
+  end
+
+  pointsArray is
+    array[20] of point
+  end
+
+arrays
+  points: pointsArray
+
+func inputPoints(): integer
+  numOfpoints: integer,
+  index: integer
+
+  begin
+    numOfpoints = 0;
+
+    out << "How many points in the polygon (max 20):";
+    in >> numOfpoints;
+
+    if (numOfpoints > 20)
+      out << "You entered too many points.";
+      return inputPoints();
+    else
+      for (index = 0; index < numOfpoints)
+        out << "Enter point ", index, " x coordinate:" << line;
+        in >> points[index].x;
+        out << "Enter point ", index, " y coordinate:" << line;
+        in >> points[index].y;
+        index += 1;
+      end
+
+      return numOfpoints;
+    end
+  end
+
+func calculateArea(numOfpoints: integer): real
+  index: integer,
+  nextIndex: integer,
+  endIndex: integer,
+  sum: real,
+  area: real
+
+  begin
+    index = 0;
+    nextIndex = 0;
+    endIndex = 0;
+    sum = 0.0;
+    area = 0.0
+
+    if (numOfpoints <= 3)
+      return 0.0;
+    end
+
+    endIndex = numOfpoints - 2;
+
+    for (index = 0; index <= endIndex)
+      nextIndex += 1;
+      sum += (points[nextIndex].x + points[index].x) * (points[nextIndex].y - points[index].y);
+      index += 1;
+    end
+
+    area = sum / 2.0;
+
+    if (area < 0.0)
+      area *= 0.0 - 1.0;
+    end
+
+    return area;
+  end
+
+main
+  numOfpoints: integer,
+  polygonArea: real
+
+begin
+  numOfpoints = 0;
+  polygonArea - 0.0;
+
+  numOfpoints = inputPoints();
+  polygonArea = calculateArea(numOfpoints);
+
+  out << "Polygon area: ", polygonArea;
+end
+
+CD23 AreaOfPolygon

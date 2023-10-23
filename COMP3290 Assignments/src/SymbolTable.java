@@ -53,8 +53,10 @@ public class SymbolTable {
     }
 
     // Handles a type declaration of a token. If the declaration isn't valid returns an error
-     // Returns an integer - 0 is success - -1 is variable type not valid (technically should not occur)
+    // Returns an integer - 0 is success - -1 is variable type not valid (technically should not occur)
     public int processTokenDeclaration(Token identifier, Token typeToken){
+
+        System.out.println("Processing token declaration!");
 
         String type;
         if (typeToken.getTokID().equals("TINTG ")){
@@ -67,12 +69,15 @@ public class SymbolTable {
             type = "bool";
         }
         else{
+            // System.out.println("Invalid type decl found: Recieved token: " + identifier.getLex() + " received type: " + typeToken.getTokID());
+            System.out.println("Invalid type found! type found: " + typeToken.getTokID() + " with lex " + typeToken.getLex() + " with identifier " + identifier.getLex());
             return -1; // invalid type decl
         }
 
         int tokenIndex = getRecordIndex(identifier.getTokID());
         //System.out.println("In Process Token");
         if ( tokenIndex == -1){     //if record doesn't already exist
+            System.out.println("Test");
             records.add(new STRecord(identifier, type));
             keywordsIndex.put(identifier.getLex(), number_of_records);
             number_of_records++;
@@ -87,12 +92,15 @@ public class SymbolTable {
 
     // Handles assigning a value to a token - if the token is not defined this returns an error
     // Returns an integer - 0 is success - -1 is variable not declared -2 type does not match declaration
+    // This has a requirement that the variable already exists in the symbol table
     public int processVariable(Token identifier, Token literal){
 
         // Semantic checking
         // check if type declaration exists
         int tokenIndex = getRecordIndex(identifier.getTokID());
         if ( tokenIndex == -1){     // No type Declaration!
+            //System.out.println("Invalid type decl found: Recieved token: " + identifier.getLex() +  " received type: " + literal.getTokID() + " in line " + identifier.getLn());
+            //printTable();
             return -1;
         }
         STRecord typeDeclRecord = records.get(tokenIndex);
@@ -134,6 +142,54 @@ public class SymbolTable {
         STRecord record = records.get(recordNum);
         String recordOutput = "Symbol Table Record "+ recordNum + ": " + record.getID() + " " + record.getType();
         return recordOutput;       
+    }
+
+    public void printTable(){
+        // helper method for debugging
+        for ( int i = 0; i < records.size(); i++){
+            records.get(i).print();
+        }
+    }
+
+    // This forces a variable into the symbol table
+    public int processVariableForce(Token identifier, Token literal){
+
+        // check if type declaration exists
+        int tokenIndex = getRecordIndex(identifier.getTokID());
+        if ( tokenIndex == -1){     // No type Declaration!
+            //System.out.println("Invalid type decl found: Recieved token: " + identifier.getLex() +  " received type: " + literal.getTokID() + " in line " + identifier.getLn());
+            //printTable();
+            return -1;
+        }
+        STRecord typeDeclRecord = records.get(tokenIndex);
+        // Ensure literal matches type
+        if (typeDeclRecord.getType().equals("integer")){
+            try {
+                int literal_value = Integer.parseInt(literal.getLex());
+            }
+            catch (Exception e){ // TODO: check if converting float to int
+                // not an integer!
+                return -2;
+            }
+        }
+        if ( typeDeclRecord.getType().equals("real")){
+            try {
+                float literal_value = Float.parseFloat(literal.getLex());
+            }
+            catch (Exception e){ 
+                return -2;
+            }
+        }
+        if (  typeDeclRecord.getType().equals("bool")){
+            if (!(literal.getTokID() == "TFALS " || literal.getTokID() == "TTRUE ")){
+                return -2;
+            }
+        }
+
+        // Valid type
+        // Update record
+        typeDeclRecord.setGlyph(literal.getLex());
+        return 0;
     }
    
 }

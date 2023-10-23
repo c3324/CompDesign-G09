@@ -1,0 +1,11 @@
+/-- Simple Program
+/-- This SHOULD pass!
+CD23 a
+
+main
+    x : integer
+begin
+    out << "Hello world"  << line ;
+end 
+
+CD23 a
