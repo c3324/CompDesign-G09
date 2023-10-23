@@ -673,7 +673,7 @@ public class SyntaxTree {
     public Node plist(){
 
         error_recovery_state = ERROR_STATES.PARAMS;
-        if (currentToken.getTokID().equals("TLPAR ")){ // epsilon path
+        if (currentToken.getTokID().equals("TRPAR ")){ // epsilon path
             return null;
         }
 

@@ -175,9 +175,10 @@ public class CDScanner {
             
             if (currentState != STATE.UNDEFINED_SYMBOL){
                 // Tokenize buffer
-                tokenizeBuffer(1);
+                //tokenizeBuffer(1);
                 currentState = STATE.UNDEFINED_SYMBOL;
             }
+            
             // System.out.println("Undefined symbol found in:" + buffer + "  with currState = " + currentState); // Debug printout
             return;
         }
@@ -323,7 +324,7 @@ public class CDScanner {
                     tokenizeBuffer(1);
                     currentState = STATE.ALPHABETIC_STRING;
                 }
-                else if (Character.isDigit(character)){
+                else if (Character.isDigit(character)){ 
                     tokenizeBuffer(1);
                     currentState = STATE.INTEGER;
                 }
@@ -331,6 +332,10 @@ public class CDScanner {
                     tokenizeBuffer(1);
                     currentState = STATE.DELIM_OPER;
                 }
+                // else 
+                // {
+                //     currentState = STATE.LEXICAL_ERROR;
+                // }
                 break;
 
             case LEXICAL_ERROR:   
