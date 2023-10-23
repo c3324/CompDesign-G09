@@ -77,7 +77,6 @@ public class SymbolTable {
         int tokenIndex = getRecordIndex(identifier.getTokID());
         //System.out.println("In Process Token");
         if ( tokenIndex == -1){     //if record doesn't already exist
-            System.out.println("Test");
             records.add(new STRecord(identifier, type));
             keywordsIndex.put(identifier.getLex(), number_of_records);
             number_of_records++;

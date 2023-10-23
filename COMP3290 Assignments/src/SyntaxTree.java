@@ -479,7 +479,6 @@ public class SyntaxTree {
     public Node fields(){
 
 
-        //System.out.println("test1");
         Node fields = new Node("NFLIST ");
         Node sdecl = sdecl();
         Node fields_r = fields_r();
@@ -586,7 +585,6 @@ public class SyntaxTree {
         
         if(!(currentToken.getTokID().equals("TIDEN ") )){ 
             // TODO: <typeid>
-            System.out.println("test");
             System.out.println("comma matched at " + currentToken.getTokID() + " " + currentToken.getLex());
             error("Expected identifier");
             return new Node("NERROR ");
@@ -926,11 +924,12 @@ public class SyntaxTree {
 
     public Node stats(){
 
+        // <stat>;<stats_r> | <strstat><stats_r>
         Node NSTATS = new Node("NSTATS ");
 
-        // <stat>;<stats_r> | <strstat><stats_r>
+        // <strstat> path
         if (currentToken.getTokID().equals("TIFTH ") || currentToken.getTokID().equals("TTFOR ")){ 
-            // <strstat> path
+            
             Node strsrtat = strstat();
 
             if(  currentToken.getTokID().equals("TUNTL ") ||  currentToken.getTokID().equals("TELSE ") ||  currentToken.getTokID().equals("TTEND ")){ // epsilon path
@@ -944,10 +943,11 @@ public class SyntaxTree {
 
         }
 
+        // <stat> path
         else if ( !(currentToken.getTokID().equals("TREPT ") || currentToken.getTokID().equals("TIDEN ") || currentToken.getTokID().equals("TOUTP ") 
         || currentToken.getTokID().equals("TINPT ") || currentToken.getTokID().equals("TRETN ") || currentToken.getTokID().equals("TOUTL ") 
         )){
-            error("Invalid statement");
+            error("Invalid <stat> statement");
             return new Node("NERROR ");
         }
 
@@ -973,12 +973,18 @@ public class SyntaxTree {
 
     public Node stats_r(){
 
-        if(  currentToken.getTokID().equals("TUNTL ") ||  currentToken.getTokID().equals("TELSE ") 
-        ||  currentToken.getTokID().equals("TTEND ") || currentToken.getTokID().equals(("TCOMA "))
-        || currentToken.getTokID().equals("TREPT ") || currentToken.getTokID().equals("TIDEN ") || currentToken.getTokID().equals("TOUTP ") 
-        || currentToken.getTokID().equals("TINPT ") || currentToken.getTokID().equals("TRETN ") || currentToken.getTokID().equals("TOUTL ") 
-        || currentToken.getTokID().equals("TSEMI ")){ // epsilon path
+        // epsilon path
+        if (currentToken.getTokID().equals("TTEND ") || currentToken.getTokID().equals("TELSE ")){
             return null;
+        }
+
+        if(  !(currentToken.getTokID().equals("TTFOR ") || currentToken.getTokID().equals("TIFTH ")
+        || currentToken.getTokID().equals("TREPT ") || currentToken.getTokID().equals("TIDEN ")
+        || currentToken.getTokID().equals("TOUTP ") || currentToken.getTokID().equals("TINPT ")
+        || currentToken.getTokID().equals("TRETN ") 
+        )){ 
+            error("Expected new statement.");
+            return new Node("NERROR ");
         }
 
         return stats();
@@ -1217,6 +1223,7 @@ public class SyntaxTree {
             error("Missing 'if' statement");
             return new Node("NERROR ");
         }
+        match(); // if
 
         if (!(currentToken.getTokID().equals("TLPAR ") )){
             error("Missing '(' in for statement");
@@ -1976,6 +1983,7 @@ public class SyntaxTree {
     public Node exponent_delayed(){
 
         String id_lex = currentToken.getLex();
+        currentIdentifier = currentToken;
         match(); // <id>
 
         if (currentToken.getTokID().equals("TLPAR ")){
