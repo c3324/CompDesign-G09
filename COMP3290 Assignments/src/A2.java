@@ -22,6 +22,10 @@ public class A2 {
 		// Construct Scanner.
 		CDScanner scanner = new CDScanner(filepath);
 
+		//read file contents into program listing file, with line numbers.
+		scanner.createProgramListing();
+
+
 		// Spec structure used.
 		System.out.print("SCANNER\n");
 		while (!scanner.eof()){

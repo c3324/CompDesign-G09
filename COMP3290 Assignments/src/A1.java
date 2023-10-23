@@ -17,25 +17,31 @@ public class A1{
 
 		// String filepath = args[0];
 		String filepath = "COMP3290 Assignments/testfiles/a.txt"; // for non-console use
+
+		
 		
 		// Construct Scanner.
 		CDScanner scanner = new CDScanner(filepath);
 
+		scanner.createProgramListing();
+
 		// Spec structure used.
 		while (!scanner.eof()){
 			Token recieved_token = scanner.nextToken();
-
-			scanner.printToken(recieved_token);
-			
-			
+			scanner.printToken(recieved_token);		
 			//need to add a away to store the tokens in a list to pass to the Parser
 		}
+
 		System.out.println("\n\nLEXICAL ERRORS\n");
 		System.out.println("-------------------------------------------------------------\n");
+
         LinkedList<String> errorList = scanner.returnErrorList();
         for(int i = 0; i < errorList.size() ; i++){
             System.out.println(errorList.get(i));
         }
+		scanner.addErrorstoFile();
+
+		
 
 		//This is where : CDParser parser = new CDParser(tokenList); can then go. 
 	}
