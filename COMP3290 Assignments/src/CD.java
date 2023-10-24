@@ -22,6 +22,9 @@ public class CD {
 		// Construct Scanner.
 		CDScanner scanner = new CDScanner(filepath);
 
+		//read file contents into program listing file, with line numbers.
+		scanner.createProgramListing();
+
 		// Spec structure used.
 		System.out.print("SCANNER\n");
 		while (!scanner.eof()){
@@ -50,6 +53,7 @@ public class CD {
 			System.out.println("\n\nPARSER - Pre-Order Traversal:\n");
 			parser.parser_Printing();
 			parser.printErrorList();
+			parser.addErrorstoFile();
 			//parser.printSymbolTable(); //--> Uncomment this to see what has been stored in the Symbol Table
 
 		}
