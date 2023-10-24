@@ -54,7 +54,7 @@ func calculateArea(numOfpoints: integer): real
     nextIndex = 0;
     endIndex = 0;
     sum = 0.0;
-    area = 0.0
+    area = 0.0;
 
     if (numOfpoints <= 3)
       return 0.0;
@@ -83,7 +83,7 @@ main
 
 begin
   numOfpoints = 0;
-  polygonArea - 0.0;
+  polygonArea = 0.0;
 
   numOfpoints = inputPoints();
   polygonArea = calculateArea(numOfpoints);

@@ -1,27 +1,27 @@
-1. /-- Calculate area of polygon. COMP3290
-2. 
-3. 
-4. CD23 AreaOfPolygon
-5. 
-6. types
-7.   point is
-8.     x: real,
-9.     y: real
-10.   end
+1. /**
+2. 	Comp3290 Assignment 1
+3. 	Main Class
+4. 	Author: Dan Bell
+5. 	Student No: c9876543
+6. 	Last Modified 8/8/2021
+7. 	Updated by Dan
+8. **/
+9. 
+10. /-- Simple variables
 11. 
-12.   pointsArray is
-13.     array[20] of point
-14.   end
+12. 
+13. CD23 D1
+14. 
 15. 
-16. arrays
-17.   points: pointsArray
-18. 
-19. func inputPoints(): integer
-20.   numOfpoints: integer,
-21.   index: integer
-22. 
-23.   begin
-24.     numOfpoints = 0;
+16. 
+17. 
+18. main
+19. 	a : real,
+20. 	b : real,
+21. 	c : integer,
+22. 	d : real
+23. 
+24. 
 25. 
 26.     out << "How many points in the polygon (max 20):";
 27.     in >> numOfpoints;
@@ -92,41 +92,3 @@
 92. end
 93. 
 94. CD23 AreaOfPolygon
-
- ERRORS 
-
--------------------------------------------------------------
-
-Semantic Error: line 13 - Invalid type
-Semantic Error: line 17 - Invalid type
-Error! expected identifier as a parameter found at line 19 in column 18
-Semantic Error: line 24 - Invalid type
-Semantic Error: line 29 - Invalid type
-Semantic Error: line 33 - Invalid type
-Semantic Error: line 38 - Invalid type
-Semantic Error: line 53 - Invalid type
-Semantic Error: line 54 - Invalid type
-Semantic Error: line 55 - Invalid type
-Error! Invalid term found at line 59 in column 4
-Error! Invalid term found at line 59 in column 4
-Error! Invalid expression found at line 59 in column 4
-Error! Invalid relational operator found at line 59 in column 4
-Error! Invalid exponent found at line 59 in column 4
-Error! Invalid term found at line 59 in column 4
-Error! Invalid term found at line 59 in column 4
-Error! Invalid expression found at line 59 in column 4
-Error! Invalid logical operator found at line 59 in column 4
-Error! Invalid exponent found at line 59 in column 4
-Error! Invalid term found at line 59 in column 4
-Error! Invalid term found at line 59 in column 4
-Error! Invalid expression found at line 59 in column 4
-Error! Invalid relational operator found at line 59 in column 4
-Error! Invalid exponent found at line 59 in column 4
-Error! Invalid term found at line 59 in column 4
-Error! Invalid term found at line 59 in column 4
-Error! Invalid expression found at line 59 in column 4
-Error found at line 59 in column 4
-Error! Missing semi-colon found at line 59 in column 4
-Error! Expecterd 'TTEND' keyword for function body declaration found at line 59 in column 4
-Error! Function declaration must begin with 'func' keyword. found at line 59 in column 4
-Error! Main symbol not found! found at line 59 in column 4

@@ -13,27 +13,33 @@
 CD23 D1
 
 
-begin
-	a : integer 
-	b : real
+
 
 main
+	a : real,
+	b : real,
+	c : integer,
+	d : real
+
+
+
+begin
 	a = 2;
 	b = 3.0;
-	c = 987
-	d = 123.O
+	c = 987.0;
+	d = 123.0;
 	
 
-	out << a << " + " << b << " = " << a+b << line;
-	out << a << " * " << b << " = " << a*b << line;
-	out << b << " - " << a << " = " << b-a << line;
-	out << b << " / " << a << " = " << b/a << line;
+	out << a , " + " , b , " = " , a+b << line;
+	out << a , " * " , b , " = " , a*b << line;
+	out << b , " - " , a , " = " , b-a << line;
+	out << b , " / " , a , " = " , b/a << line;
 
-	out << a << "^" << a << " = " << a^a << line;
-	out << b << "^" << a << " = " << b^a;
-	out << line
+	out << a , "^" , a , " = " , a^a << line;
+	out << b , "^" , a , " = " , b^a << line;
+	out << line;
 
 	out << "Finished";
-	out << line
+	out << line;
 
 end CD23 D1
