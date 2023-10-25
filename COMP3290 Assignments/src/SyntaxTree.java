@@ -1938,6 +1938,9 @@ public class SyntaxTree {
             if (st_push_success == -1){
                 semanticError("Invalid type");
             }
+            if (st_push_success == -2){
+                semanticError("Type does not match declaration!");
+            }
             match(); // <intlit>
             return NILIT;
         }
@@ -1947,6 +1950,9 @@ public class SyntaxTree {
             int st_push_success = currentSymbolTable.processVariable(currentIdentifier, currentToken);
             if (st_push_success == -1){
                 semanticError("Invalid type");
+            }
+            if (st_push_success == -2){
+                semanticError("Type does not match declaration!");
             }
             match(); // <reallit>
             return NFLIT;
@@ -2068,6 +2074,9 @@ public class SyntaxTree {
             if (st_push_success == -1){
                 semanticError("Invalid type");
             }
+            if (st_push_success == -2){
+                semanticError("Type does not match declaration!");
+            }
             match(); // <intlit>
             return NILIT;
         }
@@ -2079,6 +2088,9 @@ public class SyntaxTree {
             if (st_push_success == -1){
                 semanticError("Invalid type");
             }
+            if (st_push_success == -2){
+                semanticError("Type does not match declaration!");
+            }
             match(); // <intlit>
             return NFLIT;
         }
@@ -2089,6 +2101,9 @@ public class SyntaxTree {
             int st_push_success = currentSymbolTable.processVariableForce(currentIdentifier, currentToken);
             if (st_push_success == -1){
                 semanticError("Invalid type");
+            }
+            if (st_push_success == -2){
+                semanticError("Type does not match declaration!");
             }
             match(); // <intlit>
             return NTRUE;

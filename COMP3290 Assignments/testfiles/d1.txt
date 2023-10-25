@@ -18,7 +18,7 @@ CD23 D1
 main
 	a : real,
 	b : real,
-	c : integer,
+	c : real,
 	d : real
 
 

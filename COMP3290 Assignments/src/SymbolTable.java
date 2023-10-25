@@ -73,7 +73,7 @@ public class SymbolTable {
     // Returns an integer - 0 is success - -1 is variable type not valid (technically should not occur)
     public int processTokenDeclaration(Token identifier, Token typeToken){
 
-        System.out.println("Processing token declaration!");
+        // System.out.println("Processing token declaration!");
 
         String type;
         if (typeToken.getTokID().equals("TINTG ")){
@@ -90,7 +90,7 @@ public class SymbolTable {
         }
         else{
             // System.out.println("Invalid type decl found: Recieved token: " + identifier.getLex() + " received type: " + typeToken.getTokID());
-            System.out.println("Invalid type decl found! type found: " + typeToken.getTokID() + " with lex " + typeToken.getLex() + " with identifier " + identifier.getLex());
+            // System.out.println("Invalid type decl found! type found: " + typeToken.getTokID() + " with lex " + typeToken.getLex() + " with identifier " + identifier.getLex());
             return -1; // invalid type decl
         }
 
@@ -114,7 +114,7 @@ public class SymbolTable {
     // This has a requirement that the variable already exists in the symbol table
     public int processVariable(Token identifier, Token literal){
 
-        System.out.println("Processing variable! iden: " + identifier.getLex() + " literal_type: " + literal.getTokID() + " and value: " + literal.getLex());
+        // System.out.println("Processing variable! iden: " + identifier.getLex() + " literal_type: " + literal.getTokID() + " and value: " + literal.getLex());
 
         // Semantic checking
         // check if type declaration exists
@@ -124,21 +124,24 @@ public class SymbolTable {
             // printTable();
             return -1;
         }
+        
         STRecord typeDeclRecord = records.get(tokenIndex);
+        String literal_value = "";
         // Ensure literal matches type
         if (typeDeclRecord.getType().equals("integer")){
             try {
-                int literal_value = Integer.parseInt(literal.getLex());
+                literal_value = Integer.toString(Integer.parseInt(literal.getLex()));
             }
             catch (Exception e){ // TODO: check if converting float to int
                 // not an integer!
+                System.out.println("test2");
                 return -2;
             }
         }
         if ( typeDeclRecord.getType().equals("real")){
             try {
                 
-                float literal_value = Float.parseFloat(literal.getLex());
+                literal_value = Float.toString(Float.parseFloat(literal.getLex()));
             }
             catch (Exception e){ 
                 return -2;
@@ -152,9 +155,9 @@ public class SymbolTable {
 
         // Valid type
         // Update record
-        typeDeclRecord.setGlyph(literal.getLex());
-        System.out.println("Added variable: " + identifier.getLex() +  " with value: " + literal.getLex() );
-        printTable();
+        typeDeclRecord.setGlyph(literal_value);
+        // System.out.println("Added variable: " + identifier.getLex() +  " with value: " + literal.getLex() );
+        // printTable();
         return 0;
     }
 

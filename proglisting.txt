@@ -18,7 +18,7 @@
 18. main
 19. 	a : real,
 20. 	b : real,
-21. 	c : integer,
+21. 	c : real,
 22. 	d : real
 23. 
 24. 
