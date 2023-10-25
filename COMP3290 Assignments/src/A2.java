@@ -54,6 +54,7 @@ public class A2 {
 			System.out.println("\n\nPARSER - Pre-Order Traversal:\n");
 			parser.parser_Printing();
 			parser.printErrorList();
+			parser.addErrorstoFile();
 			//parser.printSymbolTable(); //--> Uncomment this to see what has been stored in the Symbol Table
 
 		}
