@@ -5,6 +5,7 @@ public class STRecord {
 
     private String id, type, base, offset, glyph;
     private int line_number, col_number;
+    private String scope; // currently just used to check function params
 
     public STRecord(
             String id, 
@@ -36,6 +37,7 @@ public class STRecord {
         this.base = "";
         this.offset = "";
         this.glyph = "";
+        this.scope = "";
 
     }
 
@@ -61,6 +63,14 @@ public class STRecord {
         System.out.println(
             this.id + " " + this.type + " " + this.glyph
         );
+    }
+
+    public void setScope(String scope){
+        this.scope = scope;
+    }
+
+    public String getScope(){
+        return scope;
     }
     
 }

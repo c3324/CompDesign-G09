@@ -10,8 +10,11 @@ public class SyntaxTree {
     private Token currentToken;
     private CDScanner cdScanner;
     private SymbolTable currentSymbolTable;
+    private SymbolTable globalSymbolTable;
     private Token currentIdentifier; // identifier is held until its type is declared and then pushed to symbol table inside of match()
     ErrorHandling errorList;
+
+    private String current_scope; // currently used only to check function params
 
     private enum ERROR_STATES {
         NPROG, CONST, TYPES, ARRAYS, FUNC, MAIN, PARAMS // note params waits on')'
@@ -28,6 +31,7 @@ public class SyntaxTree {
         cdScanner = scanner;
 
         currentSymbolTable = new SymbolTable(true);
+        globalSymbolTable = currentSymbolTable;
 
         errorList = ErrorHandling.getInstance();
 
@@ -301,8 +305,14 @@ public class SyntaxTree {
         }
 
         Node NFUNCS = new Node("NFUNCS ");
-        NFUNCS.setLeftNode(func());
-        NFUNCS.setRightNode(funcs());
+        Node func = func();
+        Node funcs = funcs();
+        if ( funcs == null){
+            return func;
+        }
+        // else
+        NFUNCS.setLeftNode(func);
+        NFUNCS.setRightNode(funcs);
 
         return NFUNCS;
         
@@ -311,7 +321,7 @@ public class SyntaxTree {
     public Node mainbody(){
 
         error_recovery_state = ERROR_STATES.MAIN;
-
+        
         if (!currentToken.getTokID().equals("TMAIN ")){
             error("Main symbol not found!");
             return new Node("NERROR ");
@@ -339,7 +349,7 @@ public class SyntaxTree {
 
         // TODO: symbol table lookup for CD23 <id>;
         //NMAIN.setSymbolValue(currentToken.getLex());
-        if (!currentToken.getLex().equals(root.getSymbolVaue())){
+        if (!currentToken.getLex().equals(root.getSymbolValue())){
             semanticError("CD23 names differ at start and end of file");
             return new Node("NERROR ");
         }
@@ -435,6 +445,15 @@ public class SyntaxTree {
                 return null;
             }
             match(); // [
+            
+            // SEMANTIC CHECK --- Var is intialised
+            // <expr> could be <var>
+            if (currentIdentifier.getTokID().equals("TIDEN ")){
+                ////// Check array has been initialised
+                if(!currentSymbolTable.contains(currentToken)){
+                    semanticError("Array size unknown!");
+                }
+            }
             type_node.setLeftNode(expr());
             if ( !currentToken.getTokID().equals("TRBRK ")){
                 error("Excpected ']'.");
@@ -605,6 +624,8 @@ public class SyntaxTree {
     public Node func(){
 
         error_recovery_state = ERROR_STATES.FUNC;
+        // Functions don't interact with global symbol table.
+        currentSymbolTable = new SymbolTable(currentSymbolTable);
 
         Node NFUND = new Node("NFUND ");
 
@@ -620,6 +641,8 @@ public class SyntaxTree {
         }
         NFUND.setSymbolValue(currentToken.getLex());
         currentIdentifier = currentToken;
+        // Push to symbol table
+        currentSymbolTable.pushFunction(currentIdentifier);
         match(); // <id>
 
         if(currentToken.getTokID() != "TLPAR "){
@@ -628,7 +651,16 @@ public class SyntaxTree {
         }
         match(); // (
 
-        NFUND.setLeftNode(plist());
+        // currentSymbolTable  = new SymbolTable(currentSymbolTable);
+        Node plist = plist();
+        if (plist != null){
+            plist.setSymbolTable(currentSymbolTable);
+        }
+        System.out.println("Checking st....");
+        
+        // currentSymbolTable = currentSymbolTable.dropScope();
+
+        NFUND.setLeftNode(plist);
         error_recovery_state = ERROR_STATES.FUNC; // return to func - no longer parameters
 
         if(currentToken.getTokID() != "TRPAR "){
@@ -644,8 +676,12 @@ public class SyntaxTree {
         match(); 
         
         rtype();
-
+        currentSymbolTable.printTable();
         NFUND.setRightNode(funcbody());
+        currentSymbolTable.printTable();
+        // return to global st
+        NFUND.setSymbolTable(currentSymbolTable);
+        currentSymbolTable = globalSymbolTable;
 
         return NFUND;
 
@@ -674,10 +710,15 @@ public class SyntaxTree {
 
     public Node plist(){
 
+        // scope records to function iden
+        current_scope = currentIdentifier.getLex(); 
+
         error_recovery_state = ERROR_STATES.PARAMS;
         if (currentToken.getTokID().equals("TRPAR ")){ // epsilon path
             return null;
         }
+
+        // Establish
 
         return params();
         
@@ -690,6 +731,8 @@ public class SyntaxTree {
         Node params_r = params_r();
 
         if ( params_r == null || param == null){
+            // remove scope
+            current_scope = "";
             return param;
         }
 
@@ -747,7 +790,7 @@ public class SyntaxTree {
 
     public Node param_delayed(){
 
-        if ( currentToken.getTokID().equals("TIDEN ")){ // TODO: <stype>
+        if ( currentToken.getTokID().equals("TIDEN ")){ // <stype>
 
             Node NSIMP = new Node("NSIMP ");
             Node NSDECL = new Node("NSDECL");
@@ -755,6 +798,16 @@ public class SyntaxTree {
 
             NSIMP.setRightNode(NSDECL); 
             currentIdentifier = currentToken;
+
+            // Symbol table..
+            int st_push_success = currentSymbolTable.processParamForce(currentIdentifier, currentToken, current_scope);
+            if (st_push_success == -1){
+                semanticError("Invalid type");
+            }
+            if (st_push_success == -2){
+                semanticError("Type does not match declaration!");
+            }
+
             match(); // id
 
             return NSIMP;
@@ -766,10 +819,13 @@ public class SyntaxTree {
             NARRD.setSymbolValue(currentToken.getLex());
 
             NARRP.setRightNode(NARRD); 
-            // Symbol table push
-            int st_push_success = currentSymbolTable.processTokenDeclaration(currentIdentifier, currentToken);
+            // Symbol table..
+            int st_push_success = currentSymbolTable.processParamForce(currentIdentifier, currentToken, current_scope);
             if (st_push_success == -1){
                 semanticError("Invalid type");
+            }
+            if (st_push_success == -2){
+                semanticError("Type does not match declaration!");
             }
             match(); // type
 
@@ -896,7 +952,7 @@ public class SyntaxTree {
 
         }
         else {
-            error("Expected paramater type of <stype> or <typeid>.");
+            error("Expected parameter type of <stype> or <typeid>.");
             return null;
         }
 
@@ -1399,6 +1455,7 @@ public class SyntaxTree {
         }
         NCALL.setSymbolValue(currentToken.getLex());
         currentIdentifier = currentToken;
+        Token func_var_token = currentToken;
         match(); // <id>
 
         if ( !currentToken.getTokID().equals("TLPAR ")){
@@ -1410,7 +1467,14 @@ public class SyntaxTree {
         if ( currentToken.getTokID().equals("TRPAR ")){ // epsilon path
         }
         else {
+            currentSymbolTable = new SymbolTable(currentSymbolTable);
             Node elist = elist();
+            // check params
+            if (!funcCallParamsAreValid(func_var_token, currentSymbolTable)){
+                semanticError("Parameter count or types do not match!");
+            }
+            // drop scoping
+            currentSymbolTable = currentSymbolTable.dropScope();
             NCALL.setLeftNode(elist);
         }
 
@@ -1433,11 +1497,19 @@ public class SyntaxTree {
             return new Node("NERROR ");
         }
         match(); // (
+        Token func_var_token = currentIdentifier;
 
         if ( currentToken.getTokID().equals("TRPAR ")){ // epsilon path
         }
         else {
+            currentSymbolTable = new SymbolTable(currentSymbolTable);
             Node elist = elist();
+            // check params
+            if (!funcCallParamsAreValid(func_var_token, currentSymbolTable)){
+                semanticError("Parameter count or types do not match!");
+            }
+            // drop scoping
+            currentSymbolTable = currentSymbolTable.dropScope();
             NCALL.setLeftNode(elist);
         }
 
@@ -1527,11 +1599,11 @@ public class SyntaxTree {
         match(); // <id>
 
         Node var_r = var_r();
-        if ( var_r.getSymbolVaue().equals("")){ 
+        if ( var_r.getSymbolValue().equals("")){ 
             var_r.setSymbolValue(id_lex);
         }
         else{
-            var_r.setSymbolValue(id_lex + "." + var_r.getSymbolVaue()); // TODO: Handle Array identifiers. Is this correct?
+            var_r.setSymbolValue(id_lex + "." + var_r.getSymbolValue()); // TODO: Handle Array identifiers. Is this correct?
         }
         
         
@@ -1995,12 +2067,19 @@ public class SyntaxTree {
 
         String id_lex = currentToken.getLex();
         currentIdentifier = currentToken;
+        Token func_var_token = currentIdentifier;
         match(); // <id>
 
         if (currentToken.getTokID().equals("TLPAR ")){
             //fncall path
             Node NFCALL = new Node("NFCALL ");
+
+            // Check function has been declared;
+            if (!funcExists(currentIdentifier)){
+                semanticError("Function call for " + currentIdentifier.getLex()+ " has not been declared!");
+            }
             NFCALL.setSymbolValue(id_lex);
+
             match(); // (
 
             if (currentToken.getTokID().equals("TRPAR ")){
@@ -2008,7 +2087,14 @@ public class SyntaxTree {
                 return NFCALL;
             }
 
+            currentSymbolTable = new SymbolTable(currentSymbolTable);
             Node elist = elist();
+            // check params
+            if (!funcCallParamsAreValid(func_var_token, currentSymbolTable)){
+                semanticError("Paramater count or types do not match!");
+            }
+            // drop scoping
+            currentSymbolTable = currentSymbolTable.dropScope();
             NFCALL.setLeftNode(elist);
 
             if (!currentToken.getTokID().equals("TRPAR ")){
@@ -2038,8 +2124,8 @@ public class SyntaxTree {
 
             Node var_r_r = var_r_r();
             var_r_r.setLeftNode(expr);
-            if ( !var_r_r.getSymbolVaue().equals("")){
-                var_r_r.setSymbolValue(id_lex + "." + var_r_r.getSymbolVaue()); // TODO: Handle Array identifiers. Is this correct?
+            if ( !var_r_r.getSymbolValue().equals("")){
+                var_r_r.setSymbolValue(id_lex + "." + var_r_r.getSymbolValue()); // TODO: Handle Array identifiers. Is this correct?
             }
 
             return var_r_r;
@@ -2195,6 +2281,51 @@ public class SyntaxTree {
         if (st_push_success == -1){
             semanticError("Invalid type");
         }
+
+    }
+
+    private boolean funcExists(Token token){
+
+        // check ST
+        if (currentSymbolTable.containsFunction(token)){
+            return true;
+        }
+        return false; // else
+
+    }
+
+    private boolean funcCallParamsAreValid(Token func_iden_token, SymbolTable param_ST){
+
+        // search for Node
+        // Node node = root.getMidNode();
+
+        // if (node == null) return false;
+
+        // while (true){
+            
+        //     if (node.getRightNode() == null){
+        //         return false;
+        //     }
+            
+        //     if (node.getRightNode().getSymbolValue().equals(func_iden_token.getLex())){
+        //         return currentSymbolTable.funcCallParamsAreValid(node.getRightNode().getSymbolTable(), func_iden_token.getLex());
+        //     }
+
+        //     if (node.getLeftNode() == null){
+        //         return false;
+        //     }
+        //     if (node.getLeftNode().getSymbolValue().equals(func_iden_token.getLex())){
+        //         return currentSymbolTable.funcCallParamsAreValid(node.getLeftNode().getSymbolTable(), func_iden_token.getLex());
+        //     }
+        //     node = node.getRightNode();
+        // }
+
+        return true;
+
+        // TODO:
+        // Perhaps can be done by defining function scopes inside the ST
+        // currently breaks with recursive functions.
+
 
     }
 
