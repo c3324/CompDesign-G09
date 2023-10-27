@@ -6,7 +6,9 @@ public class InstructionSet {
 	public static final int ZERO  = 3;
 	public static final int FALSE = 4;
 	public static final int TRUE  = 5;
-	public static final int TYPE  = 7;
+	
+    
+    public static final int TYPE  = 7;
 	public static final int ITYPE = 8;
 	public static final int FTYPE = 9;
 
@@ -15,8 +17,10 @@ public class InstructionSet {
 	public static final int MUL = 13;
 	public static final int DIV = 14;
 	public static final int REM = 15;
-	public static final int POW = 16;
-	public static final int CHS = 17;
+	
+    public static final int POW = 16;
+	
+    public static final int CHS = 17;
 	public static final int ABS = 18;
 
 	public static final int GT = 21;
@@ -24,19 +28,21 @@ public class InstructionSet {
 	public static final int LT = 23;
 	public static final int LE = 24;
 	public static final int EQ = 25;
-	public static final int NE = 26;
+	
+    public static final int NE = 26;
 
 	public static final int AND = 31;
 	public static final int OR  = 32;
 	public static final int XOR = 33;
 	public static final int NOT = 34;
-	public static final int BT  = 35;
+	
+    public static final int BT  = 35;
 	public static final int BF  = 36;
 	public static final int BR  = 37;
 
 	public static final int L  = 40;
-	public static final int LB = 41;
-	public static final int LH = 42;
+	public static final int LB = 41; //load byte
+	public static final int LH = 42; //load 2 bytes
 	public static final int ST = 43;
 
 	public static final int STEP  = 51;
