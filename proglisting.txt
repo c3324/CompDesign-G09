@@ -1,53 +1,55 @@
-1. /-- Fibonacci sequence program. COMP3290
-2. 
-3. 
-4. CD23 FibonacciSequence
-5. 
-6. func calculateFibonacci(index: integer): integer
-7.   fibonacciValue: integer
-8. 
-9.   begin
-10.     if (index == 0 || index == 1)
-11.       return index;
-12.     else
-13.       fibonacciValue = calculateFibonacci(index - 1) + calculateFibonacci(index - 2);
-14.       return fibonacciValue;
-15.     end
-16.   end
+1. /**
+2. 	Multi-lines
+3. **/
+4. 
+5. /-- Simple variables
+6. 
+7. 
+8. CD23 D
+9. 
+10. 
+11. main
+12. 	a : integer,
+13. 	b : real,
+14. 	c : integer
+15. 
+16. /-- fixed!
 17. 
-18. main
-19.   index: integer,
-20.   fibonacciOfIndex : integer
-21. 
-22. begin
-23.   index = 0;
-24.   fibonacciOfIndex = 0;
-25. 
-26.   in >> index;
-27.   fibonacciOfIndex = calculateFibonacci(index);
-28.   out << fibonacciOfIndex << line;
-29. 
-30. end
-31. 
-32. CD23 FibonacciSequence
-33. 
+18. begin
+19. 	a = 2;
+20. 	b = 3.0;
+21. 	c = 9;
+22. 
+23. 	out << "Basic Maths & String Const";
+24. 
+25. 	out << a, " + ", b, " = ", a+b << line;
+26. 	out << a, " * ", b, " = ", a*b << line;
+27. 	out << b, " - ", a, " = ", b-a << line;
+28. 	out << b, " / ", a, " = ", b/a << line;
+29. 	out << c, " % ", a, " = ", c%a << line;
+30. 	out << c, " += ", a, " = ", c+=a << line;
+31. 	out << c, " -= ", a, " = ", c-=a << line;
+32. 	out << c, " /= ", b, " = ", c/=b << line;
+33. 	out << c, " *= ", b, " = ", c*=b << line;
 34. 
-35. /**
-36. 
-37. <func> ::= func <id> ( <plist> ) : <rtype> <funcbody>
-38. <funcbody> ::= <locals> begin <stats> end
-39. <ifstat> ::= if ( <bool> ) <stats> else <stats> end 
-40. 
-41. <func> ::= func calculateFibonacci(index: integer): integer
-42.   <funcbody> 
-43.   <locals> ::= fibonacciValue: integer
-44.   begin 
-45.     <stats> ::= <ifstat> ::= if ( <bool> ) <stats> else <stats> end 
-46.   end
-47. 
-48. **/
+35. 	out << a, "^", a, " = ", a^a << line;
+36. 	out << b, "^", a, " = ", b^a << line;
+37. 
+38. 	out << "Finished ", "the ", "List!" << line;
+39. 
+40. end 
+41. 
+42. CD23 D
 
  ERRORS 
 
 -------------------------------------------------------------
 
+Syntax Error! Invalid exponent sequence found at line 30 in column 30
+Syntax Error! Invalid term found at line 30 in column 32
+Syntax Error! Invalid exponent sequence found at line 31 in column 30
+Syntax Error! Invalid term found at line 31 in column 32
+Syntax Error! Invalid exponent sequence found at line 32 in column 30
+Syntax Error! Invalid term found at line 32 in column 32
+Syntax Error! Invalid exponent sequence found at line 33 in column 30
+Syntax Error! Invalid term found at line 33 in column 32
