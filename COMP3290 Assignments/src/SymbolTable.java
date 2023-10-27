@@ -53,7 +53,7 @@ public class SymbolTable {
     }
 
     public STRecord getStRecord(int idx){
-        if (idx > number_of_records){
+        if (idx >= number_of_records){
             return parentSymbolTable.getStRecord(idx-number_of_records);
         }
         return records.get(idx);
@@ -131,7 +131,7 @@ public class SymbolTable {
 
     // Handles a type declaration of a token. If the declaration isn't valid returns an error
     // Returns an integer - 0 is success - -1 is variable type not valid (technically should not occur)
-    public int processTokenDeclaration(Token identifier, Token typeToken){
+    public int processTokenDeclaration(Token identifier, Token typeToken, String scope){
 
         // System.out.println("Processing token declaration!");
 
@@ -157,7 +157,7 @@ public class SymbolTable {
         int tokenIndex = getRecordIndex(identifier.getTokID());
 
         if ( tokenIndex == -1){     //if record doesn't already exist
-            records.add(new STRecord(identifier, type));
+            records.add(new STRecord(identifier, type, scope));
             keywordsIndex.put(identifier.getLex(), number_of_records);
             number_of_records++;
            // System.out.println(number_of_records);
@@ -172,7 +172,7 @@ public class SymbolTable {
     // Handles assigning a value to a token - if the token is not defined this returns an error
     // Returns an integer - 0 is success - -1 is variable not declared -2 type does not match declaration
     // This has a requirement that the variable already exists in the symbol table
-    public int processVariable(Token identifier, Token literal){
+    public int processVariable(Token identifier, Token literal, String scope){
 
         System.out.println("Processing variable! iden: " + identifier.getLex() + " literal_type: " + literal.getTokID() + " and value: " + literal.getLex());
 
@@ -215,7 +215,17 @@ public class SymbolTable {
 
         // Valid type
         // Update record
-        typeDeclRecord.setGlyph(literal_value);
+        if (typeDeclRecord.getScope().equals(scope)){
+            typeDeclRecord.setGlyph(literal_value);
+        }
+        else{
+            // create new scoped reference
+            records.add(new STRecord(identifier, typeDeclRecord.getType(), scope));
+            keywordsIndex.put(identifier.getLex(), number_of_records);
+            number_of_records++;
+        }
+        
+        
         // System.out.println("Added variable: " + identifier.getLex() +  " with value: " + literal.getLex() );
         // printTable();
         return 0;
@@ -360,28 +370,39 @@ public class SymbolTable {
         return true;
     }
 
-    public boolean funcCallParamsAreValid(SymbolTable other_ST, String scope){
+    public boolean funcCallParamsAreValid(Token function_iden){
 
-        int param_index = 0;
+        printTable();
 
-        for (int index = 0; index < totalRecords(); index++){
-            STRecord currRecord = records.get(index);
-
-            // null check
-            if (currRecord.getScope() == null){
-                continue;
-            }
-
+        String scope = function_iden.getLex();
+        System.out.println("Checking function parameters are valid. Found scope: " + scope);
+        for(int i = 0; i < totalRecords(); i++){
+            STRecord currRecord = getStRecord(i);
+            System.out.println("Current record scope: " + currRecord.getScope());
             if (currRecord.getScope().equals(scope)){
+                // find _param ST records
+                for(int param_index = 0; param_index < totalRecords(); param_index++){
+                    STRecord paramRecord = getStRecord(param_index);
+                    if (paramRecord.getScope().equals(scope+"_param")){
 
-                // Params typing must match in order!
-                String param_type = other_ST.getStRecord(param_index).getType();
-                if (!currRecord.getType().equals(param_type)){
-                    return false;
+                        // Found both STs. Now compare
+                        while (i-1 < totalRecords() && param_index-1 < totalRecords() && currRecord.getScope().equals(scope) && paramRecord.getScope().equals(scope+"_param")){
+                            // type check
+                            if (!currRecord.getType().equals(paramRecord.getType())){
+                                return false;
+                            }
+                            i++;
+                            currRecord = getStRecord(i);
+                            param_index++;
+                            paramRecord = getStRecord(param_index);
+                        }
+                        // if reached here. success
+                        return true;
+                    }
                 }
-                param_index++;
             }
         }
+        
 
         return true;
 

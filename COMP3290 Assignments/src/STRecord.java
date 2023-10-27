@@ -24,6 +24,7 @@ public class STRecord {
         this.base = base;
         this.offset = offset;
         this.glyph = glyph;
+        this.scope = "";
 
     }
 
@@ -38,6 +39,19 @@ public class STRecord {
         this.offset = "";
         this.glyph = "";
         this.scope = "";
+
+    }
+
+    public STRecord( Token token, String type, String scope){
+
+        this.id = token.getLex();
+        this.line_number = token.getLn();
+        this.col_number = token.getCol();
+        this.type = type;
+        this.base = "";
+        this.offset = "";
+        this.glyph = "";
+        this.scope = scope;
 
     }
 
@@ -61,7 +75,7 @@ public class STRecord {
     public void print(){
         // helper method for printing records
         System.out.println(
-            this.id + " " + this.type + " " + this.glyph
+            this.id + " " + this.type + " " + this.glyph + " scope: " + this.scope
         );
     }
 
