@@ -18,13 +18,13 @@ CD23 D1
 main
 	a : real,
 	b : real,
-	c : integer,
+	c : real,
 	d : real
 
 
 
 begin
-	a = 2;
+	a = 2.0;
 	b = 3.0;
 	c = 987.0;
 	d = 123.0;

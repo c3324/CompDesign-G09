@@ -68,7 +68,7 @@ public class Node {
         symbolValue = value;
     }
 
-    public String getSymbolVaue(){
+    public String getSymbolValue(){
         return symbolValue;
     }
 
@@ -78,6 +78,14 @@ public class Node {
 
     public String getId(){
         return id;
+    }
+
+    public void setSymbolTable(SymbolTable st){
+        this.symbolTable = st;
+    }
+
+    public SymbolTable getSymbolTable(){
+        return symbolTable;
     }
 
     public Integer printTreeHelper(int current_col){
@@ -94,7 +102,7 @@ public class Node {
         }
 
         if (!this.symbolValue.equals("")){
-            string +=  this.getSymbolVaue() + " ";
+            string +=  this.getSymbolValue() + " ";
             col++;
 
             for ( int i = 0; i < string.length() % 7; i++){

@@ -1,94 +1,20 @@
-1. /**
-2. 	Comp3290 Assignment 1
-3. 	Main Class
-4. 	Author: Dan Bell
-5. 	Student No: c9876543
-6. 	Last Modified 8/8/2021
-7. 	Updated by Dan
-8. **/
-9. 
-10. /-- Simple variables
+1. CD23 program1
+2. main 
+3.     var1 : integer,
+4.     var2 : integer,
+5.     var3 : integer
+6. 
+7. begin
+8.     var1 = 1;
+9.     var2 = 2;
+10.     var3 = var1 + var2;
 11. 
-12. 
-13. CD23 D1
+12.     Out << var3 << line;
+13. 
 14. 
-15. 
-16. 
-17. 
-18. main
-19. 	a : real,
-20. 	b : real,
-21. 	c : integer,
-22. 	d : real
-23. 
-24. 
-25. 
-26.     out << "How many points in the polygon (max 20):";
-27.     in >> numOfpoints;
-28. 
-29.     if (numOfpoints > 20)
-30.       out << "You entered too many points.";
-31.       return inputPoints();
-32.     else
-33.       for (index = 0; index < numOfpoints)
-34.         out << "Enter point ", index, " x coordinate:" << line;
-35.         in >> points[index].x;
-36.         out << "Enter point ", index, " y coordinate:" << line;
-37.         in >> points[index].y;
-38.         index += 1;
-39.       end
-40. 
-41.       return numOfpoints;
-42.     end
-43.   end
-44. 
-45. func calculateArea(numOfpoints: integer): real
-46.   index: integer,
-47.   nextIndex: integer,
-48.   endIndex: integer,
-49.   sum: real,
-50.   area: real
-51. 
-52.   begin
-53.     index = 0;
-54.     nextIndex = 0;
-55.     endIndex = 0;
-56.     sum = 0.0;
-57.     area = 0.0
-58. 
-59.     if (numOfpoints <= 3)
-60.       return 0.0;
-61.     end
-62. 
-63.     endIndex = numOfpoints - 2;
-64. 
-65.     for (index = 0; index <= endIndex)
-66.       nextIndex += 1;
-67.       sum += (points[nextIndex].x + points[index].x) * (points[nextIndex].y - points[index].y);
-68.       index += 1;
-69.     end
-70. 
-71.     area = sum / 2.0;
-72. 
-73.     if (area < 0.0)
-74.       area *= 0.0 - 1.0;
-75.     end
-76. 
-77.     return area;
-78.   end
-79. 
-80. main
-81.   numOfpoints: integer,
-82.   polygonArea: real
-83. 
-84. begin
-85.   numOfpoints = 0;
-86.   polygonArea - 0.0;
-87. 
-88.   numOfpoints = inputPoints();
-89.   polygonArea = calculateArea(numOfpoints);
-90. 
-91.   out << "Polygon area: ", polygonArea;
-92. end
-93. 
-94. CD23 AreaOfPolygon
+15. end CD23 program1
+
+ ERRORS 
+
+-------------------------------------------------------------
+
