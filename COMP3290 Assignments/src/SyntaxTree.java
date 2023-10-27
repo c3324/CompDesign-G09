@@ -15,6 +15,7 @@ public class SyntaxTree {
     ErrorHandling errorList;
 
     private String current_scope; // currently used only to check function params
+    private boolean contains_errors;
 
     private enum ERROR_STATES {
         NPROG, CONST, TYPES, ARRAYS, FUNC, MAIN, PARAMS // note params waits on')'
@@ -41,7 +42,12 @@ public class SyntaxTree {
         errorList = ErrorHandling.getInstance();
 
         scope = SCOPE.GLOBAL;
+        contains_errors = false;
 
+    }
+
+    public Node getRoot(){
+        return root;
     }
 
     // Match current token
@@ -56,6 +62,7 @@ public class SyntaxTree {
     private void error(){
         String errorString = "Syntax Error! found at line " + currentToken.getLn() + " in column " + currentToken.getCol();
         errorList.addErrorToList(errorString);   
+        contains_errors = true;
 
         burnTokens();
     }
@@ -63,6 +70,7 @@ public class SyntaxTree {
     private void error(String msg){
         String errorString = "Syntax Error! " + msg + " found at line " + currentToken.getLn() + " in column " + currentToken.getCol();
         errorList.addErrorToList(errorString);
+        contains_errors = true;
 
         burnTokens();
 
@@ -73,6 +81,7 @@ public class SyntaxTree {
     private void semanticError(String msg){
         String errorString = "Semantic Error: line " + currentToken.getLn() + " - " + msg;
         errorList.addErrorToList(errorString);
+        contains_errors = true;
 
     }
 
@@ -170,13 +179,14 @@ public class SyntaxTree {
             match(); // TCD23 token
 
             root.setSymbolValue(currentToken.getLex());
-            currentSymbolTable.processTokenDeclaration(currentToken, currentToken, current_scope);
+            // currentSymbolTable.processTokenDeclaration(currentToken, currentToken, current_scope);
             match(); // identifier token
 
             root.setLeftNode(globals());
             root.setMidNode(funcs());
             root.setRightNode(mainbody());
 
+            root.setSymbolTable(currentSymbolTable);
         }  
         
     }
@@ -361,6 +371,9 @@ public class SyntaxTree {
             return new Node("NERROR ");
         }
         match(); // <id>
+
+        // For codeGen alloc
+        NMAIN.setSymbolTable(currentSymbolTable); 
         
         return NMAIN;
         
@@ -555,6 +568,8 @@ public class SyntaxTree {
         match(); // TCOLN
         
         stype();
+
+        nsdecl.setSymbolTable(currentSymbolTable);
         
         return nsdecl;
         
@@ -1127,6 +1142,7 @@ public class SyntaxTree {
         Node bool = bool();
         asgnop.setLeftNode(var_r);
         asgnop.setRightNode(bool);
+        asgnop.setSymbolTable(currentSymbolTable);
         return asgnop;
         
     }
@@ -2347,6 +2363,11 @@ public class SyntaxTree {
         return currentSymbolTable.funcCallParamsAreValid(func_iden_token);
 
 
+    }
+
+
+    public boolean containsErrors(){
+        return contains_errors;
     }
 
     

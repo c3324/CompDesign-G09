@@ -1,26 +1,20 @@
-1. CD23 fibonacci
-2. 
-3. func fib(num : integer) : integer
-4.     begin
-5.         if (num == 1 || num == 2)
-6.         /--    return 1;
-7.         end
-8.         /--return fib(num - 2) + fib(num - 1);
-9.     end
-10. 
-11. main
-12.     num : integer
+1. CD23 program1
+2. main 
+3.     var1 : integer,
+4.     var2 : integer,
+5.     var3 : integer
+6. 
+7. begin
+8.     var1 = 1;
+9.     var2 = 2;
+10.     var3 = var1 + var2;
+11. 
+12.     Out << var3 << line;
 13. 
-14. begin
-15.     in >> num;
-16.     out << (fib(num)) << line;
-17. 
-18. 
-19. end CD23 fibonacci
+14. 
+15. end CD23 program1
 
  ERRORS 
 
 -------------------------------------------------------------
 
-Syntax Error! Invalid <stat> statement found at line 7 in column 7
-Semantic Error: line 11 - Function has no return statement!

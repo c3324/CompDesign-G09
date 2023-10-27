@@ -11,6 +11,7 @@ public class SymbolTable {
     private HashMap<String, Integer> keywordsIndex;
     
     private int number_of_records;
+    private int offset;
 
     public SymbolTable(boolean push_keywords){
 
@@ -70,6 +71,19 @@ public class SymbolTable {
         }
         r += number_of_records;
         return r;
+    }
+
+    public STRecord find(String var){
+
+        for (int i = 0; i < number_of_records; i++){
+            STRecord rec = records.get(i);
+            if (rec.getID().equals(var)){
+                return rec;
+            }
+        }
+        parentSymbolTable.find(var);
+        return null;
+        
     }
 
     public SymbolTable dropScope(){
@@ -136,17 +150,22 @@ public class SymbolTable {
         // System.out.println("Processing token declaration!");
 
         String type;
+        int offset_used = offset;
         if (typeToken.getTokID().equals("TINTG ")){
             type = "integer";
+            offset += 8;
         }
         else if (typeToken.getTokID().equals("TREAL ")){
             type = "real";
+            offset += 8;
         }
         else if (typeToken.getTokID().equals("TBOOL ")){
             type = "bool";
+            // TODO: bool offsets
         }
         else if (typeToken.getTokID().equals("TIDEN ")){
             type = typeToken.getLex();
+            // TODO: iden offsets
         }
         else{
             // System.out.println("Invalid type decl found: Recieved token: " + identifier.getLex() + " received type: " + typeToken.getTokID());
@@ -157,7 +176,7 @@ public class SymbolTable {
         int tokenIndex = getRecordIndex(identifier.getTokID());
 
         if ( tokenIndex == -1){     //if record doesn't already exist
-            records.add(new STRecord(identifier, type, scope));
+            records.add(new STRecord(identifier, type, scope, offset_used));
             keywordsIndex.put(identifier.getLex(), number_of_records);
             number_of_records++;
            // System.out.println(number_of_records);
@@ -194,7 +213,6 @@ public class SymbolTable {
             }
             catch (Exception e){ // TODO: check if converting float to int
                 // not an integer!
-                System.out.println("test2");
                 return -2;
             }
         }

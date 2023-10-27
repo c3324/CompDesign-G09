@@ -6,7 +6,7 @@
 import java.io.IOException;
 import java.util.LinkedList;
 
-public class A2 {
+public class A3 {
     
     public static void main(String[] args) throws IOException {
 
@@ -17,10 +17,12 @@ public class A2 {
 		// }
 
 		// String filepath = args[0];
-		String filepath = "COMP3290 Assignments/testfiles/testsuite/fib.txt"; // for non-console use
+		String filepath = "COMP3290 Assignments/testfiles/main_stats_code_gen_check"; // for non-console use
+		String filepath_txt = filepath + ".txt"; // for non-console use
+		
 		
 		// Construct Scanner.
-		CDScanner scanner = new CDScanner(filepath);
+		CDScanner scanner = new CDScanner(filepath_txt);
 
 		//read file contents into program listing file, with line numbers.
 		scanner.createProgramListing();
@@ -47,7 +49,7 @@ public class A2 {
 			//yay, there are no lexical Errors, so the Parsing Process can begin
 			
 			//This is where : CDParser parser = new CDParser(tokenList); can then go. 
-			scanner = new CDScanner(filepath);
+			scanner = new CDScanner(filepath_txt);
 			CDParser parser = new CDParser(scanner);
 			
 			parser.parse();
@@ -57,6 +59,19 @@ public class A2 {
 			parser.addErrorstoFile();
 			//parser.printSymbolTable(); //--> Uncomment this to see what has been stored in the Symbol Table
 
+
+			// Code Gen
+			if (parser.getSyntaxTree().containsErrors()){
+				// stop
+				return;
+			}
+			SyntaxTree syntaxTree = parser.getSyntaxTree();
+			CodeGen codeGenerator = new CodeGen(syntaxTree, "output");
+			codeGenerator.run();
+			codeGenerator.toFile("output.mod");
+
 		}
+
+		
 	}
 }
