@@ -20,6 +20,11 @@ public class SyntaxTree {
         NPROG, CONST, TYPES, ARRAYS, FUNC, MAIN, PARAMS // note params waits on')'
     }
 
+    private SCOPE scope;
+    private enum SCOPE {
+        GLOBAL, MAIN, FUNCTION_NO_RETURN, FUNCTION_WITH_RETURN
+    }
+
     private ERROR_STATES error_recovery_state;
 
     public SyntaxTree(CDScanner scanner){
@@ -34,6 +39,8 @@ public class SyntaxTree {
         globalSymbolTable = currentSymbolTable;
 
         errorList = ErrorHandling.getInstance();
+
+        scope = SCOPE.GLOBAL;
 
     }
 
@@ -624,6 +631,7 @@ public class SyntaxTree {
     public Node func(){
 
         error_recovery_state = ERROR_STATES.FUNC;
+        scope = SCOPE.FUNCTION_NO_RETURN;
         // Functions don't interact with global symbol table.
         currentSymbolTable = new SymbolTable(currentSymbolTable);
 
@@ -682,6 +690,12 @@ public class SyntaxTree {
         // return to global st
         NFUND.setSymbolTable(currentSymbolTable);
         currentSymbolTable = globalSymbolTable;
+
+        System.out.println("Funciton return statement state: " + scope);
+        if (scope == SCOPE.FUNCTION_NO_RETURN){
+            semanticError("Function has no return statement!");
+        }
+        scope = SCOPE.GLOBAL;
 
         return NFUND;
 
@@ -1533,6 +1547,7 @@ public class SyntaxTree {
             return new Node("NERROR ");
         }
         match(); // return
+        scope = SCOPE.FUNCTION_WITH_RETURN;
 
         Node NRETN = new Node("NRETN ");
         NRETN.setLeftNode(returnstat_r());

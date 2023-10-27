@@ -1,55 +1,26 @@
-1. /**
-2. 	Multi-lines
-3. **/
-4. 
-5. /-- Simple variables
-6. 
-7. 
-8. CD23 D
-9. 
+1. CD23 fibonacci
+2. 
+3. func fib(num : integer) : integer
+4.     begin
+5.         if (num == 1 || num == 2)
+6.         /--    return 1;
+7.         end
+8.         /--return fib(num - 2) + fib(num - 1);
+9.     end
 10. 
 11. main
-12. 	a : integer,
-13. 	b : real,
-14. 	c : integer
-15. 
-16. /-- fixed!
+12.     num : integer
+13. 
+14. begin
+15.     in >> num;
+16.     out << (fib(num)) << line;
 17. 
-18. begin
-19. 	a = 2;
-20. 	b = 3.0;
-21. 	c = 9;
-22. 
-23. 	out << "Basic Maths & String Const";
-24. 
-25. 	out << a, " + ", b, " = ", a+b << line;
-26. 	out << a, " * ", b, " = ", a*b << line;
-27. 	out << b, " - ", a, " = ", b-a << line;
-28. 	out << b, " / ", a, " = ", b/a << line;
-29. 	out << c, " % ", a, " = ", c%a << line;
-30. 	out << c, " += ", a, " = ", c+=a << line;
-31. 	out << c, " -= ", a, " = ", c-=a << line;
-32. 	out << c, " /= ", b, " = ", c/=b << line;
-33. 	out << c, " *= ", b, " = ", c*=b << line;
-34. 
-35. 	out << a, "^", a, " = ", a^a << line;
-36. 	out << b, "^", a, " = ", b^a << line;
-37. 
-38. 	out << "Finished ", "the ", "List!" << line;
-39. 
-40. end 
-41. 
-42. CD23 D
+18. 
+19. end CD23 fibonacci
 
  ERRORS 
 
 -------------------------------------------------------------
 
-Syntax Error! Invalid exponent sequence found at line 30 in column 30
-Syntax Error! Invalid term found at line 30 in column 32
-Syntax Error! Invalid exponent sequence found at line 31 in column 30
-Syntax Error! Invalid term found at line 31 in column 32
-Syntax Error! Invalid exponent sequence found at line 32 in column 30
-Syntax Error! Invalid term found at line 32 in column 32
-Syntax Error! Invalid exponent sequence found at line 33 in column 30
-Syntax Error! Invalid term found at line 33 in column 32
+Syntax Error! Invalid <stat> statement found at line 7 in column 7
+Semantic Error: line 11 - Function has no return statement!

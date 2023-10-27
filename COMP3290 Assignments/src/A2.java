@@ -17,7 +17,7 @@ public class A2 {
 		// }
 
 		// String filepath = args[0];
-		String filepath = "COMP3290 Assignments/testfiles/testsuite/dadv.txt"; // for non-console use
+		String filepath = "COMP3290 Assignments/testfiles/testsuite/fib.txt"; // for non-console use
 		
 		// Construct Scanner.
 		CDScanner scanner = new CDScanner(filepath);
