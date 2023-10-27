@@ -1,19 +1,53 @@
-1. CD23 fibonacci
+1. /-- Fibonacci sequence program. COMP3290
 2. 
-3. func fib(num : integer) : integer
-4.     begin
-5.         if (num == 1 || num == 2)
-6.             return 1;
-7.         end
-8.         return fib(num - 2) + fib(num - 1);
-9.     end
-10. 
-11. main
-12.     num : integer
-13. 
-14. begin
-15.     in >> num;
-16.     out << (fib(num)) << line;
+3. 
+4. CD23 FibonacciSequence
+5. 
+6. func calculateFibonacci(index: integer): integer
+7.   fibonacciValue: integer
+8. 
+9.   begin
+10.     if (index == 0 || index == 1)
+11.       return index;
+12.     else
+13.       fibonacciValue = calculateFibonacci(index - 1) + calculateFibonacci(index - 2);
+14.       return fibonacciValue;
+15.     end
+16.   end
 17. 
-18. 
-19. end CD23 fibonacci
+18. main
+19.   index: integer,
+20.   fibonacciOfIndex : integer
+21. 
+22. begin
+23.   index = 0;
+24.   fibonacciOfIndex = 0;
+25. 
+26.   in >> index;
+27.   fibonacciOfIndex = calculateFibonacci(index);
+28.   out << fibonacciOfIndex << line;
+29. 
+30. end
+31. 
+32. CD23 FibonacciSequence
+33. 
+34. 
+35. /**
+36. 
+37. <func> ::= func <id> ( <plist> ) : <rtype> <funcbody>
+38. <funcbody> ::= <locals> begin <stats> end
+39. <ifstat> ::= if ( <bool> ) <stats> else <stats> end 
+40. 
+41. <func> ::= func calculateFibonacci(index: integer): integer
+42.   <funcbody> 
+43.   <locals> ::= fibonacciValue: integer
+44.   begin 
+45.     <stats> ::= <ifstat> ::= if ( <bool> ) <stats> else <stats> end 
+46.   end
+47. 
+48. **/
+
+ ERRORS 
+
+-------------------------------------------------------------
+

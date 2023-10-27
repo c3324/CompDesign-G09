@@ -656,7 +656,7 @@ public class SyntaxTree {
         if (plist != null){
             plist.setSymbolTable(currentSymbolTable);
         }
-        System.out.println("Checking st....");
+        // System.out.println("Checking st....");
         
         // currentSymbolTable = currentSymbolTable.dropScope();
 
@@ -676,9 +676,9 @@ public class SyntaxTree {
         match(); 
         
         rtype();
-        currentSymbolTable.printTable();
+        // currentSymbolTable.printTable();
         NFUND.setRightNode(funcbody());
-        currentSymbolTable.printTable();
+        // currentSymbolTable.printTable();
         // return to global st
         NFUND.setSymbolTable(currentSymbolTable);
         currentSymbolTable = globalSymbolTable;
@@ -2078,9 +2078,9 @@ public class SyntaxTree {
             Node NFCALL = new Node("NFCALL ");
 
             // Check function has been declared;
-            if (!funcExists(currentIdentifier)){
-                semanticError("Function call for " + currentIdentifier.getLex()+ " has not been declared!");
-            }
+            // if (!funcExists(currentIdentifier)){
+            //     semanticError("Function call for " + currentIdentifier.getLex()+ " has not been declared!");
+            // }
             NFCALL.setSymbolValue(id_lex);
 
             match(); // (

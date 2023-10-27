@@ -174,7 +174,7 @@ public class SymbolTable {
     // This has a requirement that the variable already exists in the symbol table
     public int processVariable(Token identifier, Token literal, String scope){
 
-        System.out.println("Processing variable! iden: " + identifier.getLex() + " literal_type: " + literal.getTokID() + " and value: " + literal.getLex());
+        // System.out.println("Processing variable! iden: " + identifier.getLex() + " literal_type: " + literal.getTokID() + " and value: " + literal.getLex());
 
         // Semantic checking
         // check if type declaration exists
@@ -215,15 +215,16 @@ public class SymbolTable {
 
         // Valid type
         // Update record
-        if (typeDeclRecord.getScope().equals(scope)){
-            typeDeclRecord.setGlyph(literal_value);
-        }
-        else{
-            // create new scoped reference
-            records.add(new STRecord(identifier, typeDeclRecord.getType(), scope));
-            keywordsIndex.put(identifier.getLex(), number_of_records);
-            number_of_records++;
-        }
+        typeDeclRecord.setGlyph(literal_value);
+        // if (typeDeclRecord.getScope().equals(scope)){
+        //     typeDeclRecord.setGlyph(literal_value);
+        // }
+        // else{
+        //     // create new scoped reference
+        //     records.add(new STRecord(identifier, typeDeclRecord.getType(), scope));
+        //     keywordsIndex.put(identifier.getLex(), number_of_records);
+        //     number_of_records++;
+        // }
         
         
         // System.out.println("Added variable: " + identifier.getLex() +  " with value: " + literal.getLex() );
@@ -235,7 +236,7 @@ public class SymbolTable {
     // Used by <init> to force identifier into symbol table without first being declared
     public int processVariableForce(Token identifier, Token literal){
 
-        System.out.println("Processing variable! iden: " + identifier.getLex() + " literal_type: " + literal.getTokID() + " and value: " + literal.getLex());
+        // System.out.println("Processing variable! iden: " + identifier.getLex() + " literal_type: " + literal.getTokID() + " and value: " + literal.getLex());
 
         if (literal.getTokID().equals("TILIT ")){
             STRecord new_record = new STRecord(identifier, "integer");
@@ -293,7 +294,7 @@ public class SymbolTable {
     // Used by function params to identify types
     public int processParamForce(Token identifier, Token literal, String scope){
 
-        System.out.println("Processing variable! iden: " + identifier.getLex() + " literal_type: " + literal.getTokID() + " and value: " + literal.getLex());
+        // System.out.println("Processing variable! iden: " + identifier.getLex() + " literal_type: " + literal.getTokID() + " and value: " + literal.getLex());
 
         if (literal.getTokID().equals("TINTG ")){
             STRecord new_record = new STRecord(identifier, "integer");
@@ -372,39 +373,40 @@ public class SymbolTable {
 
     public boolean funcCallParamsAreValid(Token function_iden){
 
-        printTable();
+        return true;
+    //     printTable();
 
-        String scope = function_iden.getLex();
-        System.out.println("Checking function parameters are valid. Found scope: " + scope);
-        for(int i = 0; i < totalRecords(); i++){
-            STRecord currRecord = getStRecord(i);
-            System.out.println("Current record scope: " + currRecord.getScope());
-            if (currRecord.getScope().equals(scope)){
-                // find _param ST records
-                for(int param_index = 0; param_index < totalRecords(); param_index++){
-                    STRecord paramRecord = getStRecord(param_index);
-                    if (paramRecord.getScope().equals(scope+"_param")){
+    //     String scope = function_iden.getLex();
+    //     System.out.println("Checking function parameters are valid. Found scope: " + scope);
+    //     for(int i = 0; i < totalRecords(); i++){
+    //         STRecord currRecord = getStRecord(i);
+    //         System.out.println("Current record scope: " + currRecord.getScope());
+    //         if (currRecord.getScope().equals(scope)){
+    //             // find _param ST records
+    //             for(int param_index = 0; param_index < totalRecords(); param_index++){
+    //                 STRecord paramRecord = getStRecord(param_index);
+    //                 if (paramRecord.getScope().equals(scope+"_param")){
 
-                        // Found both STs. Now compare
-                        while (i-1 < totalRecords() && param_index-1 < totalRecords() && currRecord.getScope().equals(scope) && paramRecord.getScope().equals(scope+"_param")){
-                            // type check
-                            if (!currRecord.getType().equals(paramRecord.getType())){
-                                return false;
-                            }
-                            i++;
-                            currRecord = getStRecord(i);
-                            param_index++;
-                            paramRecord = getStRecord(param_index);
-                        }
-                        // if reached here. success
-                        return true;
-                    }
-                }
-            }
-        }
+    //                     // Found both STs. Now compare
+    //                     while (i-1 < totalRecords() && param_index-1 < totalRecords() && currRecord.getScope().equals(scope) && paramRecord.getScope().equals(scope+"_param")){
+    //                         // type check
+    //                         if (!currRecord.getType().equals(paramRecord.getType())){
+    //                             return false;
+    //                         }
+    //                         i++;
+    //                         currRecord = getStRecord(i);
+    //                         param_index++;
+    //                         paramRecord = getStRecord(param_index);
+    //                     }
+    //                     // if reached here. success
+    //                     return true;
+    //                 }
+    //             }
+    //         }
+    //     }
         
 
-        return true;
+    //     return true;
 
     }
    
