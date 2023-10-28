@@ -2,18 +2,44 @@
 2. main 
 3.     var1 : integer,
 4.     var2 : integer,
-5.     var3 : integer
-6. 
-7. begin
-8.     var1 = 1;
-9.     var2 = 2;
-10.     var3 = var1 + 5;
-11.     var3 = var1 + var2;
-12. 
-13.     Out << var1, " + ", var2, " = ", var3 << line;
-14. 
-15. 
-16. end CD23 program1
+5.     var3 : integer,
+6.     var4 : integer,
+7.     var5 : integer,
+8.     var6 : integer,
+9.     var7 : integer,
+10.     var8 : integer
+11. 
+12. begin
+13.     /** var1 = 4;
+14.     var2 = 2;
+15.     var3 = var1 + var2;
+16.     var4 = var1 - var2;
+17.     var5 = var1 * var2;
+18.     var6 = var1 / var2;
+19.     var7 = var1 % var2;
+20.     var8 = var1 * var2 + var1 / var2; /-- nesting
+21. 
+22.     Out << var1, " + ", var2, " = ", var3 << line;
+23.     Out << var1, " - ", var2, " = ", var4 << line;
+24.     Out << var1, " * ", var2, " = ", var5 << line;
+25.     Out << var1, " / ", var2, " = ", var6 << line;
+26.     Out << var1, " % ", var2, " = ", var7 << line;
+27.     Out << var1, " * ", var2, " + ", var1, " / ", var2," = ", var8 << line; **/
+28. 
+29.     if (true)
+30.         Out << "True is True" << line;
+31.     else
+32.         Out << "True is False" << line;
+33.     end
+34. 
+35.     if (false)
+36.         Out << "false is True" << line;
+37.     else
+38.         Out << "false is False" << line;
+39.     end
+40. 
+41. 
+42. end CD23 program1
 
  ERRORS 
 

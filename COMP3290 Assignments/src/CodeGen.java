@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 public class CodeGen {
 
     private static int instruction_size = 4096; // easy way to assign memory.. for some reason can break if uses the last row?
+    private static int if_else_block_size = 64;
 
     private SyntaxTree syntaxTree;
     private Node root;
@@ -160,6 +161,10 @@ public class CodeGen {
     public void NSTATS(Node head){
 
         // System.out.println("In NSTATS");
+        if (head.getId().equals("STAT ")){ // cheat re-use.
+            STAT(head); 
+            return;
+        }
 
         // Left
         Node left = head.getLeftNode();
@@ -167,6 +172,9 @@ public class CodeGen {
 
         // Right
         Node right = head.getRightNode();
+        if (right == null){
+            return;
+        }
         if (right.getId().equals("NSTATS ")){
             NSTATS(right);
         }
@@ -219,7 +227,24 @@ public class CodeGen {
             
         }
         else if (checkNode.getId().equals("NIFTE ")){
-            
+            int else_address = pc + if_else_block_size;
+            int post_else_address = else_address + if_else_block_size; // non-dynamic assignment
+            LA0(else_address);
+            bool(head);
+            BF(else_address);
+            NSTATS(checkNode.getMidNode());
+            if (pc > else_address){
+                System.out.println("Error! If block too small!");
+            }
+            LA0(post_else_address);
+            BT(post_else_address);
+            NSTATS(checkNode.getRightNode());
+            if (pc > post_else_address){
+                System.out.println("Error! else block too small!");
+            }
+
+
+
         }
         else if (checkNode.getId().equals("NINPUT ")){
             
@@ -281,10 +306,7 @@ public class CodeGen {
 
         String var = leftNode.getSymbolValue(); // TODO: Arrays
         SymbolTable st = head.getSymbolTable();
-        st.printTable();
         STRecord rec = st.find(var);
-
-        System.out.println("Finding offset: " + rec);
         // SM
         LA1(rec);
 
@@ -372,9 +394,6 @@ public class CodeGen {
         STRecord rec = main_symbol_table.find(literal);
         int n_bytes = countBytes(stringToByte(literal));
 
-        System.out.println("Searching for literal: " + literal);
-        main_symbol_table.printTable();
-
         // SM
         LA0(rec);
         mod.push("instructions", InstructionSet.STRPR);
@@ -391,6 +410,53 @@ public class CodeGen {
         expr(head.getRightNode());
 
         mod.push("instructions", InstructionSet.ADD);
+        pc++;
+    }
+
+    public void NSUB(Node head){
+
+        expr(head.getLeftNode());
+        expr(head.getRightNode());
+
+        mod.push("instructions", InstructionSet.SUB);
+        pc++;
+    }
+
+    public void NMUL(Node head){
+
+        expr(head.getLeftNode());
+        expr(head.getRightNode());
+
+        mod.push("instructions", InstructionSet.MUL);
+        pc++;
+    }
+
+    public void NDIV(Node head){
+
+        expr(head.getLeftNode());
+        expr(head.getRightNode());
+
+        mod.push("instructions", InstructionSet.DIV);
+        pc++;
+    }
+
+    public void NMOD(Node head){
+
+        // TODO: Validate
+
+        expr(head.getLeftNode());
+        expr(head.getRightNode());
+
+        mod.push("instructions", InstructionSet.REM);
+        pc++;
+    }
+
+    public void NPOW(Node head){
+
+        expr(head.getLeftNode());
+        expr(head.getRightNode());
+
+        mod.push("instructions", InstructionSet.POW);
         pc++;
     }
 
@@ -416,22 +482,87 @@ public class CodeGen {
             NADD(head);
         }
         else if ( head.getId().equals("NSUB ")){
-            
+            NSUB(head);
         } 
         else if ( head.getId().equals("NMUL ")){
-            
+            NMUL(head);
         }
         else if ( head.getId().equals("NDIV ")){
-            
+            NDIV(head);
         }
         else if ( head.getId().equals("NMOD ")){
-            
+            NMOD(head);
         }
         else if ( head.getId().equals("NPOW ")){
-            
+            NPOW(head);
         }
         else if ( head.getId().equals("NSIMV ")){
             NSIMV(head);
+        }
+        else if (head.getId().equals("NTRUE ")){
+            mod.push("instructions", InstructionSet.TRUE);
+            pc++;
+        }
+        else if (head.getId().equals("NFALS ")){
+            mod.push("instructions", InstructionSet.FALSE);
+            pc++;
+        }
+        else if(head.getId().equals("NBOOL ")){
+            bool(head);
+        }
+    }
+
+    private void bool(Node head){
+
+        if (head.getId().equals("NBOOL ")){
+            Node logop_ = head.getMidNode();
+            // TODO: Logical operator.
+            if (logop_.getId().equals("NAND ")){
+
+            }
+            else if (logop_.getId().equals("NOR ")){
+
+            }
+            else if (logop_.getId().equals("NXOR ")){
+
+            }
+            // TODO: else error? 
+        }
+        else{
+            rel(head);
+        }
+    }
+
+    private void rel(Node head){
+
+        if (head.getId().equals("NNOT ")){
+
+        }
+        else {
+            if (head.getMidNode() == null){
+                expr(head);
+                return;
+            }
+            // else
+            Node relop_ = head.getMidNode();
+            if (relop_.getId().equals("NEQL ")){
+
+            }
+            else if (relop_.getId().equals("NNEQ ")){
+
+            }
+            else if (relop_.getId().equals("NGRT ")){
+
+            }
+            else if (relop_.getId().equals("NLSS ")){
+
+            }
+            else if (relop_.getId().equals("NLEQ ")){
+
+            }
+            else if (relop_.getId().equals("NGEQ ")){
+
+            }
         }
     }
 
@@ -441,11 +572,48 @@ public class CodeGen {
         LV1(rec);
     }
 
+    private void BF(int address){
+        mod.push("instructions", InstructionSet.BF);
+
+        String bytes = intToBytes(address);
+        String[] bytes_array = bytes.split(" ");
+        mod.push("instructions", bytes_array[0]);
+        mod.push("instructions", bytes_array[1]);
+        mod.push("instructions", bytes_array[2]);
+        mod.push("instructions", bytes_array[3]);
+        pc+= 5;
+    }
+
+    private void BT(int address){
+        mod.push("instructions", InstructionSet.BT);
+
+        String bytes = intToBytes(address);
+        String[] bytes_array = bytes.split(" ");
+        mod.push("instructions", bytes_array[0]);
+        mod.push("instructions", bytes_array[1]);
+        mod.push("instructions", bytes_array[2]);
+        mod.push("instructions", bytes_array[3]);
+        pc+= 5;
+    }
+
     private void LA0(STRecord rec){
         // TODO handle more than 256 addresses.
         mod.push("instructions", InstructionSet.LA0);
 
         String bytes = intToBytes(rec.getBase() + rec.getOffset());
+        String[] bytes_array = bytes.split(" ");
+        mod.push("instructions", bytes_array[0]);
+        mod.push("instructions", bytes_array[1]);
+        mod.push("instructions", bytes_array[2]);
+        mod.push("instructions", bytes_array[3]);
+        pc+= 5;
+    }
+
+    private void LA0(int address){
+        // TODO handle more than 256 addresses.
+        mod.push("instructions", InstructionSet.LA0);
+
+        String bytes = intToBytes(address);
         String[] bytes_array = bytes.split(" ");
         mod.push("instructions", bytes_array[0]);
         mod.push("instructions", bytes_array[1]);

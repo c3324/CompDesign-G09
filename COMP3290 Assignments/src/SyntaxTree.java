@@ -1331,6 +1331,10 @@ public class SyntaxTree {
 
         NIFTH.setRightNode(ifstat_opt_end());
 
+        if (NIFTH.getRightNode() != null){
+            NIFTH.setId("NIFTE ");
+        }
+
         if (!(currentToken.getTokID().equals("TTEND ") )){
             error("Missing '(' in for statement");
             return new Node("NERROR ");
