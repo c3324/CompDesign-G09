@@ -308,10 +308,8 @@ public class CodeGen {
         else if(leftChild.getId().equals("NSTRG ")){
             NSTRG(leftChild);
         }
-        else if (leftChild.getId().endsWith("NSIMV ")){
-            String var_name = leftChild.getSymbolValue();
-            STRecord rec = main_symbol_table.find(var_name);
-            LV1(rec);
+        else if (leftChild.getId().equals("NSIMV ")){
+            NSIMV(leftChild);
             mod.push("instructions", InstructionSet.VALPR);
             pc++;
         }
@@ -336,9 +334,7 @@ public class CodeGen {
             NSTRG(leftChild);
         }
         else if (leftChild.getId().endsWith("NSIMV ")){
-            String var_name = leftChild.getSymbolValue();
-            STRecord rec = main_symbol_table.find(var_name);
-            LV1(rec);
+            NSIMV(leftChild);
             mod.push("instructions", InstructionSet.VALPR);
             pc++;
         } // TODO: Arrays?
@@ -357,9 +353,7 @@ public class CodeGen {
             NSTRG(rightChild);
         }
         else if (rightChild.getId().endsWith("NSIMV ")){
-            String var_name = rightChild.getSymbolValue();
-            STRecord rec = main_symbol_table.find(var_name);
-            LV1(rec);
+            NSIMV(rightChild);
             mod.push("instructions", InstructionSet.VALPR);
             pc++;
         }
@@ -393,7 +387,11 @@ public class CodeGen {
 
     public void NADD(Node head){
 
-        Node leftChild = head.getLeftNode();
+        expr(head.getLeftNode());
+        expr(head.getRightNode());
+
+        mod.push("instructions", InstructionSet.ADD);
+        pc++;
     }
 
     private void expr(Node head){
@@ -404,9 +402,43 @@ public class CodeGen {
             mod.push("instructions", value);
             pc+=2;
         }
+        else if ( head.getId().equals("NFLIT ")){
+            
+            // TODO: Floats?
+            // float value = Float.parseFloat(head.getSymbolValue());
+            // mod.push("instructions", InstructionSet.LB);
+            // mod.push("instructions", value);
+            // pc+=2;
+            
+        }
+        // TODO: ALL THE BELOW
         else if ( head.getId().equals("NADD ")){
             NADD(head);
         }
+        else if ( head.getId().equals("NSUB ")){
+            
+        } 
+        else if ( head.getId().equals("NMUL ")){
+            
+        }
+        else if ( head.getId().equals("NDIV ")){
+            
+        }
+        else if ( head.getId().equals("NMOD ")){
+            
+        }
+        else if ( head.getId().equals("NPOW ")){
+            
+        }
+        else if ( head.getId().equals("NSIMV ")){
+            NSIMV(head);
+        }
+    }
+
+    private void NSIMV(Node head){
+        String var_name = head.getSymbolValue();
+        STRecord rec = main_symbol_table.find(var_name);
+        LV1(rec);
     }
 
     private void LA0(STRecord rec){
