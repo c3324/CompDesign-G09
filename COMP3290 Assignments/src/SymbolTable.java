@@ -309,6 +309,22 @@ public class SymbolTable {
         
     }
 
+    // 
+    public void processStringLiteral(Token stringToken){
+
+        
+        STRecord new_record = new STRecord(stringToken, "string");
+        new_record.setGlyph(stringToken.getLex());
+        records.add(new_record);
+        keywordsIndex.put(stringToken.getLex(), number_of_records); 
+        number_of_records++;
+        // System.out.println(number_of_records);
+        return;
+
+
+        
+    }
+
     // Used by function params to identify types
     public int processParamForce(Token identifier, Token literal, String scope){
 

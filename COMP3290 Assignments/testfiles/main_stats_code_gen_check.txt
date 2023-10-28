@@ -9,7 +9,7 @@ begin
     var2 = 2;
     var3 = var1 + var2;
 
-    Out << var3 << line;
+    Out << "Result: ", var3 << line;
 
 
 end CD23 program1

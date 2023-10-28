@@ -67,7 +67,7 @@ public class CodeGen {
         mod.pushFront("float_consts", float_count);
         mod.pushFront("string_consts", string_count);
         mod.push("instructions", InstructionSet.LB);
-        mod.push("instructions", int_count+float_count+string_count); // TODO: is this actually char_count // 8 ?
+        mod.push("instructions", int_count+float_count+string_count); // TODO: is this actually char_count ?
         mod.push("instructions", InstructionSet.ALLOC);
         pc++;
         mod.pad();

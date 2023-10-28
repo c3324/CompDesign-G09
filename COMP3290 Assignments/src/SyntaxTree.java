@@ -2288,6 +2288,8 @@ public class SyntaxTree {
         if ( currentToken.getTokID().equals("TSTRG ") ){
             Node NSTRG = new Node("NSTRG ");
             NSTRG.setSymbolValue(currentToken.getLex());
+            // Symbol table
+            currentSymbolTable.processStringLiteral(currentToken);
             match(); // <String>
             return NSTRG;
         }
