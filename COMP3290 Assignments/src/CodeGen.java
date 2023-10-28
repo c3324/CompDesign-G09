@@ -7,6 +7,8 @@ import java.nio.charset.StandardCharsets;
 
 public class CodeGen {
 
+    private static int instruction_size = 80; // easy way to assign memory..
+
     private SyntaxTree syntaxTree;
     private Node root;
     private Node currentNode;
@@ -44,25 +46,43 @@ public class CodeGen {
         // ALLOC
         main_symbol_table = currentNode.getSymbolTable();
         System.out.println("Allocating stack");
-        main_symbol_table.printTable();
+        
         // Consts
         int int_count = 0;
         int float_count = 0;
-        int string_count = 0;
+        int string_count = 0; // note this is not the number of strings, but rather the number of words (8 bytes) used to store the strings, including end of string padding
         for (int i = 3; i < main_symbol_table.getNumRecords(); i++){ // note skips keywords..
             // note integer, real, boolean keywords skipped
             STRecord rec = main_symbol_table.getStRecord(i);
             if (rec.getType().equals("integer")){
+                if(rec.getGlyph().equals("")){ // not initialised
+                    mod.push("int_consts", rec.getGlyph() + "0");
+                }
+                else{
+                    mod.push("int_consts", rec.getGlyph());
+                }
+                rec.setBase(instruction_size);
+                rec.setOffset(int_count * 8);
                 int_count++;
-                mod.push("int_consts", 0);
             }
             else if (rec.getType().equals("float")){
+                if(rec.getGlyph().equals("")){ // not initialised
+                    mod.push("float_consts", rec.getGlyph() + "0");
+                }
+                else{
+                    mod.push("float_consts", rec.getGlyph());
+                }
+                rec.setBase(instruction_size);
+                rec.setOffset((int_count + float_count) * 8);
                 float_count++;
-                mod.push("float_consts", 0);
             }
             else if (rec.getType().equals("string")){ // ? probably not included in ST but rather at nodes.
-                string_count++;
+                // string_count++;
+                // System.out.println("allocating string literal for " + rec.getID());
                 String byte_string = stringToByte(rec.getID());
+                rec.setBase(instruction_size);
+                rec.setOffset((int_count + float_count + string_count) * 8);
+                string_count += countBytes(byte_string)/8;
                 mod.push("string_consts", byte_string);
             }
         }
@@ -70,10 +90,15 @@ public class CodeGen {
         mod.pushFront("float_consts", float_count);
         mod.pushFront("string_consts", string_count);
         mod.push("instructions", InstructionSet.LB);
-        mod.push("instructions", int_count+float_count+string_count); // TODO: is this actually char_count ?
+        mod.push("instructions", int_count+float_count+string_count);
         mod.push("instructions", InstructionSet.ALLOC);
-        pc++;
-        mod.pad();
+        pc+=3;
+        //mod.pad();
+
+        // System.out.println("Testing intToByte for " + 11 + " -> " + intToBytes(11));
+        // System.out.println("Testing intToByte for " + 11 + " -> " + intToBytes(564));
+
+        main_symbol_table.printTable();
         
           
         
@@ -134,54 +159,19 @@ public class CodeGen {
 
     public void NSTATS(Node head){
 
+        // System.out.println("In NSTATS");
+
         // Left
         Node left = head.getLeftNode();
-        if (left.getId().equals("NFORL ")){
-
-        }
-        else if (left.getId().equals("NREPT ")){
-            
-        }
-        else if (left.getId().equals("NASGNS ")){
-            NASGNS(left);
-        }
-        else if (left.getId().equals("NASGN ")){
-            NASGN(left);
-        }
-        else if (left.getId().equals("NCALL ")){
-            
-        }
-        else if (left.getId().equals("NRETN ")){
-            
-        }
+        STAT(left);
 
         // Right
         Node right = head.getRightNode();
-        if (right.getId().equals("NSTATS")){
+        if (right.getId().equals("NSTATS ")){
             NSTATS(right);
         }
-        else if(right.getId().equals("NFORL ")){
+        STAT(right);
 
-        }
-        else if (right.getId().equals("NREPT ")){
-            
-        }
-        else if (right.getId().equals("NASGNS ")){
-            NASGNS(right);
-        }
-        else if (right.getId().equals("NASGN ")){
-            NASGN(right);
-        }
-        else if (right.getId().equals("NCALL ")){
-            
-        }
-        else if (right.getId().equals("NRETN ")){
-            
-        }
-        else{
-            // assume <stat> path //TODO: validate this is fari
-            STAT(right);
-        }
     }
 
 
@@ -189,18 +179,17 @@ public class CodeGen {
 
         Node checkNode = head;
 
-        if (checkNode.getLeftNode() == null){
-            return;
-        }
+        // if (checkNode.getLeftNode() == null){
+        //     return;
+        // }
 
-        checkNode = checkNode.getLeftNode();
+        // checkNode = checkNode.getLeftNode();
 
         if (checkNode.getId().equals("NASGNS ")){
-            NASGNS(head);
+            NASGNS(checkNode);
         }
-
         else if (checkNode.getId().equals("NASGN ")){
-
+            NASGN(checkNode);
         }
         else if (checkNode.getId().equals("NPLEQ ")){
 
@@ -225,6 +214,21 @@ public class CodeGen {
         }
         else if (checkNode.getId().equals("NRETN ")){
             
+        }
+        else if (checkNode.getId().equals("NIFTH ")){
+            
+        }
+        else if (checkNode.getId().equals("NIFTE ")){
+            
+        }
+        else if (checkNode.getId().equals("NINPUT ")){
+            
+        }
+        else if (checkNode.getId().equals("NOUTP ")){
+            
+        }
+        else if (checkNode.getId().equals("NOUTL ")){
+            NOUTL(checkNode);
         }
 
     }
@@ -280,26 +284,191 @@ public class CodeGen {
         st.printTable();
         STRecord rec = st.find(var);
 
-        System.out.println("Finding offset: " + rec.getOffset());
-        // LA var
-        // <expr>
-        // mod.push(InstructionSet.LV);
-        // mod.push(1);
-        // mod.push(rec.getOffset());
-        // mod.push(InstructionSet.READI);
+        System.out.println("Finding offset: " + rec);
+        // SM
+        LA1(rec);
+
+        expr(head.getRightNode());
+
+        mod.push("instructions", InstructionSet.ST);
+        pc++;
 
 
 
     }
-    
+
+    public void NOUTL(Node head){
+
+        // print all of prlist -> get node names from NPRLIST -> NSTRG
+        Node leftChild = head.getLeftNode();
+
+        if (leftChild.getId().equals("NPRLIST ")){
+            NPRLIST(leftChild);
+        }
+        else if(leftChild.getId().equals("NSTRG ")){
+            NSTRG(leftChild);
+        }
+        else if (leftChild.getId().endsWith("NSIMV ")){
+            String var_name = leftChild.getSymbolValue();
+            STRecord rec = main_symbol_table.find(var_name);
+            LV1(rec);
+            mod.push("instructions", InstructionSet.VALPR);
+            pc++;
+        }
+        // TODO:
+        else{ // else <expr>
+            expr(leftChild);
+            mod.push("instructions", InstructionSet.VALPR);
+            pc++;
+        }
+
+        // SM
+        mod.push("instructions", InstructionSet.NEWLN);
+        pc++;
+    }
+
+    public void NPRLIST(Node head){
+
+        // print all of prlist -> get node names from NPRLIST -> NSTRG
+        Node leftChild = head.getLeftNode();
+
+        if (leftChild.getId().equals("NSTRG ")){
+            NSTRG(leftChild);
+        }
+        else if (leftChild.getId().endsWith("NSIMV ")){
+            String var_name = leftChild.getSymbolValue();
+            STRecord rec = main_symbol_table.find(var_name);
+            LV1(rec);
+            mod.push("instructions", InstructionSet.VALPR);
+            pc++;
+        } // TODO: Arrays?
+        else{ // else <expr>
+            expr(leftChild);
+            mod.push("instructions", InstructionSet.VALPR);
+            pc++;
+        }
+
+        
+        Node rightChild = head.getRightNode();
+        if (rightChild.getId().equals("NPRLIST ")){
+            NPRLIST(rightChild);
+        }
+        else if (rightChild.getId().equals("NSTRG ")){
+            NSTRG(rightChild);
+        }
+        else if (rightChild.getId().endsWith("NSIMV ")){
+            String var_name = rightChild.getSymbolValue();
+            STRecord rec = main_symbol_table.find(var_name);
+            LV1(rec);
+            mod.push("instructions", InstructionSet.VALPR);
+            pc++;
+        }
+        else{ // else <expr>
+            expr(rightChild);
+            mod.push("instructions", InstructionSet.VALPR);
+            pc++;
+        }
+
+    }
+
+    public void NSTRG(Node head){
+
+        // found const
+        String literal = head.getSymbolValue();
+        STRecord rec = main_symbol_table.find(literal);
+        int n_bytes = countBytes(stringToByte(literal));
+
+        System.out.println("Searching for literal: " + literal);
+        main_symbol_table.printTable();
+
+        // SM
+        LA0(rec);
+        mod.push("instructions", InstructionSet.STRPR);
+        pc++;
 
 
+        System.out.println("Loading string!");
+        
+    }
+
+    public void NADD(Node head){
+
+        Node leftChild = head.getLeftNode();
+    }
+
+    private void expr(Node head){
+
+        if (head.getId().equals("NILIT ")){
+            int value = Integer.parseInt(head.getSymbolValue());
+            mod.push("instructions", InstructionSet.LB);
+            mod.push("instructions", value);
+            pc+=2;
+        }
+        else if ( head.getId().equals("NADD ")){
+            NADD(head);
+        }
+    }
+
+    private void LA0(STRecord rec){
+        // TODO handle more than 256 addresses.
+        mod.push("instructions", InstructionSet.LA0);
+
+        String bytes = intToBytes(rec.getBase() + rec.getOffset());
+        String[] bytes_array = bytes.split(" ");
+        mod.push("instructions", bytes_array[0]);
+        mod.push("instructions", bytes_array[1]);
+        mod.push("instructions", bytes_array[2]);
+        mod.push("instructions", bytes_array[3]);
+        pc+= 5;
+    }
+
+    private void LA1(STRecord rec){
+        mod.push("instructions", InstructionSet.LA1);
+        // mod.push("instructions", 0);
+        // mod.push("instructions", 0);
+        // mod.push("instructions", 0);
+        
+        // mod.push("instructions", offset);
+        String bytes = intToBytes(rec.getOffset());
+        String[] bytes_array = bytes.split(" ");
+        mod.push("instructions", bytes_array[0]);
+        mod.push("instructions", bytes_array[1]);
+        mod.push("instructions", bytes_array[2]);
+        mod.push("instructions", bytes_array[3]);
+        pc+= 5;
+    }
+
+    public void LV1(STRecord rec){
+        mod.push("instructions", InstructionSet.LV1);
+        String bytes = intToBytes(rec.getOffset());
+        String[] bytes_array = bytes.split(" ");
+        mod.push("instructions", bytes_array[0]);
+        mod.push("instructions", bytes_array[1]);
+        mod.push("instructions", bytes_array[2]);
+        mod.push("instructions", bytes_array[3]);
+        pc+=5;
+    }
 
 
     public void toFile(String filename){
         //stack.toFile(filename + "");
         // push pc
-        mod.pushFront("instructions", pc);
+        if (pc % 8 != 0){
+            int pad_len = 8 - pc % 8;
+            for (int i = 0; i < pad_len; i++){
+                mod.push("instructions", 0);
+                pc++;
+            }
+        }
+        if (pc < instruction_size){
+            // pad memory
+            int pad_len = instruction_size - pc;
+            for (int i = 0; i < pad_len; i++){
+                mod.push("instructions", 0);
+                pc++;
+            }
+        }
+        mod.pushFront("instructions", pc/8);
         mod.toFile(filename);
     }
 
@@ -307,8 +476,8 @@ public class CodeGen {
     public String stringToByte(String inputString){
         byte[] bytes = inputString.getBytes(StandardCharsets.UTF_8);
 
-        System.out.println("Converting string to bytes:");
-        String output = "";
+        // System.out.println("Converting string to bytes:");
+        String output = "\n";
         for (int i = 0; i < bytes.length; i++) {
             if (i > 0 && i % 8 == 0) {
                 output += "\n";
@@ -324,11 +493,36 @@ public class CodeGen {
             for (int j = 0; j < paddingCount; j++) {
                  output += ("0 ");
             }
-             output += "\n";
         }
        
-        System.out.print(output);
+        // System.out.println(output);
         return output;
+    }
+
+    public String intToBytes(int inputInteger) {
+        // Convert the integer to its 4-byte representation
+        byte[] bytes = new byte[4];
+        bytes[0] = (byte) (inputInteger & 0xFF);
+        bytes[1] = (byte) ((inputInteger >> 8) & 0xFF);
+        bytes[2] = (byte) ((inputInteger >> 16) & 0xFF);
+        bytes[3] = (byte) ((inputInteger >> 24) & 0xFF);
+    
+        // System.out.println("Converting integer to bytes:");
+        String output = "";
+        for (int i = bytes.length - 1; i >= 0; i--) {
+            int decimalValue = bytes[i] & 0xFF;
+            output += (decimalValue + " ");
+        }
+        
+        return output;
+    }
+
+    public int countBytes(String inputString){
+        // note includes padded bytes
+        String[] chunks = inputString.split("\n");
+        int count = chunks.length - 1; // note that all strings start with \n
+        // System.out.println("Found " + count + " words.");
+        return count * 8;
     }
     
 }

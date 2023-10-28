@@ -47,7 +47,7 @@ public class Mod {
 
         if (section.equals("instructions")){
             if ( instruction_col == 8){
-                instructions += '\n' + value;
+                instructions += "\n" + value + " ";
                 instruction_col = 1;
             }
             else{
@@ -87,6 +87,10 @@ public class Mod {
             string_consts = string_consts + " " + value;
             string_col++;
         }
+        else{
+            System.out.println("Error! Invalid use of mod.push(). Perhaps 'section' paramter was wrong.");
+            System.exit(1);
+        }
         
 
     }
@@ -95,8 +99,8 @@ public class Mod {
     public void push(String section, String value){
 
         if (section.equals("instructions")){
-            if ( instruction_col == 8){
-                instructions += '\n' + value;
+            if ( instruction_col >= 8){
+                instructions += "\n" + value + " ";
                 instruction_col = 1;
             }
             else{
@@ -125,16 +129,20 @@ public class Mod {
             float_col++;
         }
         else if (section.equals("string_consts")){
-            if (string_consts.equals("")){
-                string_consts += value;
-                return;
-            }
-            if ( string_col == 8){
-                int_consts += '\n';
-                string_col = 0;
-            }
+            // if (string_consts.equals("")){
+            //     string_consts += value;
+            //     return;
+            // }
+            // if ( string_col == 8){
+            //     int_consts += '\n';
+            //     string_col = 0;
+            // }
             string_consts = string_consts + " " + value;
-            string_col++;
+            // string_col++;
+        }
+        else{
+            System.out.println("Error! Invalid use of mod.push(). Perhaps 'section' paramter was wrong.");
+            System.exit(1);
         }
         
 
@@ -171,7 +179,11 @@ public class Mod {
                 string_consts += value;
                 return;
             }
-            string_consts = value + "\n" + string_consts;
+            string_consts = value +  string_consts; // "\n" was removed as all strings begin with "\n"
+        }
+        else{
+            System.out.println("Error! Invalid use of mod.push(). Perhaps 'section' paramter was wrong.");
+            System.exit(1);
         }
 
     }
@@ -207,11 +219,12 @@ public class Mod {
 
 
 
+
     public void toFile(String filename){
 
         // Finally push a HALT
         // mod += "\n0";
-        String mod = instructions + "\n" + int_consts + "\n" +float_consts + "\n" + string_consts + "\n" + "0";
+        String mod = instructions + "\n" + int_consts + "\n" + float_consts + "\n" + string_consts + "\n" + "0";
 
         try {
             FileWriter writer     = new FileWriter(filename, false);

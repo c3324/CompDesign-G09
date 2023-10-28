@@ -3,8 +3,8 @@
 
 public class STRecord {
 
-    private String id, type, base, glyph;
-    private int line_number, col_number, offset; // note -1 offset means uninitialised
+    private String id, type, glyph;
+    private int line_number, col_number, offset, base; // note -1 offset means uninitialised
     private String scope; // currently just used to check function params
 
     public STRecord(
@@ -12,8 +12,8 @@ public class STRecord {
             int line_number, 
             int col_number, 
             String type, 
-            String base, 
-            String offset, 
+            int base, 
+            int offset, 
             String glyph
         ){
 
@@ -21,7 +21,7 @@ public class STRecord {
         this.line_number = line_number;
         this.col_number = col_number;
         this.type = type;
-        this.base = base;
+        this.base = -1;
         this.offset = -1;
         this.glyph = glyph;
         this.scope = "";
@@ -35,7 +35,7 @@ public class STRecord {
         this.line_number = token.getLn();
         this.col_number = token.getCol();
         this.type = type;
-        this.base = "";
+        this.base = -1;
         this.offset = -1;
         this.glyph = "";
         this.scope = "";
@@ -48,7 +48,7 @@ public class STRecord {
         this.line_number = token.getLn();
         this.col_number = token.getCol();
         this.type = type;
-        this.base = "";
+        this.base = -1;
         this.offset = -1;
         this.glyph = "";
         this.scope = scope;
@@ -61,7 +61,7 @@ public class STRecord {
         this.line_number = token.getLn();
         this.col_number = token.getCol();
         this.type = type;
-        this.base = "";
+        this.base = -1;
         this.offset = offset;
         this.glyph = "";
         this.scope = scope;
@@ -92,12 +92,20 @@ public class STRecord {
         return offset;
     }
 
+    public void setBase(int base){
+        this.base = base;
+    }
+
+    public int getBase(){
+        return base;
+    }
+
 
 
     public void print(){
         // helper method for printing records
         System.out.println(
-            this.id + " " + this.type + " " + this.glyph + " scope: " + this.scope
+            this.id + " " + this.type + " " + this.glyph + " scope: " + this.scope + " offset: " + this.offset
         );
     }
 

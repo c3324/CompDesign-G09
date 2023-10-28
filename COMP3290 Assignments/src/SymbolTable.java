@@ -21,9 +21,9 @@ public class SymbolTable {
         number_of_records = 0;
 
         if (push_keywords){
-            records.add(new STRecord("integer", 0, 0, "Keyword", null, null, null));
-            records.add(new STRecord("real", 0, 0, "Keyword", null, null, null));
-            records.add(new STRecord("boolean", 0, 0, "Keyword", null, null, null));
+            records.add(new STRecord("integer", 0, 0, "Keyword", -1, -1, null));
+            records.add(new STRecord("real", 0, 0, "Keyword", -1, -1, null));
+            records.add(new STRecord("boolean", 0, 0, "Keyword", -1, -1, null));
 
             keywordsIndex.put("integer", 0);
             keywordsIndex.put("real", 1);
@@ -81,7 +81,10 @@ public class SymbolTable {
                 return rec;
             }
         }
-        parentSymbolTable.find(var);
+        if (parentSymbolTable != null){
+            return parentSymbolTable.find(var);
+        }
+        
         return null;
         
     }

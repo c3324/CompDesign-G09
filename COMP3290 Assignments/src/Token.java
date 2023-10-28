@@ -49,6 +49,10 @@ public class Token {
 		return lex;
 	}
 
+	public void setLex(String lex){
+		this.lex = lex;
+	}
+
 	public void print(){
 		String str = LookUpTable.intToTokenString(tokNum);
 		if ( !lex.equals( "")){

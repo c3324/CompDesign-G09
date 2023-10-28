@@ -2287,7 +2287,8 @@ public class SyntaxTree {
 
         if ( currentToken.getTokID().equals("TSTRG ") ){
             Node NSTRG = new Node("NSTRG ");
-            NSTRG.setSymbolValue(currentToken.getLex());
+            currentToken.setLex(currentToken.getLex().replace("\"", ""));// odd bugfix for strings forcing the quotation marks
+            NSTRG.setSymbolValue(currentToken.getLex()); 
             // Symbol table
             currentSymbolTable.processStringLiteral(currentToken);
             match(); // <String>
