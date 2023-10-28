@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 
 public class CodeGen {
 
-    private static int instruction_size = 80; // easy way to assign memory..
+    private static int instruction_size = 4096; // easy way to assign memory.. for some reason can break if uses the last row?
 
     private SyntaxTree syntaxTree;
     private Node root;

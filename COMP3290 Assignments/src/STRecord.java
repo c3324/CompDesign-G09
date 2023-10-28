@@ -105,7 +105,7 @@ public class STRecord {
     public void print(){
         // helper method for printing records
         System.out.println(
-            this.id + " " + this.type + " " + this.glyph + " scope: " + this.scope + " offset: " + this.offset
+            this.id + " " + this.type + " " + this.glyph + " scope: " + this.scope + " offset: " + this.offset + " base: " + this.base
         );
     }
 
