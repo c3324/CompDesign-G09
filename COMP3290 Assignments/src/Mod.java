@@ -91,6 +91,55 @@ public class Mod {
 
     }
 
+    // For accepting string inputs
+    public void push(String section, String value){
+
+        if (section.equals("instructions")){
+            if ( instruction_col == 8){
+                instructions += '\n' + value;
+                instruction_col = 1;
+            }
+            else{
+                instructions = instructions + value + " ";
+                instruction_col++;
+            }
+            
+        }
+        else if (section.equals("int_consts")){
+            if (int_consts.equals("")){
+                int_consts += value;
+                return;
+            }
+            int_consts =  int_consts + "\n" + value;
+        }
+        else if (section.equals("float_consts")){
+            if (float_consts.equals("")){
+                float_consts += value;
+                return;
+            }
+            if ( float_col == 8){
+                float_consts += '\n';
+                float_col = 0;
+            }
+            float_consts = float_consts + " " + value;
+            float_col++;
+        }
+        else if (section.equals("string_consts")){
+            if (string_consts.equals("")){
+                string_consts += value;
+                return;
+            }
+            if ( string_col == 8){
+                int_consts += '\n';
+                string_col = 0;
+            }
+            string_consts = string_consts + " " + value;
+            string_col++;
+        }
+        
+
+    }
+
     // Ideally only needed for instructions, but updated just in case
     public void pushFront(String section, Integer value){
 

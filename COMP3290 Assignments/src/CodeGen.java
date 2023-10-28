@@ -3,6 +3,8 @@
 // CodeGen.java
 // Due 29.10.2023
 
+import java.nio.charset.StandardCharsets;
+
 public class CodeGen {
 
     private SyntaxTree syntaxTree;
@@ -60,7 +62,8 @@ public class CodeGen {
             }
             else if (rec.getType().equals("string")){ // ? probably not included in ST but rather at nodes.
                 string_count++;
-                mod.push("float_consts", 0);
+                String byte_string = stringToByte(rec.getID());
+                mod.push("string_consts", byte_string);
             }
         }
         mod.pushFront("int_consts", int_count);
@@ -298,6 +301,34 @@ public class CodeGen {
         // push pc
         mod.pushFront("instructions", pc);
         mod.toFile(filename);
+    }
+
+
+    public String stringToByte(String inputString){
+        byte[] bytes = inputString.getBytes(StandardCharsets.UTF_8);
+
+        System.out.println("Converting string to bytes:");
+        String output = "";
+        for (int i = 0; i < bytes.length; i++) {
+            if (i > 0 && i % 8 == 0) {
+                output += "\n";
+            }
+            // Convert the byte to its decimal representation
+            int decimalValue = bytes[i] & 0xFF;
+            output += (decimalValue + " ");
+            
+        }
+        // Pad the last line with "0 " up to 8 bytes if needed
+        if (bytes.length % 8 != 0) {
+            int paddingCount = 8 - (bytes.length % 8);
+            for (int j = 0; j < paddingCount; j++) {
+                 output += ("0 ");
+            }
+             output += "\n";
+        }
+       
+        System.out.print(output);
+        return output;
     }
     
 }
