@@ -17,7 +17,7 @@ public class A3 {
 		// }
 
 		// String filepath = args[0];
-		String filepath = "COMP3290 Assignments/testfiles/main_stats_code_gen_check"; // for non-console use
+		String filepath = "COMP3290 Assignments/testfiles/code_gen_testing"; // for non-console use
 		String filepath_txt = filepath + ".txt"; // for non-console use
 		
 		
