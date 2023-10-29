@@ -10,7 +10,7 @@
 10.     var8 : integer
 11. 
 12. begin
-13.     /** var1 = 4;
+13.     var1 = 4;
 14.     var2 = 2;
 15.     var3 = var1 + var2;
 16.     var4 = var1 - var2;
@@ -24,9 +24,9 @@
 24.     Out << var1, " * ", var2, " = ", var5 << line;
 25.     Out << var1, " / ", var2, " = ", var6 << line;
 26.     Out << var1, " % ", var2, " = ", var7 << line;
-27.     Out << var1, " * ", var2, " + ", var1, " / ", var2," = ", var8 << line; **/
+27.     Out << var1, " * ", var2, " + ", var1, " / ", var2," = ", var8 << line; 
 28. 
-29.     if (true)
+29.     /** if (true)
 30.         Out << "True is True" << line;
 31.     else
 32.         Out << "True is False" << line;
@@ -36,7 +36,7 @@
 36.         Out << "false is True" << line;
 37.     else
 38.         Out << "false is False" << line;
-39.     end
+39.     end**/
 40. 
 41. 
 42. end CD23 program1
