@@ -17,13 +17,16 @@ public class CD {
 		}
 
 		String filepath = args[0];
+		String fileName = filepath.substring(0, filepath.lastIndexOf('.'));
+		
+        //System.out.println(fileName);
 		// String filepath = "COMP3290 Assignments/testfiles/polygon.txt"; // for non-console use
 		
 		// Construct Scanner.
 		CDScanner scanner = new CDScanner(filepath);
 
 		//read file contents into program listing file, with line numbers.
-		scanner.createProgramListing();
+		scanner.createProgramListing(fileName);
 
 		// Spec structure used.
 		System.out.print("SCANNER\n");
@@ -53,7 +56,7 @@ public class CD {
 			System.out.println("\n\nPARSER - Pre-Order Traversal:\n");
 			parser.parser_Printing();
 			parser.printErrorList();
-			parser.addErrorstoFile();
+			parser.addErrorstoFile(fileName);
 			//parser.printSymbolTable(); //--> Uncomment this to see what has been stored in the Symbol Table
 
 		}
