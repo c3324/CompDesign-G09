@@ -59,9 +59,10 @@ public class CDParser {
         }
     }
 
-    public void addErrorstoFile(){
+    public void addErrorstoFile(String fileName){
         try {
-            writer= new FileWriter("proglisting.txt", true);
+            
+            writer= new FileWriter(fileName + ".lst", true);
             bufferW= new BufferedWriter(writer);
             printer = new PrintWriter(bufferW);
 

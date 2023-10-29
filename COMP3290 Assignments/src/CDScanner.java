@@ -65,6 +65,7 @@ public class CDScanner {
         } 
         look_up_table = new LookUpTable();
         
+        
     }
 
     Token nextToken(){
@@ -525,11 +526,12 @@ public class CDScanner {
         return errorList_Scanner.getErrorList();
     } 
 
-    public void createProgramListing(){
+    public void createProgramListing(String fileName){
         int i =1;
+        
         try {
 			reader = new BufferedReader(new FileReader(file));
-            writer = new FileWriter("proglisting.txt");
+            writer = new FileWriter(fileName + ".lst");
 			String line = reader.readLine();
 
 			while (line != null) {
@@ -550,7 +552,7 @@ public class CDScanner {
 
     public void addErrorstoFile(){
         try {
-            writer= new FileWriter("proglisting.txt", true);
+            writer= new FileWriter("proglisting.lst", true);
             bufferW= new BufferedWriter(writer);
             printer = new PrintWriter(bufferW);
 

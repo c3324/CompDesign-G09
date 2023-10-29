@@ -18,7 +18,7 @@ public class A3 {
 
 		// String filepath = args[0];
 		String filepath = "COMP3290 Assignments/testfiles/code_gen_testing"; // for non-console use
-		String filepath_txt = filepath + ".txt"; // for non-console use
+		String filepath_txt = filepath + ".cd"; // for non-console use
 		
 		
 		// Construct Scanner.
@@ -56,7 +56,7 @@ public class A3 {
 			System.out.println("\n\nPARSER - Pre-Order Traversal:\n");
 			parser.parser_Printing();
 			parser.printErrorList();
-			parser.addErrorstoFile();
+			parser.addErrorstoFile(fileName);
 			//parser.printSymbolTable(); //--> Uncomment this to see what has been stored in the Symbol Table
 
 

@@ -1,0 +1,42 @@
+CD23 program1
+main 
+    var1 : integer,
+    var2 : integer,
+    var3 : integer,
+    var4 : integer,
+    var5 : integer,
+    var6 : integer,
+    var7 : integer,
+    var8 : integer
+
+begin
+    /** var1 = 4;
+    var2 = 2;
+    var3 = var1 + var2;
+    var4 = var1 - var2;
+    var5 = var1 * var2;
+    var6 = var1 / var2;
+    var7 = var1 % var2;
+    var8 = var1 * var2 + var1 / var2; /-- nesting
+
+    Out << var1, " + ", var2, " = ", var3 << line;
+    Out << var1, " - ", var2, " = ", var4 << line;
+    Out << var1, " * ", var2, " = ", var5 << line;
+    Out << var1, " / ", var2, " = ", var6 << line;
+    Out << var1, " % ", var2, " = ", var7 << line;
+    Out << var1, " * ", var2, " + ", var1, " / ", var2," = ", var8 << line; **/
+
+    if (true)
+        Out << "True is True" << line;
+    else
+        Out << "True is False" << line;
+    end
+
+    if (false)
+        Out << "false is True" << line;
+    else
+        Out << "false is False" << line;
+    end
+
+
+end CD23 program1
