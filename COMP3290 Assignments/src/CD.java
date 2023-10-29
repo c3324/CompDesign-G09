@@ -59,6 +59,15 @@ public class CD {
 			parser.addErrorstoFile(fileName);
 			//parser.printSymbolTable(); //--> Uncomment this to see what has been stored in the Symbol Table
 
+			if (parser.getSyntaxTree().containsErrors()){
+				// stop
+				return;
+			}
+			SyntaxTree syntaxTree = parser.getSyntaxTree();
+			CodeGen codeGenerator = new CodeGen(syntaxTree, fileName);
+			codeGenerator.run();
+			codeGenerator.toFile(fileName + ".mod");
+
 		}
 	}
 }
